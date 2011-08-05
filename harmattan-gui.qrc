@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/harmattan/main.qml</file>
+        <file>qml/harmattan/ChatPage.qml</file>
+        <file>qml/harmattan/ConnectionSheet.qml</file>
+        <file>qml/harmattan/SettingsPage.qml</file>
+        <file>qml/harmattan/TitleLabel.qml</file>
+    </qresource>
+</RCC>
