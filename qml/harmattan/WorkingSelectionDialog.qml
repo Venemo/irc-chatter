@@ -47,26 +47,28 @@ CommonDialog {
     property alias model: selectorListView.model
     property bool searchFieldVisible: true
 
-    Keys.forwardTo: searchField
-
     content: Column {
         width: parent.width
         anchors.top: parent.top
         anchors.topMargin: 10
-        spacing: 10
+        spacing: 0
 
         TextField {
             id: searchField
             placeholderText: "Search"
             width: parent.width
             visible: selectorDialog.searchFieldVisible
+
+            property string fullText: text + platformPreedit
         }
 
         ListView {
+            anchors.topMargin: 10
             id: selectorListView
-            height: 290
+            height: 200
             width: parent.width
             interactive: true
+            clip: true
 
             delegate: Component {
                 id: defaultDelegate
@@ -78,7 +80,7 @@ CommonDialog {
 
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    visible: searchField.text.length === 0 || displayableText.toLowerCase().indexOf(searchField.text.toLowerCase()) > -1
+                    visible: searchField.fullText.length === 0 || displayableText.toLowerCase().indexOf(searchField.fullText.toLowerCase()) > -1;
                     height: visible ? selectorDialog.platformStyle.itemHeight : 0
 
                     MouseArea {
