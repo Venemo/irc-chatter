@@ -33,4 +33,10 @@ PageStackWindow {
         }
     }
 
+    JoinSheet {
+        id: joinSheet
+        onAccepted: console.log("haha");
+        visualParent: chatPage
+    }
+
 }
