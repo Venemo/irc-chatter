@@ -11,8 +11,9 @@ int main(int argc, char *argv[])
     QObjectListModel<ChannelModel> list;
     list.addItem(new ChannelModel("#meego"));
     list.addItem(new ChannelModel("#harmattan"));
-    list.addItem(new ChannelModel("#maemo"));
-    list.addItem(new ChannelModel("w00t_"));
+
+    qmlRegisterType<ChannelModel>("net.venemo.ircchatter", 1, 0, "ChannelModel");
+    qmlRegisterType<MessageModel>("net.venemo.ircchatter", 1, 0, "MessageModel");
 
     QDeclarativeView view;
     view.rootContext()->setContextProperty("channelList", &list);
