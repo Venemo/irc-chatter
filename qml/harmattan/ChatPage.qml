@@ -4,10 +4,11 @@ import net.venemo.ircchatter 1.0
 
 Page {
     id: mainPage
+
+
     property ChannelModel currentChannel: null
     property bool shouldUpdateCurrentMessage: true
-    Keys.forwardTo: [(returnKey), (mainPage)]
-    Keys.onReturnPressed: sendCurrentMessage()
+    property int currentChannelIndex: -1
 
     function sendCurrentMessage() {
         if (currentChannel !== null) {
@@ -16,18 +17,26 @@ Page {
             shouldUpdateCurrentMessage = true;
         }
     }
+    function switchChannel(index) {
+        shouldUpdateCurrentMessage = false;
+        currentChannel = ircModel.channelList.getItem(index);
+        shouldUpdateCurrentMessage = true;
+    }
 
     tools: ToolBarLayout {
         visible: true
 
         ToolIcon {
             platformIconId: "toolbar-add";
+            onClicked: joinSheet.open()
         }
         ToolIcon {
             platformIconId: "toolbar-send-chat";
+            onClicked: channelSelectorDialog.open();
         }
         ToolIcon {
             platformIconId: "toolbar-addressbook";
+            onClicked: userSelectorDialog.open();
         }
         ToolIcon {
             platformIconId: "toolbar-settings";
@@ -42,7 +51,7 @@ Page {
     Flickable {
         id: chatFlickable
         anchors.top: parent.top
-        anchors.bottom: bottomRow.top
+        anchors.bottom: messageField.top
         anchors.left: parent.left
         anchors.right: channelNameBg.left
         anchors.bottomMargin: 10
@@ -60,8 +69,8 @@ Page {
                 delegate: Text {
                     wrapMode: TextEdit.WordWrap
                     textFormat: TextEdit.RichText
-                    font.pixelSize: 24
-                    text: model.timestamp + " <span style='color: green'>" + "mehmeh" + "</span>: " + model.text;
+                    font.pixelSize: 24 // TODO: bind this to setting
+                    text: model.timestamp + " <span style='color: " + model.userNameColor + "'>" + model.userName + "</span>: " + model.text;
                 }
                 onCountChanged: {
                     var should = Math.max(0,  chatColumn.height - chatFlickable.height);
@@ -81,8 +90,7 @@ Page {
         width: 60
         anchors.top: parent.top
         anchors.right: parent.right
-        anchors.bottom: bottomRow.top
-        anchors.bottomMargin: 10
+        anchors.bottom: messageField.top
 
         Flickable {
             id: channelSwitcherFlickable
@@ -90,6 +98,7 @@ Page {
             contentHeight: channelSwitcherRow.width + 30
             interactive: true
             clip: true
+
             Row {
                 id: channelSwitcherRow
                 spacing: 10
@@ -99,8 +108,9 @@ Page {
                     angle: 90
                     origin.x: channelNameBg.width
                 }
+
                 Repeater {
-                    model: channelList
+                    model: ircModel.channelList
                     delegate: Label {
                         id: myLabel
                         text: model.name
@@ -111,11 +121,7 @@ Page {
 
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: {
-                                shouldUpdateCurrentMessage = false;
-                                currentChannel = channelList.getItem(index)
-                                shouldUpdateCurrentMessage = true;
-                            }
+                            onClicked: switchChannel(index)
                         }
                     }
                 }
@@ -126,37 +132,39 @@ Page {
         }
     }
 
-    Row {
+    TextField {
+        id: messageField
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
-        id: bottomRow
         width: parent.width
-        spacing: 5
+        placeholderText: "Type a message"
+        text: currentChannel !== null ? currentChannel.currentMessage : ""
+        platformStyle: TextFieldStyle {
+            paddingLeft: tabButton.width
+            paddingRight: sendButton.width
+        }
+        Keys.onReturnPressed: sendCurrentMessage()
 
+        Binding {
+            target: currentChannel
+            property: "currentMessage"
+            value: messageField.text
+            when: currentChannel !== null && shouldUpdateCurrentMessage
+        }
         ToolIcon {
             id: tabButton
             anchors.verticalCenter: messageField.verticalCenter
+            anchors.left: parent.left
             platformIconId: "toolbar-reply"
             onClicked: {
                 messageField.forceActiveFocus();
-                // TODO
-            }
-        }
-        TextField {
-            id: messageField
-            width: parent.width - tabButton.width - sendButton.width - 10
-            placeholderText: "Type a message"
-            text: currentChannel !== null ? currentChannel.currentMessage : ""
-            Binding {
-                target: currentChannel
-                property: "currentMessage"
-                value: messageField.text
-                when: currentChannel !== null && shouldUpdateCurrentMessage
+                // TODO: nickname autocompletion
             }
         }
         ToolIcon {
             id: sendButton
             anchors.verticalCenter: messageField.verticalCenter
+            anchors.right: parent.right
             platformIconId: "toolbar-send-sms"
             onClicked: {
                 messageField.forceActiveFocus();
@@ -164,4 +172,19 @@ Page {
             }
         }
     }
+
+    WorkingSelectionDialog {
+        id: channelSelectorDialog
+        titleText: "Switch channel"
+        selectedIndex: ircModel.channelList.indexOf(currentChannel)
+        model: ircModel.channelList
+        onSelectedIndexChanged: switchChannel(selectedIndex);
+    }
+
+    WorkingSelectionDialog {
+        id: userSelectorDialog
+        titleText: "User list of " + currentChannel.name
+        model: currentChannel.users
+    }
+
 }
