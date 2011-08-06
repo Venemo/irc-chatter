@@ -11,9 +11,13 @@ class QObjectListModelMagic : public QAbstractListModel
 public:
     QObjectListModelMagic(QObject *parent) : QAbstractListModel(parent) { }
     Q_INVOKABLE virtual QObject *getItem(int index) = 0;
+    Q_INVOKABLE virtual int rowCount(const QModelIndex &parent = QModelIndex()) const = 0;
 
 protected slots:
     virtual void removeDestroyedItem() = 0;
+
+signals:
+    void itemAdded(QObject *item);
 
 };
 
@@ -93,6 +97,8 @@ void QObjectListModel<T>::addItem(T *item)
     _list.append(item);
     connect(item, SIGNAL(destroyed()), this, SLOT(removeDestroyedItem()));
     endInsertRows();
+
+    emit itemAdded(item);
 }
 
 template<typename T>
