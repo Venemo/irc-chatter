@@ -5,5 +5,8 @@
         <file>qml/harmattan/ConnectionSheet.qml</file>
         <file>qml/harmattan/SettingsPage.qml</file>
         <file>qml/harmattan/TitleLabel.qml</file>
+        <file>qml/harmattan/JoinSheet.qml</file>
+        <file>qml/harmattan/WorkingSelectionDialog.qml</file>
+        <file>qml/harmattan/CommonDialog.qml</file>
     </qresource>
 </RCC>
