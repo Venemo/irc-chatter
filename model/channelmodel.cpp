@@ -1,10 +1,12 @@
 #include "channelmodel.h"
+#include <QtCore>
 
 ChannelModel::ChannelModel(QString name, QObject *parent) :
     QObject(parent)
 {
     _name = name;
-    fakeMessage();
+    //fakeMessage();
+
 }
 
 void ChannelModel::close()
@@ -22,10 +24,9 @@ void ChannelModel::sendCurrentMessage()
 void ChannelModel::fakeMessage()
 {
     //qDebug() << "faking new message";
-    //UserModel *u = new UserModel();
-    //u->setName("Zvdegor");
     MessageModel *m = new MessageModel();
-    //m->setUser(u);
+    m->setUserName("Zvdegor");
+    m->setUserNameColor("#0000ff");
     m->setText(QUuid::createUuid().toString());
     m->setTimestamp(QTime::currentTime().toString("HH:mm"));
     _messages.addItem(m);
