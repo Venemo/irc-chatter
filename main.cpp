@@ -1,23 +1,23 @@
 #include <QtGui/QApplication>
 #include <QtDeclarative>
 
-#include "qobjectlistmodel.h"
-#include "model/channelmodel.h"
+#include "model/ircmodel.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QObjectListModel<ChannelModel> list;
-    list.addItem(new ChannelModel("#meego"));
-    list.addItem(new ChannelModel("#harmattan"));
+    IrcModel model(&app);
+    model.fillWithDummyData();
 
     qmlRegisterType<ChannelModel>("net.venemo.ircchatter", 1, 0, "ChannelModel");
     qmlRegisterType<MessageModel>("net.venemo.ircchatter", 1, 0, "MessageModel");
+    qmlRegisterType<IrcModel>("net.venemo.ircchatter", 1, 0, "IrcModel");
 
     QDeclarativeView view;
-    view.rootContext()->setContextProperty("channelList", &list);
+    view.rootContext()->setContextProperty("ircModel", &model);
     view.setSource(QUrl("qrc:/qml/harmattan/main.qml"));
     view.showFullScreen();
+
     return app.exec();
 }
