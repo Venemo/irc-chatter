@@ -47,6 +47,8 @@ CommonDialog {
     property alias model: selectorListView.model
     property bool searchFieldVisible: true
 
+    Keys.forwardTo: searchField
+
     content: Column {
         width: parent.width
         anchors.top: parent.top
@@ -74,10 +76,10 @@ CommonDialog {
                     property bool selected: index == selectorDialog.selectedIndex;
                     property string displayableText: model.modelData !== undefined ? model.modelData : (model.display !== undefined ? model.display : (model.edit !== undefined ? model.edit : model.name))
 
-                    height: selectorDialog.platformStyle.itemHeight
                     anchors.left: parent.left
                     anchors.right: parent.right
                     visible: searchField.text.length === 0 || displayableText.toLowerCase().indexOf(searchField.text.toLowerCase()) > -1
+                    height: visible ? selectorDialog.platformStyle.itemHeight : 0
 
                     MouseArea {
                         id: delegateMouseArea
