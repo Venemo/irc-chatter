@@ -1,8 +1,22 @@
 import QtQuick 1.1
 import com.meego 1.0
+import net.venemo.ircchatter 1.0
 
 Page {
     id: mainPage
+    property ChannelModel currentChannel: null
+    property bool shouldUpdateCurrentMessage: true
+    Keys.forwardTo: [(returnKey), (mainPage)]
+    Keys.onReturnPressed: sendCurrentMessage()
+
+    function sendCurrentMessage() {
+        if (currentChannel !== null) {
+            shouldUpdateCurrentMessage = false;
+            currentChannel.sendCurrentMessage();
+            shouldUpdateCurrentMessage = true;
+        }
+    }
+
     tools: ToolBarLayout {
         visible: true
 
@@ -34,17 +48,28 @@ Page {
         anchors.bottomMargin: 10
 
         interactive: true
-        contentHeight: chatArea.height
+        contentHeight: chatColumn.height
         clip: true
 
-        TextEdit {
-            id: chatArea
-            width: parent.width
-            readOnly: true
-            wrapMode: TextEdit.WordWrap
-            textFormat: TextEdit.RichText
-            font.pixelSize: 24
-            text: "13:34 <span style='color: green'>Venemo</span>: This is an example message\n<br />13:35 <span style='color: red'>DocScrutinizer</span>: <a href='http://meego.com'>http://meego.com</a><br />13:34 <span style='color: green'>Venemo</span>: This is an example message\n<br />13:35 <span style='color: red'>DocScrutinizer</span>: Indeed<br />13:34 <span style='color: green'>Venemo</span>: This is an example message\n<br />13:35 <span style='color: red'>DocScrutinizer</span>: Indeed<br />13:34 <span style='color: green'>Venemo</span>: This is an example message\n<br />13:35 <span style='color: red'>DocScrutinizer</span>: Indeed<br />13:34 <span style='color: green'>Venemo</span>: This is an example message\n<br />13:35 <span style='color: red'>DocScrutinizer</span>: Indeed<br />13:34 <span style='color: green'>Venemo</span>: This is an example message\n<br />13:35 <span style='color: red'>DocScrutinizer</span>: Indeed<br />13:34 <span style='color: green'>Venemo</span>: This is an example message\n<br />13:35 <span style='color: red'>DocScrutinizer</span>: Indeed<br />13:34 <span style='color: green'>Venemo</span>: This is an example message\n<br />13:35 <span style='color: red'>DocScrutinizer</span>: Indeed<br />13:34 <span style='color: green'>Venemo</span>: This is an example message\n<br />13:35 <span style='color: red'>DocScrutinizer</span>: Indeed<br />13:34 <span style='color: green'>Venemo</span>: This is an example message\n<br />13:35 <span style='color: red'>DocScrutinizer</span>: Indeed"
+        Column {
+            id: chatColumn
+            Repeater {
+                id: chatView
+                width: parent.width
+                model: currentChannel !== null ? currentChannel.messages() : null
+                delegate: Text {
+                    wrapMode: TextEdit.WordWrap
+                    textFormat: TextEdit.RichText
+                    font.pixelSize: 24
+                    text: model.timestamp + " <span style='color: green'>" + "mehmeh" + "</span>: " + model.text;
+                }
+                onCountChanged: {
+                    var should = Math.max(0,  chatColumn.height - chatFlickable.height);
+                    if (chatFlickable.contentY >= should - 50)
+                        chatFlickable.contentY = should;
+                }
+                onModelChanged: chatFlickable.contentY = Math.max(0,  chatColumn.height - chatFlickable.height)
+            }
         }
     }
     ScrollDecorator {
@@ -69,16 +94,29 @@ Page {
                 id: channelSwitcherRow
                 spacing: 10
                 anchors.top: parent.top
-                anchors.topMargin: 60
+                anchors.topMargin: 70
                 transform: Rotation {
                     angle: 90
-                    origin.x: 45
+                    origin.x: channelNameBg.width
                 }
                 Repeater {
                     model: channelList
                     delegate: Label {
+                        id: myLabel
                         text: model.name
-                        color: "lightgray"
+                        height: channelNameBg.width
+                        verticalAlignment: Text.AlignVCenter
+                        color: (currentChannel !== null && currentChannel.name == model.name) ? "white" : "lightgrey"
+                        font.bold: (currentChannel !== null && currentChannel.name == model.name) ? true : false
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                shouldUpdateCurrentMessage = false;
+                                currentChannel = channelList.getItem(index)
+                                shouldUpdateCurrentMessage = true;
+                            }
+                        }
                     }
                 }
             }
@@ -99,17 +137,31 @@ Page {
             id: tabButton
             anchors.verticalCenter: messageField.verticalCenter
             platformIconId: "toolbar-reply"
-
+            onClicked: {
+                messageField.forceActiveFocus();
+                // TODO
+            }
         }
         TextField {
             id: messageField
             width: parent.width - tabButton.width - sendButton.width - 10
             placeholderText: "Type a message"
+            text: currentChannel !== null ? currentChannel.currentMessage : ""
+            Binding {
+                target: currentChannel
+                property: "currentMessage"
+                value: messageField.text
+                when: currentChannel !== null && shouldUpdateCurrentMessage
+            }
         }
         ToolIcon {
             id: sendButton
             anchors.verticalCenter: messageField.verticalCenter
             platformIconId: "toolbar-send-sms"
+            onClicked: {
+                messageField.forceActiveFocus();
+                sendCurrentMessage()
+            }
         }
     }
 }
