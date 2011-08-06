@@ -4,27 +4,42 @@
 #include <QAbstractListModel>
 #include <QMetaProperty>
 
+class QObjectListModelMagic : public QAbstractListModel
+{
+    Q_OBJECT
+
+public:
+    QObjectListModelMagic(QObject *parent) : QAbstractListModel(parent) { }
+    Q_INVOKABLE virtual QObject *getItem(int index) = 0;
+
+protected slots:
+    virtual void removeDestroyedItem() = 0;
+
+};
+
 template<typename X>
-class QObjectListModel : public QAbstractListModel
+class QObjectListModel : public QObjectListModelMagic
 {
     QHash<int, QByteArray> _roles;
     QList<X*> _list;
 
 public:
-    explicit QObjectListModel(const QList<X*> &list = QList<X*>(), QObject *parent = 0);
+    explicit QObjectListModel(QObject *parent = 0, const QList<X*> &list = QList<X*>());
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role);
 
     void addItem(X *item);
-    void removeItem(const X *item);
+    void removeItem(X *item);
     void removeItem(int index);
+    QObject* getItem(int index);
+    void removeDestroyedItem();
 };
 
 template<typename T>
-QObjectListModel<T>::QObjectListModel(const QList<T*> &list, QObject *parent)
-    : QAbstractListModel(parent),
+QObjectListModel<T>::QObjectListModel(QObject *parent, const QList<T*> &list)
+    : QObjectListModelMagic(parent),
       _list(list)
 {
     QMetaObject meta = T::staticMetaObject;
@@ -76,15 +91,24 @@ void QObjectListModel<T>::addItem(T *item)
     int z = _list.count();
     beginInsertRows(QModelIndex(), z, z);
     _list.append(item);
+    connect(item, SIGNAL(destroyed()), this, SLOT(removeDestroyedItem()));
     endInsertRows();
 }
 
 template<typename T>
-void QObjectListModel<T>::removeItem(const T *item)
+void QObjectListModel<T>::removeDestroyedItem()
+{
+    T *obj = (T*) QObject::sender();
+    removeItem(obj);
+}
+
+template<typename T>
+void QObjectListModel<T>::removeItem(T *item)
 {
     int z = _list.indexOf(item);
     beginRemoveRows(QModelIndex(), z, z);
     _list.removeAt(z);
+    disconnect(item, SIGNAL(destroyed()), this, SLOT(removeDestroyedItem()));
     endRemoveRows();
 }
 
@@ -92,8 +116,15 @@ template<typename T>
 void QObjectListModel<T>::removeItem(int index)
 {
     beginRemoveRows(QModelIndex(), index, index);
+    disconnect(_list[index], SIGNAL(destroyed()), this, SLOT(removeDestroyedItem()));
     _list.removeAt(index);
     endRemoveRows();
+}
+
+template<typename T>
+QObject* QObjectListModel<T>::getItem(int index)
+{
+    return _list[index];
 }
 
 #endif // QOBJECTLISTMODEL_H
