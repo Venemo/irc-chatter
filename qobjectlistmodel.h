@@ -12,6 +12,7 @@ public:
     QObjectListModelMagic(QObject *parent) : QAbstractListModel(parent) { }
     Q_INVOKABLE virtual QObject *getItem(int index) = 0;
     Q_INVOKABLE virtual int rowCount(const QModelIndex &parent = QModelIndex()) const = 0;
+    Q_INVOKABLE virtual int indexOf(QObject *obj) const = 0;
 
 protected slots:
     virtual void removeDestroyedItem() = 0;
@@ -38,6 +39,7 @@ public:
     void removeItem(X *item);
     void removeItem(int index);
     QObject* getItem(int index);
+    int indexOf(QObject *obj) const;
     void removeDestroyedItem();
 };
 
@@ -53,6 +55,12 @@ QObjectListModel<T>::QObjectListModel(QObject *parent, const QList<T*> &list)
         _roles[Qt::UserRole + i + 1] = QByteArray(prop.name());
     }
     setRoleNames(_roles);
+}
+
+template<typename T>
+int QObjectListModel<T>::indexOf(QObject *obj) const
+{
+    return _list.indexOf((T*) obj);
 }
 
 template<typename T>
