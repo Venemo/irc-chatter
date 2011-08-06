@@ -20,6 +20,7 @@ Page {
     function switchChannel(index) {
         shouldUpdateCurrentMessage = false;
         currentChannel = ircModel.channelList.getItem(index);
+        currentChannelIndex = index;
         shouldUpdateCurrentMessage = true;
     }
 
@@ -176,9 +177,12 @@ Page {
     WorkingSelectionDialog {
         id: channelSelectorDialog
         titleText: "Switch channel"
-        selectedIndex: ircModel.channelList.indexOf(currentChannel)
         model: ircModel.channelList
         onSelectedIndexChanged: switchChannel(selectedIndex);
+        onStatusChanged: {
+            if (status == DialogStatus.Opening)
+                selectedIndex = currentChannelIndex;
+        }
     }
 
     WorkingSelectionDialog {
