@@ -38,7 +38,6 @@ Page {
                 text: "Display"
             }
             Row {
-                spacing: 10
                 width: parent.width
                 Label {
                     text: "Misc events"
@@ -50,7 +49,6 @@ Page {
                 }
             }
             Row {
-                spacing: 10
                 width: parent.width
                 Label {
                     text: "Timestamps"
@@ -62,7 +60,6 @@ Page {
                 }
             }
             Row {
-                spacing: 10
                 width: parent.width
                 Label {
                     text: "Font size"
@@ -78,7 +75,6 @@ Page {
                 text: "Send notifications for"
             }
             Row {
-                spacing: 10
                 width: parent.width
                 Label {
                     text: "Messages in queries"
@@ -90,7 +86,6 @@ Page {
                 }
             }
             Row {
-                spacing: 10
                 width: parent.width
                 Label {
                     text: "Messages containing your nick"
