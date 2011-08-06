@@ -45,47 +45,63 @@ CommonDialog {
     id: selectorDialog
     property int selectedIndex: -1
     property alias model: selectorListView.model
+    property bool searchFieldVisible: true
 
-    content: ListView {
-        id: selectorListView
+    content: Column {
+        width: parent.width
+        anchors.top: parent.top
         anchors.topMargin: 10
-        anchors.fill: parent
-        height: 300
-        interactive: true
+        spacing: 10
 
-        delegate: Component {
-            id: defaultDelegate
+        TextField {
+            id: searchField
+            placeholderText: "Search"
+            width: parent.width
+            visible: selectorDialog.searchFieldVisible
+        }
 
-            Item {
-                id: delegateItem
-                property bool selected: index == selectorDialog.selectedIndex;
+        ListView {
+            id: selectorListView
+            height: 290
+            width: parent.width
+            interactive: true
 
-                height: selectorDialog.platformStyle.itemHeight
-                anchors.left: parent.left
-                anchors.right: parent.right
+            delegate: Component {
+                id: defaultDelegate
 
-                MouseArea {
-                    id: delegateMouseArea
-                    anchors.fill: parent;
-                    onPressed: selectorDialog.selectedIndex = index;
-                    onClicked: selectorDialog.accept();
-                }
-                Rectangle {
-                    id: backgroundRect
-                    anchors.fill: parent
-                    color: delegateItem.selected ? selectorDialog.platformStyle.itemSelectedBackgroundColor : selectorDialog.platformStyle.itemBackgroundColor
-                }
-                Text {
-                    id: itemText
-                    elide: Text.ElideRight
-                    color: delegateItem.selected ? selectorDialog.platformStyle.itemSelectedTextColor : selectorDialog.platformStyle.itemTextColor
-                    anchors.verticalCenter: delegateItem.verticalCenter
+                Item {
+                    id: delegateItem
+                    property bool selected: index == selectorDialog.selectedIndex;
+                    property string displayableText: model.modelData !== undefined ? model.modelData : (model.display !== undefined ? model.display : (model.edit !== undefined ? model.edit : model.name))
+
+                    height: selectorDialog.platformStyle.itemHeight
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.leftMargin: selectorDialog.platformStyle.itemLeftMargin
-                    anchors.rightMargin: selectorDialog.platformStyle.itemRightMargin
-                    text: model.modelData !== undefined ? model.modelData : (model.display !== undefined ? model.display : (model.edit !== undefined ? model.edit : model.name))
-                    font: selectorDialog.platformStyle.itemFont
+                    visible: searchField.text.length === 0 || displayableText.toLowerCase().indexOf(searchField.text.toLowerCase()) > -1
+
+                    MouseArea {
+                        id: delegateMouseArea
+                        anchors.fill: parent;
+                        onPressed: selectorDialog.selectedIndex = index;
+                        onClicked: selectorDialog.accept();
+                    }
+                    Rectangle {
+                        id: backgroundRect
+                        anchors.fill: parent
+                        color: delegateItem.selected ? selectorDialog.platformStyle.itemSelectedBackgroundColor : selectorDialog.platformStyle.itemBackgroundColor
+                    }
+                    Text {
+                        id: itemText
+                        elide: Text.ElideRight
+                        color: delegateItem.selected ? selectorDialog.platformStyle.itemSelectedTextColor : selectorDialog.platformStyle.itemTextColor
+                        anchors.verticalCenter: delegateItem.verticalCenter
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.leftMargin: selectorDialog.platformStyle.itemLeftMargin
+                        anchors.rightMargin: selectorDialog.platformStyle.itemRightMargin
+                        text: delegateItem.displayableText
+                        font: selectorDialog.platformStyle.itemFont
+                    }
                 }
             }
         }
