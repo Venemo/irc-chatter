@@ -24,9 +24,21 @@ bool IrcModel::joinChannel(const QString &channelName)
     return true;
 }
 
+bool IrcModel::partChannel(const QString &channelName)
+{
+    // TODO
+    return true;
+}
+
 bool IrcModel::queryUser(const QString &userName)
 {
     // TODO: query the user in the backend
+    return true;
+}
+
+bool IrcModel::closeUser(const QString &userName)
+{
+    // TODO
     return true;
 }
 
@@ -53,6 +65,7 @@ void IrcModel::fillWithDummyData()
     userlist->append("djszapi");
     userlist->append("hiemanshu");
     userlist->append("DocScrutinizer");
+    userlist->append("fiferboy");
     channel->_users.setStringList(*userlist);
     _channelList.addItem(channel);
 
