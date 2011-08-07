@@ -48,7 +48,7 @@ void ChannelModel::autoCompleteNick()
         // The user hasn't typed anything, let's give him the name of the last spoke user
 
         if (_messages.rowCount() > 0)
-            setCurrentMessage(_messages.lastItem()->userName());
+            setCurrentMessage(_messages.getList().last()->userName());
 
         return;
     }

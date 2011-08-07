@@ -41,7 +41,7 @@ public:
     QObject* getItem(int index);
     int indexOf(QObject *obj) const;
     void removeDestroyedItem();
-    X *lastItem();
+    QList<X*> &getList();
 };
 
 template<typename T>
@@ -59,15 +59,15 @@ QObjectListModel<T>::QObjectListModel(QObject *parent, const QList<T*> &list)
 }
 
 template<typename T>
-int QObjectListModel<T>::indexOf(QObject *obj) const
+QList<T*> &QObjectListModel<T>::getList()
 {
-    return _list.indexOf((T*) obj);
+    return _list;
 }
 
 template<typename T>
-T* QObjectListModel<T>::lastItem()
+int QObjectListModel<T>::indexOf(QObject *obj) const
 {
-    return _list.last();
+    return _list.indexOf((T*) obj);
 }
 
 template<typename T>
