@@ -144,14 +144,12 @@ Page {
             paddingLeft: tabButton.width
             paddingRight: sendButton.width
         }
+        onTextChanged: {
+            if (currentChannel !== null && currentChannel.currentMessage !== messageField.text && shouldUpdateCurrentMessage)
+                currentChannel.currentMessage = text;
+        }
         Keys.onReturnPressed: sendCurrentMessage()
 
-        Binding {
-            target: currentChannel
-            property: "currentMessage"
-            value: messageField.text
-            when: currentChannel !== null && shouldUpdateCurrentMessage
-        }
         ToolIcon {
             id: tabButton
             anchors.verticalCenter: messageField.verticalCenter
@@ -159,7 +157,7 @@ Page {
             platformIconId: "toolbar-reply"
             onClicked: {
                 messageField.forceActiveFocus();
-                // TODO: nickname autocompletion
+                currentChannel.autoCompleteNick();
             }
         }
         ToolIcon {
