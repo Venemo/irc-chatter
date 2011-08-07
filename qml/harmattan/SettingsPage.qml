@@ -37,61 +37,68 @@ Page {
             TitleLabel {
                 text: "Display"
             }
-            Row {
+            Label {
+                text: "Misc events"
                 width: parent.width
-                Label {
-                    text: "Misc events"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
+                height: miscEventsSwitch.height
+                verticalAlignment: Text.AlignVCenter
+
                 Switch {
+                    id: miscEventsSwitch
                     anchors.right: parent.right
                     checked: true
                 }
             }
-            Row {
+            Label {
+                text: "Timestamps"
                 width: parent.width
-                Label {
-                    text: "Timestamps"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
+                height: timestampsSwitch.height
+                verticalAlignment: Text.AlignVCenter
+
                 Switch {
+                    id: timestampsSwitch
                     anchors.right: parent.right
                     checked: true
                 }
             }
-            Row {
+            Label {
+                text: "Font size"
                 width: parent.width
-                Label {
-                    text: "Font size"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
+                height: fontSizeTumblerButton.height
+                verticalAlignment: Text.AlignVCenter
+
                 TumblerButton {
+                    id: fontSizeTumblerButton
                     anchors.right: parent.right
                     text: "24"
                     width: 140
+
+                    onClicked: fontSizeSelectionDialog.open()
                 }
             }
             TitleLabel {
                 text: "Send notifications for"
             }
-            Row {
+            Label {
+                text: "Messages in queries"
                 width: parent.width
-                Label {
-                    text: "Messages in queries"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
+                height: messagesInQueriesSwitch.height
+                verticalAlignment: Text.AlignVCenter
+
                 Switch {
+                    id: messagesInQueriesSwitch
                     anchors.right: parent.right
                     checked: true
                 }
             }
-            Row {
+            Label {
+                text: "Messages containing your nick"
                 width: parent.width
-                Label {
-                    text: "Messages containing your nick"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
+                height: messagesInQueriesSwitch.height
+                verticalAlignment: Text.AlignVCenter
+
                 Switch {
+                    id: messagesContainingYourNickSwitch
                     anchors.right: parent.right
                     checked: true
                 }
@@ -108,5 +115,16 @@ Page {
     }
     ScrollDecorator {
         flickableItem: settingsFlickable
+    }
+
+    WorkingSelectionDialog {
+        id: fontSizeSelectionDialog
+        model: ListModel { }
+        titleText: "Font size"
+        searchFieldVisible: false
+        Component.onCompleted: {
+            for (var i = 10; i <= 40; i++)
+                model.append({ name: i + " pixels", pixelSize: i });
+        }
     }
 }
