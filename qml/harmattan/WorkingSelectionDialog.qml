@@ -45,7 +45,14 @@ CommonDialog {
     id: selectorDialog
     property int selectedIndex: -1
     property alias model: selectorListView.model
-    property bool searchFieldVisible: true
+    property bool searchFieldVisible: selectorListView.count > 3
+
+    onStatusChanged: {
+        if (status == DialogStatus.Closing) {
+            searchField.platformCloseSoftwareInputPanel();
+            searchField.text = "";
+        }
+    }
 
     content: Column {
         width: parent.width
@@ -63,12 +70,15 @@ CommonDialog {
         }
 
         ListView {
-            anchors.topMargin: 10
             id: selectorListView
-            height: 200
+            height: Math.min(selectorDialog.platformStyle.itemHeight * count, 300)
             width: parent.width
             interactive: true
             clip: true
+
+            ScrollDecorator {
+                flickableItem: selectorListView
+            }
 
             delegate: Component {
                 id: defaultDelegate
