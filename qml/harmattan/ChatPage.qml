@@ -172,6 +172,17 @@ Page {
         }
     }
 
+    JoinSheet {
+        id: joinSheet
+        visualParent: chatPage
+        onAccepted: {
+            if (isChannel)
+                ircModel.joinChannel(joinText);
+            else if (isQuery)
+                ircModel.queryUser(joinText);
+        }
+    }
+
     WorkingSelectionDialog {
         id: channelSelectorDialog
         titleText: "Switch channel"

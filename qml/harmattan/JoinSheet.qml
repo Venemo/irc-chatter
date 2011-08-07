@@ -3,11 +3,13 @@ import com.meego 1.0
 
 Sheet {
     id: joinSheet
-    acceptButtonText: (joinField.text.length === 0 || (joinField.text.charAt(0) === '#' && joinField.text.length < 2)) ? "" : (joinField.text.charAt(0) === '#' ? "Join" : "Query")
+    acceptButtonText: isChannel ? "Join" : (isQuery ? "Query" : "")
     rejectButtonText: "Cancel"
 
-    property string channelName
+    property string joinText
     property bool autoJoin: false
+    property bool isQuery: joinField.text.length > 0 && joinField.text.charAt(0) !== '#'
+    property bool isChannel: joinField.text.length > 1 && joinField.text.charAt(0) === '#'
 
     content: Column {
         anchors.centerIn: parent
@@ -24,12 +26,12 @@ Sheet {
             width: parent.width
             id: joinField
             placeholderText: "Channel or user name..."
-            onTextChanged: channelName = text
+            onTextChanged: joinText = text
         }
         CheckBox {
             anchors.horizontalCenter: parent.horizontalCenter
             text: "Join on connect"
-            visible: joinField.text.length > 0 && joinField.text.charAt(0) === '#'
+            visible: isChannel
             onCheckedChanged: autoJoin = checked
         }
 
