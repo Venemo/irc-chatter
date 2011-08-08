@@ -21,7 +21,6 @@ ChannelModel::ChannelModel(QString name, ServerModel *parent, void *backend) :
     }
     _name = name;
     //fakeMessage();
-
 }
 
 const QString &ChannelModel::colorForNick(const QString &nick)

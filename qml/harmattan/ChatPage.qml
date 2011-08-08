@@ -1,26 +1,21 @@
 import QtQuick 1.1
 import com.meego 1.0
-//import net.venemo.ircchatter 1.0
 
 Page {
     id: mainPage
 
-
-    property ChannelModel currentChannel: null
     property bool shouldUpdateCurrentMessage: true
-    property int currentChannelIndex: -1
 
     function sendCurrentMessage() {
-        if (currentChannel !== null) {
+        if (ircModel.currentChannel !== null) {
             shouldUpdateCurrentMessage = false;
-            currentChannel.sendCurrentMessage();
+            ircModel.currentChannel.sendCurrentMessage();
             shouldUpdateCurrentMessage = true;
         }
     }
     function switchChannel(index) {
         shouldUpdateCurrentMessage = false;
-        currentChannel = ircModel.channelList.getItem(index);
-        currentChannelIndex = index;
+        ircModel.currentChannelIndex = index;
         shouldUpdateCurrentMessage = true;
     }
 
@@ -66,7 +61,7 @@ Page {
             Repeater {
                 id: chatView
                 width: parent.width
-                model: currentChannel !== null ? currentChannel.messages : null
+                model: ircModel.currentChannel !== null ? ircModel.currentChannel.messages : null
                 delegate: Text {
                     wrapMode: TextEdit.WordWrap
                     textFormat: TextEdit.RichText
@@ -111,14 +106,14 @@ Page {
                 }
 
                 Repeater {
-                    model: ircModel.channelList
+                    model: ircModel.allChannels
                     delegate: Label {
                         id: myLabel
                         text: model.name
                         height: channelNameBg.width
                         verticalAlignment: Text.AlignVCenter
-                        color: (currentChannel !== null && currentChannel.name == model.name) ? "white" : "lightgrey"
-                        font.bold: (currentChannel !== null && currentChannel.name == model.name) ? true : false
+                        color: (ircModel.currentChannel !== null && ircModel.currentChannelIndex == index) ? "white" : "lightgrey"
+                        font.bold: (ircModel.currentChannel !== null && ircModel.currentChannelIndex == index) ? true : false
 
                         MouseArea {
                             anchors.fill: parent
@@ -139,14 +134,14 @@ Page {
         anchors.bottomMargin: 0
         width: parent.width
         placeholderText: "Type a message"
-        text: currentChannel !== null ? currentChannel.currentMessage : ""
+        text: ircModel.currentChannel !== null ? ircModel.currentChannel.currentMessage : ""
         platformStyle: TextFieldStyle {
             paddingLeft: tabButton.width
             paddingRight: sendButton.width
         }
         onTextChanged: {
-            if (currentChannel !== null && currentChannel.currentMessage !== messageField.text && shouldUpdateCurrentMessage)
-                currentChannel.currentMessage = text;
+            if (ircModel.currentChannel !== null && ircModel.currentChannel.currentMessage !== messageField.text && shouldUpdateCurrentMessage)
+                ircModel.currentChannel.currentMessage = text;
         }
         Keys.onReturnPressed: sendCurrentMessage()
 
@@ -157,7 +152,7 @@ Page {
             platformIconId: "toolbar-reply"
             onClicked: {
                 messageField.forceActiveFocus();
-                currentChannel.autoCompleteNick();
+                ircModel.currentChannel.autoCompleteNick();
             }
         }
         ToolIcon {
@@ -186,19 +181,19 @@ Page {
     WorkingSelectionDialog {
         id: channelSelectorDialog
         titleText: "Switch channel"
-        model: ircModel.channelList
+        model: ircModel.allChannels
         onSelectedIndexChanged: switchChannel(selectedIndex);
         onStatusChanged: {
             if (status == DialogStatus.Opening)
-                selectedIndex = currentChannelIndex;
+                selectedIndex = ircModel.currentChannelIndex;
         }
         searchFieldVisible: true
     }
 
     WorkingSelectionDialog {
         id: userSelectorDialog
-        titleText: "User list of " + currentChannel.name
-        model: currentChannel.users
+        titleText: "User list of " + ircModel.currentChannel.name
+        model: ircModel.currentChannel.users
     }
 
 }

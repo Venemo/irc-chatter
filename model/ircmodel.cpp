@@ -2,7 +2,8 @@
 
 IrcModel::IrcModel(QObject *parent) :
     QObject(parent),
-    _servers(new QObjectListModel<ServerModel>(this))
+    _servers(new QObjectListModel<ServerModel>(this)),
+    _currentChannelIndex(-1)
 {
 }
 
@@ -50,5 +51,6 @@ QObjectListModel<ChannelModel> *IrcModel::allChannels()
     // TODO: display all channels from all servers
     if (_servers->rowCount())
         return ((ServerModel*)_servers->getItem(NULL))->channels();
+
     return NULL;
 }
