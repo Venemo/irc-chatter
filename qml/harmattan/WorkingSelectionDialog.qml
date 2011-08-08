@@ -45,12 +45,16 @@ CommonDialog {
     id: selectorDialog
     property int selectedIndex: -1
     property alias model: selectorListView.model
-    property bool searchFieldVisible: selectorListView.count > 3
+    property bool searchFieldVisible: false
 
     onStatusChanged: {
         if (status == DialogStatus.Closing) {
             searchField.platformCloseSoftwareInputPanel();
             searchField.text = "";
+        }
+        else if (status == DialogStatus.Opening) {
+            if (searchFieldVisible && inPortrait)
+                searchField.forceActiveFocus();
         }
     }
 
@@ -58,7 +62,7 @@ CommonDialog {
         width: parent.width
         anchors.top: parent.top
         anchors.topMargin: 10
-        spacing: 0
+        spacing: 5
 
         TextField {
             id: searchField
@@ -71,7 +75,9 @@ CommonDialog {
 
         ListView {
             id: selectorListView
-            height: Math.min(selectorDialog.platformStyle.itemHeight * count, 300)
+            height: (inputContext.softwareInputPanelVisible) ?
+                        ((!inPortrait) ? Math.min(selectorDialog.platformStyle.itemHeight * count, 100) : Math.min(selectorDialog.platformStyle.itemHeight * count, 300))
+                      : Math.min(selectorDialog.platformStyle.itemHeight * count, 300)
             width: parent.width
             interactive: true
             clip: true
@@ -90,7 +96,7 @@ CommonDialog {
 
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    visible: searchField.fullText.length === 0 || displayableText.toLowerCase().indexOf(searchField.fullText.toLowerCase()) > -1;
+                    visible: searchField.fullText.length === 0 || (searchFieldVisible && displayableText.toLowerCase().indexOf(searchField.fullText.toLowerCase()) > -1);
                     height: visible ? selectorDialog.platformStyle.itemHeight : 0
 
                     MouseArea {

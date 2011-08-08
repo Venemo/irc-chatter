@@ -7,13 +7,17 @@ HEADERS += \
     qobjectlistmodel.h \
     util.h \
     model/messagemodel.h \
-    model/ircmodel.h
+    model/ircmodel.h \
+    model/servermodel.h \
+    model/identitymodel.h
 
 SOURCES += \
     main.cpp \
     model/channelmodel.cpp \
     model/messagemodel.cpp \
-    model/ircmodel.cpp
+    model/ircmodel.cpp \
+    model/servermodel.cpp \
+    model/identitymodel.cpp
 
 RESOURCES += \
     harmattan-gui.qrc
@@ -30,14 +34,24 @@ OTHER_FILES += \
     qml/harmattan/WorkingSelectionDialog.qml \
     qml/harmattan/CommonDialog.qml
 
+DEFINES += IRC_NO_DEPRECATED
+INCLUDEPATH += /usr/include/ircclient-qt
+CONFIG += libircclient-qt
+
 # enable booster
 CONFIG += qdeclarative-boostable
 QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
 QMAKE_LFLAGS += -pie -rdynamic
 
-INSTALLS += target
-INSTALLS -= desktopfile icon
-target.path=/home/developer
+
+unix {
+    INSTALLS += target
+    target.path=/usr/bin
+}
+
+
+
+
 
 
 

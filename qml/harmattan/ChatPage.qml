@@ -1,6 +1,6 @@
 import QtQuick 1.1
 import com.meego 1.0
-import net.venemo.ircchatter 1.0
+//import net.venemo.ircchatter 1.0
 
 Page {
     id: mainPage
@@ -66,7 +66,7 @@ Page {
             Repeater {
                 id: chatView
                 width: parent.width
-                model: currentChannel !== null ? currentChannel.messages() : null
+                model: currentChannel !== null ? currentChannel.messages : null
                 delegate: Text {
                     wrapMode: TextEdit.WordWrap
                     textFormat: TextEdit.RichText
@@ -192,6 +192,7 @@ Page {
             if (status == DialogStatus.Opening)
                 selectedIndex = currentChannelIndex;
         }
+        searchFieldVisible: true
     }
 
     WorkingSelectionDialog {

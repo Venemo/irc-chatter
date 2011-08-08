@@ -16,6 +16,8 @@ class MessageModel : public QObject
     GENPROPERTY(QString, _timestamp, timestamp, setTimestamp, timestampChanged)
     Q_PROPERTY(QString timestamp READ timestamp WRITE setTimestamp NOTIFY timestampChanged)
 
+    friend class ChannelModel;
+    friend class ServerModel;
     friend class IrcModel;
 
 public:

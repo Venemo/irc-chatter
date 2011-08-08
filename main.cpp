@@ -10,9 +10,9 @@ int main(int argc, char *argv[])
     IrcModel model(&app);
     model.fillWithDummyData();
 
-    qmlRegisterType<ChannelModel>("net.venemo.ircchatter", 1, 0, "ChannelModel");
-    qmlRegisterType<MessageModel>("net.venemo.ircchatter", 1, 0, "MessageModel");
-    qmlRegisterType<IrcModel>("net.venemo.ircchatter", 1, 0, "IrcModel");
+    qmlRegisterUncreatableType<ChannelModel>("net.venemo.ircchatter", 1, 0, "ChannelModel", "This object is created in the model.");
+    qmlRegisterUncreatableType<MessageModel>("net.venemo.ircchatter", 1, 0, "MessageModel", "This object is created in the model.");
+    qmlRegisterUncreatableType<IrcModel>("net.venemo.ircchatter", 1, 0, "IrcModel", "This object is created in the model.");
 
     QDeclarativeView view;
     view.rootContext()->setContextProperty("ircModel", &model);

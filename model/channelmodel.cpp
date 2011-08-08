@@ -1,12 +1,37 @@
-#include "channelmodel.h"
-#include <QtCore>
 
-ChannelModel::ChannelModel(QString name, QObject *parent) :
-    QObject(parent)
+#include <QtCore>
+//#include <ircclient-qt/IrcBuffer>
+#include "channelmodel.h"
+#include "servermodel.h"
+
+QList<QString> *ChannelModel::_colors = 0;
+
+ChannelModel::ChannelModel(QString name, ServerModel *parent, void *backend) :
+    QObject(parent),
+    _users(new QStringListModel(this)),
+    _messages(new QObjectListModel<MessageModel>(this)),
+    _backend(backend)
 {
+    if (!_colors)
+    {
+        _colors = new QList<QString>();
+        _colors->append("#ff0000");
+        _colors->append("#00ff00");
+        _colors->append("#0000ff");
+    }
     _name = name;
     //fakeMessage();
 
+}
+
+const QString &ChannelModel::colorForNick(const QString &nick)
+{
+    int nickvalue = 0;
+
+    for (int index = 0; index < nick.length(); index++)
+        nickvalue += nick[index].unicode();
+
+    return (*_colors)[nickvalue % _colors->count()];
 }
 
 void ChannelModel::sendCurrentMessage()
@@ -27,7 +52,7 @@ void ChannelModel::fakeMessage()
     m->setUserNameColor("#0000ff");
     m->setText(QUuid::createUuid().toString());
     m->setTimestamp(QTime::currentTime().toString("HH:mm"));
-    _messages.addItem(m);
+    _messages->addItem(m);
     //if (_messages.rowCount() < 15)
     QTimer::singleShot(1000, this, SLOT(fakeMessage()));
 }
@@ -47,8 +72,8 @@ void ChannelModel::autoCompleteNick()
     {
         // The user hasn't typed anything, let's give him the name of the last spoke user
 
-        if (_messages.rowCount() > 0)
-            setCurrentMessage(_messages.getList().last()->userName());
+        if (_messages->rowCount() > 0)
+            setCurrentMessage(_messages->getList().last()->userName());
 
         return;
     }
@@ -88,7 +113,7 @@ void ChannelModel::autoCompleteNick()
         _possibleNickNames.clear();
         _currentCompletionIndex = 0;
 
-        foreach (QString nick, _users.stringList())
+        foreach (QString nick, _users->stringList())
             if (nick.startsWith(replacableFragment, Qt::CaseInsensitive))
                 _possibleNickNames.append(nick);
 

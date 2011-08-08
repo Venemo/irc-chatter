@@ -4,28 +4,25 @@
 #include <QObject>
 #include "channelmodel.h"
 #include "messagemodel.h"
+#include "servermodel.h"
 #include "qobjectlistmodel.h"
 
 class IrcModel : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QObject* channelList READ channelList NOTIFY channelListChanged)
-    QObjectListModel<ChannelModel> _channelList;
-    QList<QString> _colors;
+    Q_PROPERTY(QObject* allChannels READ allChannels NOTIFY allChannelsChanged)
+    GENPROPERTY_R(QObjectListModel<ServerModel>*, _servers, servers)
+    Q_PROPERTY(QObject* servers READ servers NOTIFY serversChanged)
 
 public:
     explicit IrcModel(QObject *parent = 0);
-    QObject *channelList() { return &_channelList; }
-    Q_INVOKABLE const QString &colorForNick(const QString &nick);
-    Q_INVOKABLE bool joinChannel(const QString &channelName);
-    Q_INVOKABLE bool partChannel(const QString &channelName);
-    Q_INVOKABLE bool queryUser(const QString &userName);
-    Q_INVOKABLE bool closeUser(const QString &userName);
+    QObjectListModel<ChannelModel> *allChannels();
 
     void fillWithDummyData();
 
 signals:
-    void channelListChanged();
+    void allChannelsChanged();
+    void serversChanged();
 
 };
 

@@ -7,6 +7,9 @@
 #include "qobjectlistmodel.h"
 #include "messagemodel.h"
 
+namespace Irc { class Buffer; }
+class ServerModel;
+
 class ChannelModel : public QObject
 {
     Q_OBJECT
@@ -15,30 +18,39 @@ class ChannelModel : public QObject
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     GENPROPERTY_R(QString, _currentMessage, currentMessage)
     Q_PROPERTY(QString currentMessage READ currentMessage WRITE setCurrentMessage NOTIFY currentMessageChanged)
+    GENPROPERTY_R(QStringListModel*, _users, users)
     Q_PROPERTY(QObject* users READ users NOTIFY usersChanged)
     Q_PROPERTY(int userCount READ userCount NOTIFY usersChanged)
-
-    QObjectListModel<MessageModel> _messages;
-    QStringListModel _users;
+    GENPROPERTY_R(QObjectListModel<MessageModel>*, _messages, messages)
+    Q_PROPERTY(QObject* messages READ messages NOTIFY messagesChanged)
+    Q_PROPERTY(QObject* server READ parent NOTIFY serverChanged)
 
     QString _completionFragment;
     QList<QString> _possibleNickNames;
     int _currentCompletionIndex, _currentCompletionPosition;
 
+    void *_backend;
+
+    static QList<QString> *_colors;
     friend class IrcModel;
+    friend class ServerModel;
+
+protected:
+    explicit ChannelModel(QString name, ServerModel *parent, void *backend);
 
 public:
-    explicit ChannelModel(QString name = QString(), QObject *parent = 0);
-    Q_INVOKABLE QObject *messages() { return &_messages; }
-    Q_INVOKABLE QStringListModel *users() { return &_users; }
-    Q_INVOKABLE int userCount() { return _users.rowCount(); }
-    Q_INVOKABLE void autoCompleteNick();
+    int userCount() { return _users->rowCount(); }
     void setCurrentMessage(const QString &value);
+
+    Q_INVOKABLE void autoCompleteNick();
+    Q_INVOKABLE const QString &colorForNick(const QString &nick);
 
 signals:
     void nameChanged();
     void currentMessageChanged();
     void usersChanged();
+    void messagesChanged();
+    void serverChanged();
 
 private slots:
     void fakeMessage();

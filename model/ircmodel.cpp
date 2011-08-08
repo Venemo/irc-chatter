@@ -1,72 +1,54 @@
 #include "ircmodel.h"
 
 IrcModel::IrcModel(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    _servers(new QObjectListModel<ServerModel>(this))
 {
-    _colors.append("#ff0000");
-    _colors.append("#00ff00");
-    _colors.append("#0000ff");
-}
-
-const QString &IrcModel::colorForNick(const QString &nick)
-{
-    int nickvalue = 0;
-
-    for (int index = 0; index < nick.length(); index++)
-        nickvalue += nick[index].unicode();
-
-    return _colors[nickvalue % _colors.count()];
-}
-
-bool IrcModel::joinChannel(const QString &channelName)
-{
-    // TODO: join the channel in the backend
-    return true;
-}
-
-bool IrcModel::partChannel(const QString &channelName)
-{
-    // TODO
-    return true;
-}
-
-bool IrcModel::queryUser(const QString &userName)
-{
-    // TODO: query the user in the backend
-    return true;
-}
-
-bool IrcModel::closeUser(const QString &userName)
-{
-    // TODO
-    return true;
 }
 
 void IrcModel::fillWithDummyData()
 {
-    ChannelModel *channel = new ChannelModel("#maemo", this);
+    ServerModel *server = new ServerModel(this);
+
+    ChannelModel *channel = new ChannelModel("#maemo", NULL, NULL);
     QStringList *userlist = new QStringList();
     userlist->append("Venemo");
     userlist->append("MohammadAG");
     userlist->append("alterego");
-    channel->_users.setStringList(*userlist);
-    _channelList.addItem(channel);
+    channel->_users->setStringList(*userlist);
+    server->_channels->addItem(channel);
 
-    channel = new ChannelModel("#meego", this);
+    channel = new ChannelModel("#meego", NULL, NULL);
     userlist = new QStringList();
     userlist->append("Stskeeps");
     userlist->append("lcuk");
-    userlist->append("w00t_");
-    channel->_users.setStringList(*userlist);
-    _channelList.addItem(channel);
+    userlist->append("wNULLNULLt_");
+    channel->_users->setStringList(*userlist);
+    server->_channels->addItem(channel);
 
-    channel = new ChannelModel("#harmattan", this);
+    channel = new ChannelModel("#harmattan", NULL, NULL);
     userlist = new QStringList();
     userlist->append("djszapi");
     userlist->append("hiemanshu");
     userlist->append("DocScrutinizer");
     userlist->append("fiferboy");
-    channel->_users.setStringList(*userlist);
-    _channelList.addItem(channel);
+    channel->_users->setStringList(*userlist);
+    server->_channels->addItem(channel);
 
+    server->_channels->addItem(new ChannelModel("#meego-bar", NULL, NULL));
+    server->_channels->addItem(new ChannelModel("#qt", NULL, NULL));
+    server->_channels->addItem(new ChannelModel("#qt-creator", NULL, NULL));
+    server->_channels->addItem(new ChannelModel("#qt-qml", NULL, NULL));
+    server->_channels->addItem(new ChannelModel("MohammadAG", NULL, NULL));
+    server->_channels->addItem(new ChannelModel("wNULLNULLt_", NULL, NULL));
+
+    _servers->addItem(server);
+}
+
+QObjectListModel<ChannelModel> *IrcModel::allChannels()
+{
+    // TODO: display all channels from all servers
+    if (_servers->rowCount())
+        return ((ServerModel*)_servers->getItem(NULL))->channels();
+    return NULL;
 }
