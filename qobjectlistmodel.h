@@ -145,6 +145,9 @@ void QObjectListModel<T>::removeItem(int index)
 template<typename T>
 QObject* QObjectListModel<T>::getItem(int index)
 {
+    if (index >= _list.count() || index < 0)
+        return 0;
+
     return _list[index];
 }
 
