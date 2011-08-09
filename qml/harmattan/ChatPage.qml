@@ -40,7 +40,7 @@ Page {
         }
         ToolIcon {
             platformIconId: "toolbar-view-menu";
-            onClicked: (myMenu.status == DialogStatus.Closed) ? myMenu.open() : myMenu.close()
+            onClicked: (chatMenu.status == DialogStatus.Closed) ? chatMenu.open() : chatMenu.close()
         }
     }
 
@@ -163,6 +163,26 @@ Page {
             onClicked: {
                 messageField.forceActiveFocus();
                 sendCurrentMessage()
+            }
+        }
+    }
+
+    Menu {
+        id: chatMenu
+        visualParent: pageStack
+        MenuLayout {
+            MenuItem {
+                text: "Close / Part"
+                onClicked: {
+                    if (ircModel.currentChannel.name.charAt(0) === '#')
+                        ircModel.currentServer.partChannel(ircModel.currentChannel.name)
+                    else
+                        ircModel.currentServer.closeUser(ircModel.currentChannel.name)
+                }
+            }
+            MenuItem {
+                text: "Quit app"
+                onClicked: Qt.quit();
             }
         }
     }

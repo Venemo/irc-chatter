@@ -14,23 +14,10 @@ PageStackWindow {
         id: settingsPage
     }
 
-    Menu {
-        id: myMenu
-        visualParent: pageStack
-        MenuLayout {
-            MenuItem {
-                text: "About"
-            }
-            MenuItem {
-                text: "Donate"
-            }
-            MenuItem {
-                text: "Connect to..."
-            }
-            MenuItem {
-                text: "Change nick..."
-            }
-        }
+    QueryDialog {
+        id: prereleaseDialog
+        titleText: "This is not working"
+        message: "This part of the GUI is currently 100% NON-functional.\nSorry guys."
+        acceptButtonText: "Ok, no problem"
     }
-
 }

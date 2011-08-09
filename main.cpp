@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<IrcModel>("net.venemo.ircchatter", 1, 0, "IrcModel", "This object is created in the model.");
 
     QDeclarativeView view;
+    QObject::connect(view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
     view.rootContext()->setContextProperty("ircModel", &model);
     view.setSource(QUrl("qrc:/qml/harmattan/main.qml"));
     view.showFullScreen();
