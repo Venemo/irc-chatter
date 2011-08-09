@@ -172,9 +172,9 @@ Page {
         visualParent: chatPage
         onAccepted: {
             if (isChannel)
-                ircModel.joinChannel(joinText);
+                ircModel.currentServer.joinChannel(joinText);
             else if (isQuery)
-                ircModel.queryUser(joinText);
+                ircModel.currentServer.queryUser(joinText);
         }
     }
 

@@ -11,7 +11,7 @@ void IrcModel::fillWithDummyData()
 {
     ServerModel *server = new ServerModel(this);
 
-    ChannelModel *channel = new ChannelModel("#maemo", NULL, NULL);
+    ChannelModel *channel = new ChannelModel("#maemo", server, NULL);
     QStringList *userlist = new QStringList();
     userlist->append("Venemo");
     userlist->append("MohammadAG");
@@ -19,7 +19,7 @@ void IrcModel::fillWithDummyData()
     channel->_users->setStringList(*userlist);
     server->_channels->addItem(channel);
 
-    channel = new ChannelModel("#meego", NULL, NULL);
+    channel = new ChannelModel("#meego", server, NULL);
     userlist = new QStringList();
     userlist->append("Stskeeps");
     userlist->append("lcuk");
@@ -27,7 +27,7 @@ void IrcModel::fillWithDummyData()
     channel->_users->setStringList(*userlist);
     server->_channels->addItem(channel);
 
-    channel = new ChannelModel("#harmattan", NULL, NULL);
+    channel = new ChannelModel("#harmattan", server, NULL);
     userlist = new QStringList();
     userlist->append("djszapi");
     userlist->append("hiemanshu");
@@ -36,12 +36,12 @@ void IrcModel::fillWithDummyData()
     channel->_users->setStringList(*userlist);
     server->_channels->addItem(channel);
 
-    server->_channels->addItem(new ChannelModel("#meego-bar", NULL, NULL));
-    server->_channels->addItem(new ChannelModel("#qt", NULL, NULL));
-    server->_channels->addItem(new ChannelModel("#qt-creator", NULL, NULL));
-    server->_channels->addItem(new ChannelModel("#qt-qml", NULL, NULL));
-    server->_channels->addItem(new ChannelModel("MohammadAG", NULL, NULL));
-    server->_channels->addItem(new ChannelModel("wNULLNULLt_", NULL, NULL));
+    server->_channels->addItem(new ChannelModel("#meego-bar", server, NULL));
+    server->_channels->addItem(new ChannelModel("#qt", server, NULL));
+    server->_channels->addItem(new ChannelModel("#qt-creator", server, NULL));
+    server->_channels->addItem(new ChannelModel("#qt-qml", server, NULL));
+    server->_channels->addItem(new ChannelModel("MohammadAG", server, NULL));
+    server->_channels->addItem(new ChannelModel("wNULLNULLt_", server, NULL));
 
     _servers->addItem(server);
 }
