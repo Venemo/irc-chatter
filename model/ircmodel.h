@@ -21,9 +21,10 @@ class IrcModel : public QObject
 public:
     explicit IrcModel(QObject *parent = 0);
     QObjectListModel<ChannelModel> *allChannels();
-    ChannelModel *currentChannel() { return static_cast<ChannelModel*>(allChannels()->getItem(_currentChannelIndex)); }
-    ServerModel *currentServer() { return static_cast<ServerModel*>(currentChannel()->parent()); }
+    ChannelModel *currentChannel() { return _servers->rowCount() ? static_cast<ChannelModel*>(allChannels()->getItem(_currentChannelIndex)) : 0; }
+    ServerModel *currentServer() { return currentChannel() ? static_cast<ServerModel*>(currentChannel()->parent()) : 0; }
 
+    Q_INVOKABLE void connectToServer(const QString &url, const QString &nick);
     void fillWithDummyData();
 
 signals:

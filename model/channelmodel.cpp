@@ -1,17 +1,24 @@
 
 #include <QtCore>
-//#include <ircclient-qt/IrcBuffer>
+#include <ircclient-qt/IrcSession>
+#include <ircclient-qt/IrcBuffer>
+#include <ircclient-qt/IrcUtil>
+#include <ircclient-qt/IrcGlobal>
 #include "channelmodel.h"
 #include "servermodel.h"
 
 QList<QString> *ChannelModel::_colors = 0;
 
-ChannelModel::ChannelModel(QString name, ServerModel *parent, void *backend) :
+ChannelModel::ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backend) :
     QObject(parent),
+    _name(name),
     _users(new QStringListModel(this)),
     _messages(new QObjectListModel<MessageModel>(this)),
     _backend(backend)
 {
+    connect(_backend, SIGNAL(messageReceived(QString,QString)), this, SLOT(receiveMessageFromBackend(QString,QString)));
+    connect(_backend, SIGNAL(unknownMessageReceived(QString,QStringList)), this, SLOT(receiveUnknownMessageFromBackend(QString,QStringList)));
+
     if (!_colors)
     {
         _colors = new QList<QString>();
@@ -19,12 +26,31 @@ ChannelModel::ChannelModel(QString name, ServerModel *parent, void *backend) :
         _colors->append("#00ff00");
         _colors->append("#0000ff");
     }
-    _name = name;
-    //fakeMessage();
 }
 
-const QString &ChannelModel::colorForNick(const QString &nick)
+void ChannelModel::receiveMessageFromBackend(const QString &userName, const QString &message)
 {
+    _messages->addItem(new MessageModel(userName, message, this));
+}
+
+void ChannelModel::receiveUnknownMessageFromBackend(const QString &userName, const QStringList &message)
+{
+    qDebug() << "unknown message received at: " << _name << userName << message;
+    _users->setStringList(_backend->names());
+}
+
+void ChannelModel::updateUserList()
+{
+    QStringList list = _backend->names();
+    list.sort();
+    _users->setStringList(list);
+}
+
+const QString ChannelModel::colorForNick(const QString &nick)
+{
+    if (nick == _backend->session()->nick())
+        return "#000000";
+
     int nickvalue = 0;
 
     for (int index = 0; index < nick.length(); index++)
@@ -35,25 +61,12 @@ const QString &ChannelModel::colorForNick(const QString &nick)
 
 void ChannelModel::sendCurrentMessage()
 {
-    // TODO: send message
     if (_currentMessage.length() > 0)
     {
-        qDebug() << currentMessage() << "was sent to" << name();
+        _backend->message(_currentMessage);
+        qDebug() << _currentMessage << "was sent to" << name();
         setCurrentMessage(QString());
     }
-}
-
-void ChannelModel::fakeMessage()
-{
-    //qDebug() << "faking new message";
-    MessageModel *m = new MessageModel();
-    m->setUserName("Zvdegor");
-    m->setUserNameColor("#0000ff");
-    m->setText(QUuid::createUuid().toString());
-    m->setTimestamp(QTime::currentTime().toString("HH:mm"));
-    _messages->addItem(m);
-    //if (_messages.rowCount() < 15)
-    QTimer::singleShot(1000, this, SLOT(fakeMessage()));
 }
 
 void ChannelModel::setCurrentMessage(const QString &value)
@@ -127,4 +140,12 @@ void ChannelModel::autoCompleteNick()
 
     _currentMessage.replace(_currentCompletionPosition, replacableFragment.length(), newFragment);
     emit currentMessageChanged();
+}
+
+void ChannelModel::fakeMessage()
+{
+    //qDebug() << "faking new message";
+    _messages->addItem(new MessageModel("Zvdegor", QUuid::createUuid().toString(), this));
+    //if (_messages.rowCount() < 15)
+    QTimer::singleShot(1000, this, SLOT(fakeMessage()));
 }

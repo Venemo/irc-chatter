@@ -4,13 +4,13 @@
 #include <QObject>
 #include "util.h"
 
+class ChannelModel;
+
 class MessageModel : public QObject
 {
     Q_OBJECT
     GENPROPERTY(QString, _userName, userName, setUserName, userNameChanged)
     Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged)
-    GENPROPERTY(QString, _userNameColor, userNameColor, setUserNameColor, userNameColorChanged)
-    Q_PROPERTY(QString userNameColor READ userNameColor WRITE setUserNameColor NOTIFY userNameColorChanged)
     GENPROPERTY(QString, _text, text, setText, textChanged)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
     GENPROPERTY(QString, _timestamp, timestamp, setTimestamp, timestampChanged)
@@ -21,11 +21,10 @@ class MessageModel : public QObject
     friend class IrcModel;
 
 public:
-    explicit MessageModel(QObject *parent = 0);
+    explicit MessageModel(const QString &userName, const QString &text, ChannelModel *parent = 0);
 
 signals:
     void userNameChanged();
-    void userNameColorChanged();
     void textChanged();
     void timestampChanged();
 

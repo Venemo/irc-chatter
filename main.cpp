@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     IrcModel model(&app);
-    model.fillWithDummyData();
+    model.connectToServer("chat.freenode.net", "Your_nick_here");
 
     qmlRegisterUncreatableType<ChannelModel>("net.venemo.ircchatter", 1, 0, "ChannelModel", "This object is created in the model.");
     qmlRegisterUncreatableType<MessageModel>("net.venemo.ircchatter", 1, 0, "MessageModel", "This object is created in the model.");

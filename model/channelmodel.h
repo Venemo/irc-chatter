@@ -29,21 +29,21 @@ class ChannelModel : public QObject
     QList<QString> _possibleNickNames;
     int _currentCompletionIndex, _currentCompletionPosition;
 
-    void *_backend;
+    Irc::Buffer *_backend;
 
     static QList<QString> *_colors;
     friend class IrcModel;
     friend class ServerModel;
 
 protected:
-    explicit ChannelModel(QString name, ServerModel *parent, void *backend);
+    explicit ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backend);
 
 public:
     int userCount() { return _users->rowCount(); }
     void setCurrentMessage(const QString &value);
 
     Q_INVOKABLE void autoCompleteNick();
-    Q_INVOKABLE const QString &colorForNick(const QString &nick);
+    Q_INVOKABLE const QString colorForNick(const QString &nick);
 
 signals:
     void nameChanged();
@@ -54,9 +54,12 @@ signals:
 
 private slots:
     void fakeMessage();
+    void receiveMessageFromBackend(const QString &userName, const QString &message);
+    void receiveUnknownMessageFromBackend(const QString &userName, const QStringList &message);
 
 public slots:
     void sendCurrentMessage();
+    void updateUserList();
 
 };
 

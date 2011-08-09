@@ -6,6 +6,9 @@
 #include "qobjectlistmodel.h"
 #include "channelmodel.h"
 
+namespace Irc { class Session; }
+class IrcModel;
+
 class ServerModel : public QObject
 {
     Q_OBJECT
@@ -15,12 +18,15 @@ class ServerModel : public QObject
     GENPROPERTY(QString, _url, url, setUrl, urlChanged)
     GENPROPERTY(QString, _password, password, setPassword, passwordChanged)
 
+    Irc::Session *_backend;
+
     friend class IrcModel;
 
 protected:
-    explicit ServerModel(QObject *parent = 0);
+    explicit ServerModel(IrcModel *parent, const QString &url, Irc::Session *backend);
 
 public:
+    ~ServerModel();
     Q_INVOKABLE bool joinChannel(const QString &channelName);
     Q_INVOKABLE bool partChannel(const QString &channelName);
     Q_INVOKABLE bool queryUser(const QString &userName);
@@ -31,7 +37,9 @@ signals:
     void urlChanged();
     void passwordChanged();
 
-public slots:
+private slots:
+    void backendConnectedToServer();
+    void receiveNumericMessageFromBackend(const QString &name, uint x, const QStringList &message);
 
 };
 

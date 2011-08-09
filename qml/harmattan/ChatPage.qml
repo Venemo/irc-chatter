@@ -66,7 +66,7 @@ Page {
                     wrapMode: TextEdit.WordWrap
                     textFormat: TextEdit.RichText
                     font.pixelSize: 24 // TODO: bind this to setting
-                    text: model.timestamp + " <span style='color: " + model.userNameColor + "'>" + model.userName + "</span>: " + model.text;
+                    text: model.timestamp + " <span style='color: " + ircModel.currentChannel.colorForNick(model.userName) + "'>" + model.userName + "</span>: " + model.text;
                 }
                 onCountChanged: {
                     var should = Math.max(0,  chatColumn.height - chatFlickable.height);
@@ -112,8 +112,8 @@ Page {
                         text: model.name
                         height: channelNameBg.width
                         verticalAlignment: Text.AlignVCenter
-                        color: (ircModel.currentChannel !== null && ircModel.currentChannelIndex == index) ? "white" : "lightgrey"
-                        font.bold: (ircModel.currentChannel !== null && ircModel.currentChannelIndex == index) ? true : false
+                        color: (ircModel.currentChannelIndex == index) ? "white" : "lightgrey"
+                        font.bold: (ircModel.currentChannelIndex == index) ? true : false
 
                         MouseArea {
                             anchors.fill: parent
@@ -143,6 +143,7 @@ Page {
             if (ircModel.currentChannel !== null && ircModel.currentChannel.currentMessage !== messageField.text && shouldUpdateCurrentMessage)
                 ircModel.currentChannel.currentMessage = text;
         }
+        inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
         Keys.onReturnPressed: sendCurrentMessage()
 
         ToolIcon {
