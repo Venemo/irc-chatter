@@ -49,16 +49,3 @@ unix {
     target.path=/usr/bin
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
