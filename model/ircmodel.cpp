@@ -26,7 +26,7 @@ QObjectListModel<ChannelModel> *IrcModel::allChannels()
 
 void IrcModel::fillWithDummyData()
 {
-    ServerModel *server = new ServerModel(this, "chat.freenode.net", 0);
+    ServerModel *server = new ServerModel(this, "dummy-server", 0);
 
     ChannelModel *channel = new ChannelModel("#maemo", server, NULL);
     QStringList *userlist = new QStringList();
