@@ -17,9 +17,8 @@ class ServerModel : public QObject
     Q_PROPERTY(QObject* channels READ channels NOTIFY channelsChanged)
     GENPROPERTY_R(QString, _url, url)
     Q_PROPERTY(QString url READ url NOTIFY urlChanged)
-    GENPROPERTY_R(QString, _password, password)
-    Q_PROPERTY(QString password READ password NOTIFY passwordChanged)
 
+    QString _password;
     Irc::Session *_backend;
 
     friend class IrcModel;
@@ -37,7 +36,6 @@ public:
 signals:
     void channelsChanged();
     void urlChanged();
-    void passwordChanged();
 
 private slots:
     void backendConnectedToServer();
