@@ -25,6 +25,7 @@ class ChannelModel : public QObject
     Q_PROPERTY(QObject* messages READ messages NOTIFY messagesChanged)
     Q_PROPERTY(QObject* server READ parent NOTIFY serverChanged)
 
+    static QString _autoCompletionSuffix;
     QString _completionFragment;
     QList<QString> _possibleNickNames;
     int _currentCompletionIndex, _currentCompletionPosition;
@@ -56,6 +57,10 @@ private slots:
     void fakeMessage();
     void receiveMessageFromBackend(const QString &userName, const QString &message);
     void receiveUnknownMessageFromBackend(const QString &userName, const QStringList &message);
+    void receiveNoticeFromBackend(const QString &userName, const QString &message);
+    void receiveCtcpActionFromBackend(const QString &userName, const QString &message);
+    void receiveCtcpRequestFromBackend(const QString &userName, const QString &message);
+    void receiveCtcpReplyFromBackend(const QString &userName, const QString &message);
 
 public slots:
     void sendCurrentMessage();

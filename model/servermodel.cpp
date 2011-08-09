@@ -89,15 +89,6 @@ bool ServerModel::partChannel(const QString &channelName)
 {
     qDebug() << "parting channel " << channelName;
 
-    foreach (ChannelModel *channel, _channels->getList())
-    {
-        if (channel->name() == channelName)
-        {
-            _channels->removeItem(channel);
-            break;
-        }
-    }
-
     _backend->part(channelName, "Leaving this channel. (with IRC Chatter, the first MeeGo IRC client)");
 
     return true;
@@ -106,13 +97,13 @@ bool ServerModel::partChannel(const QString &channelName)
 bool ServerModel::queryUser(const QString &userName)
 {
     qDebug() << "querying user " << userName;
-    // TODO: query the user in the backend
+    _backend->addBuffer(userName);
     return true;
 }
 
 bool ServerModel::closeUser(const QString &userName)
 {
     qDebug() << "closing user " << userName;
-    // TODO
+    // TODO: close the query in the backend
     return true;
 }

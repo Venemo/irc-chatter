@@ -8,6 +8,7 @@
 #include "servermodel.h"
 
 QList<QString> *ChannelModel::_colors = 0;
+QString ChannelModel::_autoCompletionSuffix(", ");
 
 ChannelModel::ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backend) :
     QObject(parent),
@@ -18,6 +19,10 @@ ChannelModel::ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backe
 {
     connect(_backend, SIGNAL(messageReceived(QString,QString)), this, SLOT(receiveMessageFromBackend(QString,QString)));
     connect(_backend, SIGNAL(unknownMessageReceived(QString,QStringList)), this, SLOT(receiveUnknownMessageFromBackend(QString,QStringList)));
+    connect(_backend, SIGNAL(noticeReceived(QString,QString)), this, SLOT(receiveNoticeFromBackend(QString,QString)));
+    connect(_backend, SIGNAL(ctcpActionReceived(QString,QString)), this, SLOT(receiveCtcpActionFromBackend(QString,QString)));
+    connect(_backend, SIGNAL(ctcpRequestReceived(QString,QString)), this, SLOT(receiveCtcpRequestFromBackend(QString,QString)));
+    connect(_backend, SIGNAL(ctcpReplyReceived(QString,QString)), this, SLOT(receiveCtcpReplyFromBackend(QString,QString)));
 
     if (!_colors)
     {
@@ -31,6 +36,27 @@ ChannelModel::ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backe
 void ChannelModel::receiveMessageFromBackend(const QString &userName, const QString &message)
 {
     _messages->addItem(new MessageModel(userName, message, this));
+}
+
+void ChannelModel::receiveNoticeFromBackend(const QString &userName, const QString &message)
+{
+    // Notice is basically a "private message", and that is supposed to be displayed the same way as a normal message
+    _messages->addItem(new MessageModel(userName, message, this));
+}
+
+void ChannelModel::receiveCtcpActionFromBackend(const QString &userName, const QString &message)
+{
+    qDebug() << "CTCP action received " << userName << message;
+}
+
+void ChannelModel::receiveCtcpRequestFromBackend(const QString &userName, const QString &message)
+{
+    qDebug() << "CTCP request received " << userName << message;
+}
+
+void ChannelModel::receiveCtcpReplyFromBackend(const QString &userName, const QString &message)
+{
+    qDebug() << "CTCP reply received " << userName << message;
 }
 
 void ChannelModel::receiveUnknownMessageFromBackend(const QString &userName, const QStringList &message)
@@ -64,7 +90,7 @@ void ChannelModel::sendCurrentMessage()
     if (_currentMessage.length() > 0)
     {
         _backend->message(_currentMessage);
-        qDebug() << _currentMessage << "was sent to" << name();
+        //qDebug() << _currentMessage << "was sent to" << name();
         setCurrentMessage(QString());
     }
 }
@@ -101,7 +127,7 @@ void ChannelModel::autoCompleteNick()
         if (_possibleNickNames.count() <= 1)
             return;
 
-        replacableFragment = _possibleNickNames[_currentCompletionIndex];
+        replacableFragment = _possibleNickNames[_currentCompletionIndex] + _autoCompletionSuffix;
         _currentCompletionIndex ++;
 
         if (_currentCompletionIndex >= _possibleNickNames.count())
@@ -136,6 +162,9 @@ void ChannelModel::autoCompleteNick()
     }
 
     newFragment = _possibleNickNames[_currentCompletionIndex];
+    if (_currentCompletionPosition == 0)
+        newFragment += _autoCompletionSuffix;
+
     //qDebug() << "replacable fragment is: " << replacableFragment << ", new fragment is: " << newFragment;
 
     _currentMessage.replace(_currentCompletionPosition, replacableFragment.length(), newFragment);
