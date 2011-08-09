@@ -1,9 +1,12 @@
-#include "servermodel.h"
+
 #include <QtCore>
 #include <ircclient-qt/IrcSession>
 #include <ircclient-qt/IrcBuffer>
 #include <ircclient-qt/IrcGlobal>
 #include <ircclient-qt/IrcUtil>
+
+#include "servermodel.h"
+#include "ircmodel.h"
 
 ServerModel::ServerModel(IrcModel *parent, const QString &url, Irc::Session *backend) :
     QObject((QObject*)parent),
@@ -12,6 +15,8 @@ ServerModel::ServerModel(IrcModel *parent, const QString &url, Irc::Session *bac
     _backend(backend)
 {
     connect(_backend, SIGNAL(connected()), this, SLOT(backendConnectedToServer()));
+    connect(_backend, SIGNAL(bufferAdded(Irc::Buffer*)), this, SLOT(backendAddedBuffer(Irc::Buffer*)));
+    connect(_backend, SIGNAL(bufferRemoved(Irc::Buffer*)), this, SLOT(backendRemovedBuffer(Irc::Buffer*)));
     _backend->connectToServer(_url);
 }
 
@@ -23,11 +28,28 @@ ServerModel::~ServerModel()
 void ServerModel::backendConnectedToServer()
 {
     connect(_backend->defaultBuffer(), SIGNAL(numericMessageReceived(QString,uint,QStringList)), this, SLOT(receiveNumericMessageFromBackend(QString,uint,QStringList)));
+}
 
-    foreach (Irc::Buffer *buffer, _backend->buffers())
+void ServerModel::backendAddedBuffer(Irc::Buffer *buffer)
+{
+    qDebug() << "backend added buffer " << buffer->receiver();
+    _channels->addItem(new ChannelModel(buffer->receiver(), this, buffer));
+}
+
+void ServerModel::backendRemovedBuffer(Irc::Buffer *buffer)
+{
+    qDebug() << "backend removed buffer " << buffer->receiver();
+
+    foreach (ChannelModel *channel, _channels->getList())
     {
-        QString name = buffer->names().count() ? buffer->names().at(0) : "Unnamed";
-        _channels->addItem(new ChannelModel(name, this, buffer));
+        if (channel->name() == buffer->names().at(0))
+        {
+            _channels->removeItem(channel);
+            channel->deleteLater();
+            if (channel == ((IrcModel*)parent())->currentChannel())
+                ((IrcModel*)parent())->setCurrentChannelIndex(((IrcModel*)parent())->currentChannelIndex() - 1);
+            break;
+        }
     }
 }
 
@@ -56,9 +78,9 @@ bool ServerModel::joinChannel(const QString &channelName)
     }
 
     _backend->join(channelName);
-    _backend->names(channelName);
-    Irc::Buffer *b = _backend->addBuffer(channelName);
-    _channels->addItem(new ChannelModel(channelName, this, b));
+//    _backend->names(channelName);
+//    Irc::Buffer *b = _backend->addBuffer(channelName);
+//    _channels->addItem(new ChannelModel(channelName, this, b));
 
     return true;
 }

@@ -15,8 +15,12 @@ class ServerModel : public QObject
 
     GENPROPERTY_R(QObjectListModel<ChannelModel>*, _channels, channels)
     Q_PROPERTY(QObject* channels READ channels NOTIFY channelsChanged)
-    GENPROPERTY(QString, _url, url, setUrl, urlChanged)
-    GENPROPERTY(QString, _password, password, setPassword, passwordChanged)
+    GENPROPERTY_R(QString, _url, url)
+    Q_PROPERTY(QString url READ url NOTIFY urlChanged)
+    GENPROPERTY_R(QString, _password, password)
+    Q_PROPERTY(QString password READ password NOTIFY passwordChanged)
+    GENPROPERTY_R(QString, _name, name)
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged)
 
     Irc::Session *_backend;
 
@@ -39,6 +43,8 @@ signals:
 
 private slots:
     void backendConnectedToServer();
+    void backendAddedBuffer(Irc::Buffer *buffer);
+    void backendRemovedBuffer(Irc::Buffer *buffer);
     void receiveNumericMessageFromBackend(const QString &name, uint x, const QStringList &message);
 
 };
