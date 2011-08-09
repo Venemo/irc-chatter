@@ -27,6 +27,7 @@ Sheet {
             id: joinField
             placeholderText: "Channel or user name..."
             onTextChanged: joinText = text
+            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
         }
         CheckBox {
             anchors.horizontalCenter: parent.horizontalCenter

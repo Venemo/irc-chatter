@@ -58,12 +58,14 @@ Page {
 
         Column {
             id: chatColumn
+            width: parent.width
             Repeater {
                 id: chatView
                 width: parent.width
                 model: ircModel.currentChannel !== null ? ircModel.currentChannel.messages : null
                 delegate: Text {
                     wrapMode: TextEdit.WordWrap
+                    width: chatColumn.width
                     textFormat: TextEdit.RichText
                     font.pixelSize: 24 // TODO: bind this to setting
                     text: model.timestamp + " <span style='color: " + ircModel.currentChannel.colorForNick(model.userName) + "'>" + model.userName + "</span>: " + model.text;
