@@ -19,8 +19,6 @@ class ServerModel : public QObject
     Q_PROPERTY(QString url READ url NOTIFY urlChanged)
     GENPROPERTY_R(QString, _password, password)
     Q_PROPERTY(QString password READ password NOTIFY passwordChanged)
-    GENPROPERTY_R(QString, _name, name)
-    Q_PROPERTY(QString name READ name NOTIFY nameChanged)
 
     Irc::Session *_backend;
 
