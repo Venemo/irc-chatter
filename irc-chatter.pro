@@ -34,7 +34,7 @@ OTHER_FILES += \
     qml/harmattan/WorkingSelectionDialog.qml \
     qml/harmattan/CommonDialog.qml
 
-DEFINES += IRC_NO_DEPRECATED
+DEFINES += IRC_NO_DEPRECATED IRC_SHARED
 INCLUDEPATH += /usr/include/ircclient-qt
 CONFIG += libircclient-qt
 
@@ -48,17 +48,4 @@ unix {
     INSTALLS += target
     target.path=/usr/bin
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
