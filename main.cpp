@@ -11,7 +11,6 @@ int main(int argc, char *argv[])
     model.connectToServer("chat.freenode.net", "Your_nick_here");
 
     qmlRegisterUncreatableType<ChannelModel>("net.venemo.ircchatter", 1, 0, "ChannelModel", "This object is created in the model.");
-    qmlRegisterUncreatableType<MessageModel>("net.venemo.ircchatter", 1, 0, "MessageModel", "This object is created in the model.");
     qmlRegisterUncreatableType<IrcModel>("net.venemo.ircchatter", 1, 0, "IrcModel", "This object is created in the model.");
 
     QDeclarativeView view;
