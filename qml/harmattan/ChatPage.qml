@@ -58,8 +58,9 @@ Page {
         interactive: true
         contentHeight: chatColumn.height
         clip: true
-
         onHeightChanged: scrollToBottom()
+
+        property int lastSupposedContentY: 0
 
         Column {
             id: chatColumn
@@ -77,8 +78,8 @@ Page {
                 }
                 onCountChanged: {
                     var should = Math.max(0,  chatColumn.height - chatFlickable.height);
-                    if (chatFlickable.contentY >= should - 50)
-                        chatFlickable.contentY = should;
+                    if (chatFlickable.contentY >= chatFlickable.lastSupposedContentY - 72)
+                        chatFlickable.lastSupposedContentY = chatFlickable.contentY = should;
                 }
                 onModelChanged: scrollToBottom();
             }
