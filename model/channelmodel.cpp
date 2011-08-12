@@ -289,6 +289,13 @@ void ChannelModel::parseCommand(const QString &msg)
         else
             appendCommandInfo("Invalid command. Correct usage: '/me &lt;message&gt;'");
     }
+    else if (commandParts[0] == "/msg")
+    {
+        if (n > 2)
+            appendCommandInfo("/msg is not supported yet, but planned to");
+        else
+            appendCommandInfo("Invalid command. Correct usage: '/msg &lt;username&gt; &lt;message&gt;'");
+    }
     else
         appendCommandInfo("Unknown command, maybe it will be supported later?");
 }
