@@ -76,6 +76,13 @@ Page {
                 if (chatFlickable.contentY >= chatFlickable.lastSupposedContentY - 72)
                     chatFlickable.lastSupposedContentY = chatFlickable.contentY = should;
             }
+
+            Connections {
+                target: chatArea.children[3]
+                onLinkActivated: {
+                    Qt.openUrlExternally(link);
+                }
+            }
         }
     }
     ScrollDecorator {
