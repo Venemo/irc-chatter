@@ -36,6 +36,7 @@ Page {
         ToolIcon {
             platformIconId: "toolbar-addressbook";
             onClicked: userSelectorDialog.open();
+            visible: ircModel.currentChannel === null ? false : (ircModel.currentChannel.name.charAt(0) === '#')
         }
         ToolIcon {
             platformIconId: "toolbar-settings";
@@ -224,8 +225,8 @@ Page {
 
     WorkingSelectionDialog {
         id: userSelectorDialog
-        titleText: "User list of " + ircModel.currentChannel.name
-        model: ircModel.currentChannel.users
+        titleText: "User list of " + ircModel.currentChannel === null? "?" : ircModel.currentChannel.name
+        model: ircModel.currentChannel === null ? null : ircModel.currentChannel.users
     }
 
 }
