@@ -11,6 +11,11 @@ Sheet {
     property bool isQuery: joinField.text.length > 0 && joinField.text.charAt(0) !== '#'
     property bool isChannel: joinField.text.length > 1 && joinField.text.charAt(0) === '#'
 
+    onStatusChanged: {
+        if (status == DialogStatus.Opening)
+            joinField.forceActiveFocus();
+    }
+
     content: Column {
         anchors.centerIn: parent
         spacing: 10
@@ -28,6 +33,10 @@ Sheet {
             placeholderText: "Channel or user name..."
             onTextChanged: joinText = text
             inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+            Keys.onReturnPressed: {
+                if (isChannel || isQuery)
+                    accept();
+            }
         }
         CheckBox {
             anchors.horizontalCenter: parent.horizontalCenter
