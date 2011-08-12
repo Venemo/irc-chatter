@@ -8,6 +8,7 @@
 #include "servermodel.h"
 
 QList<QString> *ChannelModel::_colors = 0;
+QRegExp ChannelModel::_urlRegexp(QString("\\b((?:(?:([a-z][\\w-]+:/{1,3})|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|\\}\\]|[^\\s`!()\\[\\]{};:'\".,<>?%1%2%3%4%5%6])|[a-z0-9.\\-+_]+@[a-z0-9.\\-]+[.][a-z]{1,5}[^\\s/`!()\\[\\]{};:'\".,<>?%1%2%3%4%5%6]))").arg(QChar(0x00AB)).arg(QChar(0x00BB)).arg(QChar(0x201C)).arg(QChar(0x201D)).arg(QChar(0x2018)).arg(QChar(0x2019)));
 QString ChannelModel::_autoCompletionSuffix(", ");
 
 ChannelModel::ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backend) :
@@ -35,38 +36,48 @@ ChannelModel::ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backe
     }
 }
 
-void ChannelModel::receiveMessageFromBackend(const QString &userName, const QString &message)
+QString &ChannelModel::processMessage(QString &msg)
+{
+    msg.replace('&', "&amp;");
+    msg.replace('<', "&lt;");
+    msg.replace('<', "&gt;");
+    msg.replace(_urlRegexp, "<a href=\"\\1\">\\1</a>");
+    return msg;
+}
+
+void ChannelModel::receiveMessageFromBackend(const QString &userName, QString message)
 {
     if (_channelText.length())
         _channelText += "<br />";
 
-    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick(userName) + "'>" + userName + "</span>: " + message);
+    //QString msg = message;
+    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick(userName) + "'>" + userName + "</span>: " + processMessage(message));
 }
 
-void ChannelModel::receiveNoticeFromBackend(const QString &userName, const QString &message)
+void ChannelModel::receiveNoticeFromBackend(const QString &userName, QString message)
 {
     // Notice is basically a "private message", and that is supposed to be displayed the same way as a normal message
 
     if (_channelText.length())
         _channelText += "<br />";
 
-    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick(userName) + "'>" + userName + "</span>: " + message);
+    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick(userName) + "'>" + userName + "</span>: " + processMessage(message));
 }
 
-void ChannelModel::receiveCtcpActionFromBackend(const QString &userName, const QString &message)
+void ChannelModel::receiveCtcpActionFromBackend(const QString &userName, QString message)
 {
     if (_channelText.length())
         _channelText += "<br />";
 
-    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " * <span style='color: " + colorForNick(userName) + "'>" + userName + "</span> " + message);
+    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " * <span style='color: " + colorForNick(userName) + "'>" + userName + "</span> " + processMessage(message));
 }
 
-void ChannelModel::receiveCtcpRequestFromBackend(const QString &userName, const QString &message)
+void ChannelModel::receiveCtcpRequestFromBackend(const QString &userName, QString message)
 {
     qDebug() << "CTCP request received " << userName << message;
 }
 
-void ChannelModel::receiveCtcpReplyFromBackend(const QString &userName, const QString &message)
+void ChannelModel::receiveCtcpReplyFromBackend(const QString &userName, QString message)
 {
     qDebug() << "CTCP reply received " << userName << message;
 }

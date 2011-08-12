@@ -32,6 +32,7 @@ class ChannelModel : public QObject
     Irc::Buffer *_backend;
 
     static QList<QString> *_colors;
+    static QRegExp _urlRegexp;
     friend class IrcModel;
     friend class ServerModel;
 
@@ -44,6 +45,7 @@ public:
 
     Q_INVOKABLE void autoCompleteNick();
     Q_INVOKABLE const QString colorForNick(const QString &nick);
+    QString &processMessage(QString &msg);
 
 signals:
     void nameChanged();
@@ -54,12 +56,12 @@ signals:
 
 private slots:
     void fakeMessage();
-    void receiveMessageFromBackend(const QString &userName, const QString &message);
+    void receiveMessageFromBackend(const QString &userName, QString message);
+    void receiveNoticeFromBackend(const QString &userName, QString message);
+    void receiveCtcpActionFromBackend(const QString &userName, QString message);
+    void receiveCtcpRequestFromBackend(const QString &userName, QString message);
+    void receiveCtcpReplyFromBackend(const QString &userName, QString message);
     void receiveUnknownMessageFromBackend(const QString &userName, const QStringList &message);
-    void receiveNoticeFromBackend(const QString &userName, const QString &message);
-    void receiveCtcpActionFromBackend(const QString &userName, const QString &message);
-    void receiveCtcpRequestFromBackend(const QString &userName, const QString &message);
-    void receiveCtcpReplyFromBackend(const QString &userName, const QString &message);
 
 public slots:
     void sendCurrentMessage();
