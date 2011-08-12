@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "channelmodel.h"
-#include "messagemodel.h"
 #include "servermodel.h"
 #include "qobjectlistmodel.h"
 

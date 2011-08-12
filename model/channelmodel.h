@@ -5,7 +5,6 @@
 #include <QStringListModel>
 #include "util.h"
 #include "qobjectlistmodel.h"
-#include "messagemodel.h"
 
 namespace Irc { class Buffer; }
 class ServerModel;
