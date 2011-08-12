@@ -44,6 +44,7 @@ protected:
     explicit ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backend);
 
 public:
+    ~ChannelModel();
     int userCount() { return _users->rowCount(); }
     void setCurrentMessage(const QString &value);
 
@@ -59,6 +60,7 @@ signals:
 
 private slots:
     void fakeMessage();
+    void backendDeleted();
     void receiveMessageFromBackend(const QString &userName, QString message);
     void receiveNoticeFromBackend(const QString &userName, QString message);
     void receiveCtcpActionFromBackend(const QString &userName, QString message);

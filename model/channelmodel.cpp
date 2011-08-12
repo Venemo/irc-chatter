@@ -36,6 +36,12 @@ ChannelModel::ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backe
     }
 }
 
+ChannelModel::~ChannelModel()
+{
+    if (_backend)
+        _backend->deleteLater();
+}
+
 QString &ChannelModel::processMessage(QString &msg)
 {
     msg.replace('&', "&amp;");
@@ -211,6 +217,12 @@ void ChannelModel::fakeMessage()
     setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick("Zvdegor") + "'>" + "Zvdegor" + "</span>: " + QUuid::createUuid().toString());
 }
 
+void ChannelModel::backendDeleted()
+{
+    _backend = 0;
+    deleteLater();
+}
+
 void ChannelModel::parseCommand(const QString &msg)
 {
     QStringList commandParts = msg.split(' ', QString::SkipEmptyParts);
@@ -238,7 +250,6 @@ void ChannelModel::parseCommand(const QString &msg)
             QCoreApplication::instance()->quit();
         else
             appendCommandInfo("Invalid command. Correct usage: '/quit'");
-
     }
     else
         appendCommandInfo("Unknown command, maybe it will be supported later?");
