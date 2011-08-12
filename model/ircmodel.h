@@ -27,6 +27,9 @@ public:
     Q_INVOKABLE void connectToServer(const QString &url, const QString &nick);
     void fillWithDummyData();
 
+private slots:
+    void backendsConnectedToServer();
+
 signals:
     void allChannelsChanged();
     void serversChanged();
