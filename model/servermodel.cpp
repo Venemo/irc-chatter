@@ -14,10 +14,13 @@ ServerModel::ServerModel(IrcModel *parent, const QString &url, Irc::Session *bac
     _url(url),
     _backend(backend)
 {
-    connect(_backend, SIGNAL(connected()), this, SLOT(backendConnectedToServer()));
-    connect(_backend, SIGNAL(bufferAdded(Irc::Buffer*)), this, SLOT(backendAddedBuffer(Irc::Buffer*)));
-    connect(_backend, SIGNAL(bufferRemoved(Irc::Buffer*)), this, SLOT(backendRemovedBuffer(Irc::Buffer*)));
-    _backend->connectToServer(_url);
+    if (_backend)
+    {
+        connect(_backend, SIGNAL(connected()), this, SLOT(backendConnectedToServer()));
+        connect(_backend, SIGNAL(bufferAdded(Irc::Buffer*)), this, SLOT(backendAddedBuffer(Irc::Buffer*)));
+        connect(_backend, SIGNAL(bufferRemoved(Irc::Buffer*)), this, SLOT(backendRemovedBuffer(Irc::Buffer*)));
+        _backend->connectToServer(_url);
+    }
 }
 
 ServerModel::~ServerModel()

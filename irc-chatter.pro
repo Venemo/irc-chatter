@@ -6,7 +6,6 @@ HEADERS += \
     model/channelmodel.h \
     qobjectlistmodel.h \
     util.h \
-    model/messagemodel.h \
     model/ircmodel.h \
     model/servermodel.h \
     model/identitymodel.h
@@ -14,7 +13,6 @@ HEADERS += \
 SOURCES += \
     main.cpp \
     model/channelmodel.cpp \
-    model/messagemodel.cpp \
     model/ircmodel.cpp \
     model/servermodel.cpp \
     model/identitymodel.cpp
@@ -48,4 +46,6 @@ unix {
     INSTALLS += target
     target.path=/usr/bin
 }
+
+
 

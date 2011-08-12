@@ -21,9 +21,9 @@ class ChannelModel : public QObject
     GENPROPERTY_R(QStringListModel*, _users, users)
     Q_PROPERTY(QObject* users READ users NOTIFY usersChanged)
     Q_PROPERTY(int userCount READ userCount NOTIFY usersChanged)
-    GENPROPERTY_R(QObjectListModel<MessageModel>*, _messages, messages)
-    Q_PROPERTY(QObject* messages READ messages NOTIFY messagesChanged)
     Q_PROPERTY(QObject* server READ parent NOTIFY serverChanged)
+    GENPROPERTY(QString, _channelText, channelText, setChannelText, channelTextChanged)
+    Q_PROPERTY(QString channelText READ channelText NOTIFY channelTextChanged)
 
     static QString _autoCompletionSuffix;
     QString _completionFragment;
@@ -50,8 +50,8 @@ signals:
     void nameChanged();
     void currentMessageChanged();
     void usersChanged();
-    void messagesChanged();
     void serverChanged();
+    void channelTextChanged();
 
 private slots:
     void fakeMessage();

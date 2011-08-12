@@ -19,7 +19,7 @@ Page {
         shouldUpdateCurrentMessage = true;
     }
     function scrollToBottom() {
-        chatFlickable.contentY = Math.max(0,  chatColumn.height - chatFlickable.height)
+        chatFlickable.contentY = Math.max(0,  chatArea.height - chatFlickable.height)
     }
 
     tools: ToolBarLayout {
@@ -53,35 +53,33 @@ Page {
         anchors.bottom: messageField.top
         anchors.left: parent.left
         anchors.right: channelNameBg.left
-        anchors.bottomMargin: 10
 
         interactive: true
-        contentHeight: chatColumn.height
+        contentHeight: chatArea.height
         clip: true
         onHeightChanged: scrollToBottom()
 
         property int lastSupposedContentY: 0
 
-        Column {
-            id: chatColumn
+        TextArea {
+            id: chatArea
             width: parent.width
-            Repeater {
-                id: chatView
-                width: parent.width
-                model: ircModel.currentChannel !== null ? ircModel.currentChannel.messages : null
-                delegate: Text {
-                    wrapMode: TextEdit.WordWrap
-                    width: chatColumn.width
-                    textFormat: TextEdit.RichText
-                    font.pixelSize: 24 // TODO: bind this to setting
-                    text: model.timestamp + " <span style='color: " + ircModel.currentChannel.colorForNick(model.userName) + "'>" + model.userName + "</span>: " + model.text;
-                }
-                onCountChanged: {
-                    var should = Math.max(0,  chatColumn.height - chatFlickable.height);
-                    if (chatFlickable.contentY >= chatFlickable.lastSupposedContentY - 72)
-                        chatFlickable.lastSupposedContentY = chatFlickable.contentY = should;
-                }
-                onModelChanged: scrollToBottom();
+            height: Math.max(chatFlickable.height, implicitHeight)
+            readOnly: true
+            wrapMode: TextEdit.WordWrap
+            textFormat: TextEdit.RichText
+            font.pixelSize: 24
+            text: ircModel.currentChannel !== null ? ircModel.currentChannel.channelText : ""
+            style: TextAreaStyle {
+                background: "transparent"
+                paddingTop: 0
+                paddingBottom: 0
+            }
+
+            onTextChanged: {
+                var should = Math.max(0,  chatArea.height - chatFlickable.height);
+                if (chatFlickable.contentY >= chatFlickable.lastSupposedContentY - 72)
+                    chatFlickable.lastSupposedContentY = chatFlickable.contentY = should;
             }
         }
     }
@@ -125,7 +123,10 @@ Page {
 
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: switchChannel(index)
+                            onClicked: {
+                                switchChannel(index);
+                                scrollToBottom();
+                            }
                         }
                     }
                 }

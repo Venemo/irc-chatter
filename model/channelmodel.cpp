@@ -14,15 +14,17 @@ ChannelModel::ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backe
     QObject(parent),
     _name(name),
     _users(new QStringListModel(this)),
-    _messages(new QObjectListModel<MessageModel>(this)),
     _backend(backend)
 {
-    connect(_backend, SIGNAL(messageReceived(QString,QString)), this, SLOT(receiveMessageFromBackend(QString,QString)));
-    connect(_backend, SIGNAL(unknownMessageReceived(QString,QStringList)), this, SLOT(receiveUnknownMessageFromBackend(QString,QStringList)));
-    connect(_backend, SIGNAL(noticeReceived(QString,QString)), this, SLOT(receiveNoticeFromBackend(QString,QString)));
-    connect(_backend, SIGNAL(ctcpActionReceived(QString,QString)), this, SLOT(receiveCtcpActionFromBackend(QString,QString)));
-    connect(_backend, SIGNAL(ctcpRequestReceived(QString,QString)), this, SLOT(receiveCtcpRequestFromBackend(QString,QString)));
-    connect(_backend, SIGNAL(ctcpReplyReceived(QString,QString)), this, SLOT(receiveCtcpReplyFromBackend(QString,QString)));
+    if (_backend)
+    {
+        connect(_backend, SIGNAL(messageReceived(QString,QString)), this, SLOT(receiveMessageFromBackend(QString,QString)));
+        connect(_backend, SIGNAL(unknownMessageReceived(QString,QStringList)), this, SLOT(receiveUnknownMessageFromBackend(QString,QStringList)));
+        connect(_backend, SIGNAL(noticeReceived(QString,QString)), this, SLOT(receiveNoticeFromBackend(QString,QString)));
+        connect(_backend, SIGNAL(ctcpActionReceived(QString,QString)), this, SLOT(receiveCtcpActionFromBackend(QString,QString)));
+        connect(_backend, SIGNAL(ctcpRequestReceived(QString,QString)), this, SLOT(receiveCtcpRequestFromBackend(QString,QString)));
+        connect(_backend, SIGNAL(ctcpReplyReceived(QString,QString)), this, SLOT(receiveCtcpReplyFromBackend(QString,QString)));
+    }
 
     if (!_colors)
     {
@@ -35,18 +37,28 @@ ChannelModel::ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backe
 
 void ChannelModel::receiveMessageFromBackend(const QString &userName, const QString &message)
 {
-    _messages->addItem(new MessageModel(userName, message, this));
+    if (_channelText.length())
+        _channelText += "<br />";
+
+    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick(userName) + "'>" + userName + "</span>: " + message);
 }
 
 void ChannelModel::receiveNoticeFromBackend(const QString &userName, const QString &message)
 {
     // Notice is basically a "private message", and that is supposed to be displayed the same way as a normal message
-    _messages->addItem(new MessageModel(userName, message, this));
+
+    if (_channelText.length())
+        _channelText += "<br />";
+
+    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick(userName) + "'>" + userName + "</span>: " + message);
 }
 
 void ChannelModel::receiveCtcpActionFromBackend(const QString &userName, const QString &message)
 {
-    qDebug() << "CTCP action received " << userName << message;
+    if (_channelText.length())
+        _channelText += "<br />";
+
+    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " * <span style='color: " + colorForNick(userName) + "'>" + userName + "</span> " + message);
 }
 
 void ChannelModel::receiveCtcpRequestFromBackend(const QString &userName, const QString &message)
@@ -90,7 +102,6 @@ void ChannelModel::sendCurrentMessage()
     if (_currentMessage.length() > 0)
     {
         _backend->message(_currentMessage);
-        //qDebug() << _currentMessage << "was sent to" << name();
         setCurrentMessage(QString());
     }
 }
@@ -110,8 +121,8 @@ void ChannelModel::autoCompleteNick()
     {
         // The user hasn't typed anything, let's give him the name of the last spoke user
 
-        if (_messages->rowCount() > 0)
-            setCurrentMessage(_messages->getList().last()->userName());
+//        if (_messages->rowCount() > 0)
+//            setCurrentMessage(_messages->getList().last()->userName());
 
         return;
     }
@@ -173,8 +184,8 @@ void ChannelModel::autoCompleteNick()
 
 void ChannelModel::fakeMessage()
 {
-    //qDebug() << "faking new message";
-    _messages->addItem(new MessageModel("Zvdegor", QUuid::createUuid().toString(), this));
-    //if (_messages.rowCount() < 15)
-    QTimer::singleShot(1000, this, SLOT(fakeMessage()));
+    if (_channelText.length())
+        _channelText += "<br />";
+
+    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick("Zvdegor") + "'>" + "Zvdegor" + "</span>: " + QUuid::createUuid().toString());
 }
