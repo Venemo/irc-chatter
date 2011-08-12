@@ -70,11 +70,6 @@ Page {
             textFormat: TextEdit.RichText
             font.pixelSize: 24
             text: ircModel.currentChannel !== null ? ircModel.currentChannel.channelText : ""
-            style: TextAreaStyle {
-                background: "transparent"
-                paddingTop: 0
-                paddingBottom: 0
-            }
 
             onTextChanged: {
                 var should = Math.max(0,  chatArea.height - chatFlickable.height);
