@@ -23,6 +23,8 @@ class ServerModel : public QObject
 
     friend class IrcModel;
 
+    void removeModelForBuffer(Irc::Buffer *buffer);
+
 protected:
     explicit ServerModel(IrcModel *parent, const QString &url, Irc::Session *backend);
 

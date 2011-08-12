@@ -42,15 +42,20 @@ void ServerModel::backendAddedBuffer(Irc::Buffer *buffer)
 void ServerModel::backendRemovedBuffer(Irc::Buffer *buffer)
 {
     qDebug() << "backend removed buffer " << buffer->receiver();
+    removeModelForBuffer(buffer);
+}
 
+void ServerModel::removeModelForBuffer(Irc::Buffer *buffer)
+{
     foreach (ChannelModel *channel, _channels->getList())
     {
-        if (channel->name() == buffer->names().at(0))
+        if (channel->name() == buffer->receiver())
         {
+            if (channel == static_cast<IrcModel*>(parent())->currentChannel())
+                static_cast<IrcModel*>(parent())->setCurrentChannelIndex(static_cast<IrcModel*>(parent())->currentChannelIndex() - 1);
+
             _channels->removeItem(channel);
             channel->deleteLater();
-            if (channel == ((IrcModel*)parent())->currentChannel())
-                ((IrcModel*)parent())->setCurrentChannelIndex(((IrcModel*)parent())->currentChannelIndex() - 1);
             break;
         }
     }
@@ -81,19 +86,13 @@ bool ServerModel::joinChannel(const QString &channelName)
     }
 
     _backend->join(channelName);
-//    _backend->names(channelName);
-//    Irc::Buffer *b = _backend->addBuffer(channelName);
-//    _channels->addItem(new ChannelModel(channelName, this, b));
-
     return true;
 }
 
 bool ServerModel::partChannel(const QString &channelName)
 {
     qDebug() << "parting channel " << channelName;
-
     _backend->part(channelName, "Leaving this channel. (with IRC Chatter, the first MeeGo IRC client)");
-
     return true;
 }
 
@@ -107,6 +106,6 @@ bool ServerModel::queryUser(const QString &userName)
 bool ServerModel::closeUser(const QString &userName)
 {
     qDebug() << "closing user " << userName;
-    // TODO: close the query in the backend
+    removeModelForBuffer(_backend->buffer(userName));
     return true;
 }
