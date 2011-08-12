@@ -19,12 +19,15 @@ ChannelModel::ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backe
 {
     if (_backend)
     {
+        connect(_backend, SIGNAL(destroyed()), this, SLOT(backendDeleted()));
         connect(_backend, SIGNAL(messageReceived(QString,QString)), this, SLOT(receiveMessageFromBackend(QString,QString)));
         connect(_backend, SIGNAL(unknownMessageReceived(QString,QStringList)), this, SLOT(receiveUnknownMessageFromBackend(QString,QStringList)));
         connect(_backend, SIGNAL(noticeReceived(QString,QString)), this, SLOT(receiveNoticeFromBackend(QString,QString)));
         connect(_backend, SIGNAL(ctcpActionReceived(QString,QString)), this, SLOT(receiveCtcpActionFromBackend(QString,QString)));
         connect(_backend, SIGNAL(ctcpRequestReceived(QString,QString)), this, SLOT(receiveCtcpRequestFromBackend(QString,QString)));
         connect(_backend, SIGNAL(ctcpReplyReceived(QString,QString)), this, SLOT(receiveCtcpReplyFromBackend(QString,QString)));
+        connect(_backend, SIGNAL(joined(QString)), this, SLOT(receiveJoinedFromBackend(QString)));
+        connect(_backend, SIGNAL(parted(QString,QString)), this, SLOT(receivePartedFromBackend(QString,QString)));
     }
 
     if (!_colors)
@@ -42,6 +45,19 @@ ChannelModel::~ChannelModel()
         _backend->deleteLater();
 }
 
+void ChannelModel::receiveJoinedFromBackend(const QString &userName)
+{
+    if (userName != _backend->session()->nick())
+        appendChannelInfo(userName + " has joined " + _name);
+    updateUserList();
+}
+
+void ChannelModel::receivePartedFromBackend(const QString &userName, const QString &reason)
+{
+    appendChannelInfo(userName + " has parted " + _name + " (Reason: " + reason + ")");
+    updateUserList();
+}
+
 QString &ChannelModel::processMessage(QString &msg)
 {
     msg.replace('&', "&amp;");
@@ -56,7 +72,15 @@ void ChannelModel::appendCommandInfo(const QString &msg)
     if (_channelText.length())
         _channelText += "<br />";
 
-    setChannelText(_channelText += "<span style='color: yellow'>" + msg + "</span>");
+    setChannelText(_channelText += "<span style='color: orange'>" + msg + "</span>");
+}
+
+void ChannelModel::appendChannelInfo(const QString &msg)
+{
+    if (_channelText.length())
+        _channelText += "<br />";
+
+    setChannelText(_channelText += "<span style='color: purple'>" + msg + "</span>");
 }
 
 void ChannelModel::receiveMessageFromBackend(const QString &userName, QString message)

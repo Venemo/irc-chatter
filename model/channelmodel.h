@@ -39,6 +39,7 @@ class ChannelModel : public QObject
     void parseCommand(const QString &msg);
     QString &processMessage(QString &msg);
     void appendCommandInfo(const QString &msg);
+    void appendChannelInfo(const QString &msg);
 
 protected:
     explicit ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backend);
@@ -67,6 +68,8 @@ private slots:
     void receiveCtcpRequestFromBackend(const QString &userName, QString message);
     void receiveCtcpReplyFromBackend(const QString &userName, QString message);
     void receiveUnknownMessageFromBackend(const QString &userName, const QStringList &message);
+    void receiveJoinedFromBackend(const QString &userName);
+    void receivePartedFromBackend(const QString &userName, const QString &reason);
 
 public slots:
     void sendCurrentMessage();
