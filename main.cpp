@@ -1,11 +1,15 @@
 #include <QtGui/QApplication>
 #include <QtDeclarative>
+#include <QSettings>
 
 #include "model/ircmodel.h"
 #include "appsettings.h"
 
 int main(int argc, char *argv[])
 {
+    QApplication::setApplicationName("irc-chatter");
+    QApplication::setOrganizationName("Venemo");
+
     QApplication app(argc, argv);
     IrcModel model(&app);
 
