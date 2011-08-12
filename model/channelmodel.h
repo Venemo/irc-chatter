@@ -36,6 +36,10 @@ class ChannelModel : public QObject
     friend class IrcModel;
     friend class ServerModel;
 
+    void parseCommand(const QString &msg);
+    QString &processMessage(QString &msg);
+    void appendCommandInfo(const QString &msg);
+
 protected:
     explicit ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backend);
 
@@ -45,7 +49,6 @@ public:
 
     Q_INVOKABLE void autoCompleteNick();
     Q_INVOKABLE const QString colorForNick(const QString &nick);
-    QString &processMessage(QString &msg);
 
 signals:
     void nameChanged();

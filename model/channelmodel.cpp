@@ -45,12 +45,19 @@ QString &ChannelModel::processMessage(QString &msg)
     return msg;
 }
 
+void ChannelModel::appendCommandInfo(const QString &msg)
+{
+    if (_channelText.length())
+        _channelText += "<br />";
+
+    setChannelText(_channelText += "<span style='color: yellow'>" + msg + "</span>");
+}
+
 void ChannelModel::receiveMessageFromBackend(const QString &userName, QString message)
 {
     if (_channelText.length())
         _channelText += "<br />";
 
-    //QString msg = message;
     setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick(userName) + "'>" + userName + "</span>: " + processMessage(message));
 }
 
@@ -112,7 +119,11 @@ void ChannelModel::sendCurrentMessage()
 {
     if (_currentMessage.length() > 0)
     {
-        _backend->message(_currentMessage);
+        if (_currentMessage.startsWith("/"))
+            parseCommand(_currentMessage);
+        else
+            _backend->message(_currentMessage);
+
         setCurrentMessage(QString());
     }
 }
@@ -132,8 +143,7 @@ void ChannelModel::autoCompleteNick()
     {
         // The user hasn't typed anything, let's give him the name of the last spoke user
 
-//        if (_messages->rowCount() > 0)
-//            setCurrentMessage(_messages->getList().last()->userName());
+        //...
 
         return;
     }
@@ -199,4 +209,37 @@ void ChannelModel::fakeMessage()
         _channelText += "<br />";
 
     setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick("Zvdegor") + "'>" + "Zvdegor" + "</span>: " + QUuid::createUuid().toString());
+}
+
+void ChannelModel::parseCommand(const QString &msg)
+{
+    QStringList commandParts = msg.split(' ', QString::SkipEmptyParts);
+    int n = commandParts.count();
+
+    if (commandParts[0] == "/join" || commandParts[0] == "/j")
+    {
+        if (n == 2)
+            static_cast<ServerModel*>(parent())->joinChannel(commandParts[1]);
+        else
+            appendCommandInfo("Invalid command. Correct usage: '/join &lt;channelname&gt;'");
+    }
+    else if (commandParts[0] == "/part" || commandParts[0] == "/p")
+    {
+        if (n == 1)
+            static_cast<ServerModel*>(parent())->partChannel(name());
+        else if (n == 2)
+            static_cast<ServerModel*>(parent())->partChannel(commandParts[1]);
+        else
+            appendCommandInfo("Invalid command. Correct usage: '/part' or '/join &lt;channelname&gt'';");
+    }
+    else if (commandParts[0] == "/quit" || commandParts[0] == "/q")
+    {
+        if (n == 1)
+            QCoreApplication::instance()->quit();
+        else
+            appendCommandInfo("Invalid command. Correct usage: '/quit'");
+
+    }
+    else
+        appendCommandInfo("Unknown command, maybe it will be supported later?");
 }
