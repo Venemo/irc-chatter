@@ -257,14 +257,23 @@ void ChannelModel::parseCommand(const QString &msg)
         else
             appendCommandInfo("Invalid command. Correct usage: '/join &lt;channelname&gt;'");
     }
-    else if (commandParts[0] == "/part" || commandParts[0] == "/p")
+    else if (_name.startsWith('#') && commandParts[0] == "/part" || commandParts[0] == "/p")
     {
         if (n == 1)
             static_cast<ServerModel*>(parent())->partChannel(name());
         else if (n == 2)
             static_cast<ServerModel*>(parent())->partChannel(commandParts[1]);
         else
-            appendCommandInfo("Invalid command. Correct usage: '/part' or '/join &lt;channelname&gt'';");
+            appendCommandInfo("Invalid command. Correct usage: '/part' or '/part &lt;channelname&gt'';");
+    }
+    else if (!_name.startsWith('#') && commandParts[0] == "/close")
+    {
+        if (n == 1)
+            static_cast<ServerModel*>(parent())->closeUser(name());
+        else if (n == 2)
+            static_cast<ServerModel*>(parent())->closeUser(commandParts[1]);
+        else
+            appendCommandInfo("Invalid command. Correct usage: '/close' or '/close &lt;username&gt'';");
     }
     else if (commandParts[0] == "/quit" || commandParts[0] == "/q")
     {
