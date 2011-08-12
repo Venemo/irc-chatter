@@ -18,6 +18,9 @@ Page {
         ircModel.currentChannelIndex = index;
         shouldUpdateCurrentMessage = true;
     }
+    function scrollToBottom() {
+        chatFlickable.contentY = Math.max(0,  chatColumn.height - chatFlickable.height)
+    }
 
     tools: ToolBarLayout {
         visible: true
@@ -56,6 +59,8 @@ Page {
         contentHeight: chatColumn.height
         clip: true
 
+        onHeightChanged: scrollToBottom()
+
         Column {
             id: chatColumn
             width: parent.width
@@ -75,7 +80,7 @@ Page {
                     if (chatFlickable.contentY >= should - 50)
                         chatFlickable.contentY = should;
                 }
-                onModelChanged: chatFlickable.contentY = Math.max(0,  chatColumn.height - chatFlickable.height)
+                onModelChanged: scrollToBottom();
             }
         }
     }

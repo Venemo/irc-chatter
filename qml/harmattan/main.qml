@@ -3,7 +3,6 @@ import com.meego 1.0
 
 PageStackWindow {
     id: appWindow
-
     initialPage: chatPage
 
     ChatPage {
