@@ -70,11 +70,7 @@ void ChannelModel::receiveMessageFromBackend(const QString &userName, QString me
 void ChannelModel::receiveNoticeFromBackend(const QString &userName, QString message)
 {
     // Notice is basically a "private message", and that is supposed to be displayed the same way as a normal message
-
-    if (_channelText.length())
-        _channelText += "<br />";
-
-    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick(userName) + "'>" + userName + "</span>: " + processMessage(message));
+    receiveMessageFromBackend(userName, message);
 }
 
 void ChannelModel::receiveCtcpActionFromBackend(const QString &userName, QString message)
@@ -88,11 +84,13 @@ void ChannelModel::receiveCtcpActionFromBackend(const QString &userName, QString
 void ChannelModel::receiveCtcpRequestFromBackend(const QString &userName, QString message)
 {
     qDebug() << "CTCP request received " << userName << message;
+    _backend->session()->ctcpReply(userName, "IRC Chatter, the first MeeGo IRC client");
 }
 
 void ChannelModel::receiveCtcpReplyFromBackend(const QString &userName, QString message)
 {
     qDebug() << "CTCP reply received " << userName << message;
+    appendCommandInfo("CTCP Reply from " + userName + ": " + message);
 }
 
 void ChannelModel::receiveUnknownMessageFromBackend(const QString &userName, const QStringList &message)
@@ -250,6 +248,13 @@ void ChannelModel::parseCommand(const QString &msg)
             QCoreApplication::instance()->quit();
         else
             appendCommandInfo("Invalid command. Correct usage: '/quit'");
+    }
+    else if (commandParts[0] == "/me")
+    {
+        if (n > 1)
+            _backend->ctcpAction(msg.mid(4));
+        else
+            appendCommandInfo("Invalid command. Correct usage: '/me &lt;message&gt;'");
     }
     else
         appendCommandInfo("Unknown command, maybe it will be supported later?");
