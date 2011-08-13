@@ -39,6 +39,8 @@ ChannelModel::ChannelModel(ServerModel *parent, Irc::Buffer *backend) :
     connect(_backend, SIGNAL(parted(QString,QString)), this, SLOT(receivePartedFromBackend(QString,QString)));
     connect(_backend, SIGNAL(quit(QString,QString)), this, SLOT(receiveQuitFromBackend(QString,QString)));
     connect(_backend, SIGNAL(nickChanged(QString,QString)), this, SLOT(receiveNickChangeFromBackend(QString,QString)));
+    connect(_backend, SIGNAL(invited(QString,QString,QString)), this, SLOT(receiveInviteFromBackend(QString,QString,QString)));
+    connect(_backend, SIGNAL(kicked(QString,QString,QString)), this, SLOT(receiveKickedFromBackend(QString,QString,QString)));
     connect(_backend, SIGNAL(receiverChanged(QString)), this, SLOT(channelNameChanged(QString)));
     connect(_backend, SIGNAL(receiverChanged(QString)), this, SIGNAL(nameChanged()));
 
@@ -89,6 +91,16 @@ void ChannelModel::receiveNickChangeFromBackend(const QString &oldNick, const QS
 {
     appendChannelInfo("*** " + oldNick + " has changed nick to " + newNick + ".");
     updateUserList();
+}
+
+void ChannelModel::receiveInviteFromBackend(const QString &origin, const QString &receiver, const QString &channel)
+{
+    appendCommandInfo("*** " + origin + " has invited " + receiver + " to " + channel + ".");
+}
+
+void ChannelModel::receiveKickedFromBackend(const QString &origin, const QString &nick, QString message)
+{
+    appendCommandInfo("*** " + origin + " has kicked " + nick + " with message '" + processMessage(message) + "'.");
 }
 
 QString &ChannelModel::processMessage(QString &msg)

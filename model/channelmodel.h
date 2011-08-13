@@ -73,6 +73,8 @@ private slots:
     void receiveQuitFromBackend(const QString &userName, QString reason);
     void receiveNickChangeFromBackend(const QString &oldNick, const QString &newNick);
     void receiveMotdFromBackend(QString motd);
+    void receiveInviteFromBackend(const QString &origin, const QString &receiver, const QString &channel);
+    void receiveKickedFromBackend(const QString &origin, const QString &nick, QString message);
     void channelNameChanged(const QString &newName);
 
 public slots:
