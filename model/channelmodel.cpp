@@ -37,8 +37,9 @@ ChannelModel::ChannelModel(ServerModel *parent, Irc::Buffer *backend) :
     connect(_backend, SIGNAL(ctcpReplyReceived(QString,QString)), this, SLOT(receiveCtcpReplyFromBackend(QString,QString)));
     connect(_backend, SIGNAL(joined(QString)), this, SLOT(receiveJoinedFromBackend(QString)));
     connect(_backend, SIGNAL(parted(QString,QString)), this, SLOT(receivePartedFromBackend(QString,QString)));
+    connect(_backend, SIGNAL(quit(QString,QString)), this, SLOT(receiveQuitFromBackend(QString,QString)));
+    connect(_backend, SIGNAL(receiverChanged(QString)), this, SLOT(channelNameChanged(QString)));
     connect(_backend, SIGNAL(receiverChanged(QString)), this, SIGNAL(nameChanged()));
-
 
 }
 
@@ -53,6 +54,11 @@ QString ChannelModel::name() const
     return _backend->receiver();
 }
 
+void ChannelModel::channelNameChanged(const QString &newName)
+{
+    appendChannelInfo("Channel name is changed to " + newName);
+}
+
 void ChannelModel::receiveMotdFromBackend(QString motd)
 {
     appendChannelInfo("[MOTD] " + processMessage(motd));
@@ -61,14 +67,20 @@ void ChannelModel::receiveMotdFromBackend(QString motd)
 void ChannelModel::receiveJoinedFromBackend(const QString &userName)
 {
     if (userName != _backend->session()->nick())
-        appendChannelInfo(userName + " has joined " + name());
+        appendChannelInfo("--> " + userName + " has joined this channel.");
 
     updateUserList();
 }
 
-void ChannelModel::receivePartedFromBackend(const QString &userName, const QString &reason)
+void ChannelModel::receivePartedFromBackend(const QString &userName, QString reason)
 {
-    appendChannelInfo(userName + " has parted " + name() + " (Reason: " + reason + ")");
+    appendChannelInfo("<-- " + userName + " has parted this channel." + (reason.length() ? (" (Reason: " + processMessage(reason) + ")") : ""));
+    updateUserList();
+}
+
+void ChannelModel::receiveQuitFromBackend(const QString &userName, QString reason)
+{
+    appendChannelInfo("<-- " + userName + " has left this server." + (reason.length() ? (" (Reason: " + processMessage(reason) + ")") : ""));
     updateUserList();
 }
 

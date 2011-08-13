@@ -69,8 +69,10 @@ private slots:
     void receiveCtcpReplyFromBackend(const QString &userName, QString message);
     void receiveUnknownMessageFromBackend(const QString &userName, const QStringList &message);
     void receiveJoinedFromBackend(const QString &userName);
-    void receivePartedFromBackend(const QString &userName, const QString &reason);
+    void receivePartedFromBackend(const QString &userName, QString reason);
+    void receiveQuitFromBackend(const QString &userName, QString reason);
     void receiveMotdFromBackend(QString motd);
+    void channelNameChanged(const QString &newName);
 
 public slots:
     void sendCurrentMessage();
