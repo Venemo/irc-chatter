@@ -9,11 +9,14 @@ IrcModel::IrcModel(QObject *parent) :
 {
 }
 
-void IrcModel::connectToServer(const QString &url, const QString &password, const QString &nick)
+void IrcModel::connectToServer(const QString &url, const QString &password, const QString &nick, const QString &ident, const QString &fullName)
 {
     Irc::Session *session = new Irc::Session();
     session->setNick(nick);
     session->setPassword(password);
+    session->setIdent(ident);
+    if (fullName != "")
+        session->setRealName(fullName);
     _servers->addItem(new ServerModel(this, url, session));
     connect(session, SIGNAL(connected()), this, SLOT(backendsConnectedToServer()));
 }
