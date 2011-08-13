@@ -25,7 +25,11 @@ ServerModel::ServerModel(IrcModel *parent, const QString &url, Irc::Session *bac
 
 ServerModel::~ServerModel()
 {
-    _backend->quit("IRC Chatter (the first MeeGo IRC client) closed.");
+    if (_backend)
+    {
+        _backend->quit("IRC Chatter (the first MeeGo IRC client) closed.");
+        _backend->deleteLater();
+    }
 }
 
 void ServerModel::backendConnectedToServer()
