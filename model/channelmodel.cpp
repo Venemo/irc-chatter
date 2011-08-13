@@ -11,25 +11,11 @@ QList<QString> *ChannelModel::_colors = 0;
 QRegExp ChannelModel::_urlRegexp(QString("\\b((?:(?:([a-z][\\w-]+:/{1,3})|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|\\}\\]|[^\\s`!()\\[\\]{};:'\".,<>?%1%2%3%4%5%6])|[a-z0-9.\\-+_]+@[a-z0-9.\\-]+[.][a-z]{1,5}[^\\s/`!()\\[\\]{};:'\".,<>?%1%2%3%4%5%6]))").arg(QChar(0x00AB)).arg(QChar(0x00BB)).arg(QChar(0x201C)).arg(QChar(0x201D)).arg(QChar(0x2018)).arg(QChar(0x2019)));
 QString ChannelModel::_autoCompletionSuffix(", ");
 
-ChannelModel::ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backend) :
+ChannelModel::ChannelModel(ServerModel *parent, Irc::Buffer *backend) :
     QObject(parent),
-    _name(name),
     _users(new QStringListModel(this)),
     _backend(backend)
 {
-    if (_backend)
-    {
-        connect(_backend, SIGNAL(destroyed()), this, SLOT(backendDeleted()));
-        connect(_backend, SIGNAL(messageReceived(QString,QString)), this, SLOT(receiveMessageFromBackend(QString,QString)));
-        connect(_backend, SIGNAL(unknownMessageReceived(QString,QStringList)), this, SLOT(receiveUnknownMessageFromBackend(QString,QStringList)));
-        connect(_backend, SIGNAL(noticeReceived(QString,QString)), this, SLOT(receiveNoticeFromBackend(QString,QString)));
-        connect(_backend, SIGNAL(ctcpActionReceived(QString,QString)), this, SLOT(receiveCtcpActionFromBackend(QString,QString)));
-        connect(_backend, SIGNAL(ctcpRequestReceived(QString,QString)), this, SLOT(receiveCtcpRequestFromBackend(QString,QString)));
-        connect(_backend, SIGNAL(ctcpReplyReceived(QString,QString)), this, SLOT(receiveCtcpReplyFromBackend(QString,QString)));
-        connect(_backend, SIGNAL(joined(QString)), this, SLOT(receiveJoinedFromBackend(QString)));
-        connect(_backend, SIGNAL(parted(QString,QString)), this, SLOT(receivePartedFromBackend(QString,QString)));
-    }
-
     if (!_colors)
     {
         _colors = new QList<QString>();
@@ -37,6 +23,23 @@ ChannelModel::ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backe
         _colors->append("#00ff00");
         _colors->append("#0000ff");
     }
+
+    if (!_backend)
+        qDebug() << "A channel backend is null, this is an error. The app will segfault.";
+
+    connect(_backend, SIGNAL(destroyed()), this, SLOT(backendDeleted()));
+    connect(_backend, SIGNAL(messageReceived(QString,QString)), this, SLOT(receiveMessageFromBackend(QString,QString)));
+    connect(_backend, SIGNAL(unknownMessageReceived(QString,QStringList)), this, SLOT(receiveUnknownMessageFromBackend(QString,QStringList)));
+    connect(_backend, SIGNAL(noticeReceived(QString,QString)), this, SLOT(receiveNoticeFromBackend(QString,QString)));
+    connect(_backend, SIGNAL(motdReceived(QString)), this, SLOT(receiveMotdFromBackend(QString)));
+    connect(_backend, SIGNAL(ctcpActionReceived(QString,QString)), this, SLOT(receiveCtcpActionFromBackend(QString,QString)));
+    connect(_backend, SIGNAL(ctcpRequestReceived(QString,QString)), this, SLOT(receiveCtcpRequestFromBackend(QString,QString)));
+    connect(_backend, SIGNAL(ctcpReplyReceived(QString,QString)), this, SLOT(receiveCtcpReplyFromBackend(QString,QString)));
+    connect(_backend, SIGNAL(joined(QString)), this, SLOT(receiveJoinedFromBackend(QString)));
+    connect(_backend, SIGNAL(parted(QString,QString)), this, SLOT(receivePartedFromBackend(QString,QString)));
+    connect(_backend, SIGNAL(receiverChanged(QString)), this, SIGNAL(nameChanged()));
+
+
 }
 
 ChannelModel::~ChannelModel()
@@ -45,16 +48,27 @@ ChannelModel::~ChannelModel()
         _backend->deleteLater();
 }
 
+QString ChannelModel::name() const
+{
+    return _backend->receiver();
+}
+
+void ChannelModel::receiveMotdFromBackend(QString motd)
+{
+    appendChannelInfo("[MOTD] " + processMessage(motd));
+}
+
 void ChannelModel::receiveJoinedFromBackend(const QString &userName)
 {
     if (userName != _backend->session()->nick())
-        appendChannelInfo(userName + " has joined " + _name);
+        appendChannelInfo(userName + " has joined " + name());
+
     updateUserList();
 }
 
 void ChannelModel::receivePartedFromBackend(const QString &userName, const QString &reason)
 {
-    appendChannelInfo(userName + " has parted " + _name + " (Reason: " + reason + ")");
+    appendChannelInfo(userName + " has parted " + name() + " (Reason: " + reason + ")");
     updateUserList();
 }
 
@@ -63,6 +77,7 @@ QString &ChannelModel::processMessage(QString &msg)
     msg.replace('&', "&amp;");
     msg.replace('<', "&lt;");
     msg.replace('<', "&gt;");
+    msg.replace('\n', "<br />");
     msg.replace(_urlRegexp, "<a href=\"\\1\">\\1</a>");
     return msg;
 }
@@ -119,7 +134,7 @@ void ChannelModel::receiveCtcpReplyFromBackend(const QString &userName, QString 
 
 void ChannelModel::receiveUnknownMessageFromBackend(const QString &userName, const QStringList &message)
 {
-    qDebug() << "unknown message received at: " << _name << userName << message;
+    qDebug() << "unknown message received at: " << name() << userName << message;
     _users->setStringList(_backend->names());
 }
 
@@ -257,7 +272,7 @@ void ChannelModel::parseCommand(const QString &msg)
         else
             appendCommandInfo("Invalid command. Correct usage: '/join &lt;channelname&gt;'");
     }
-    else if (_name.startsWith('#') && commandParts[0] == "/part" || commandParts[0] == "/p")
+    else if (name().startsWith('#') && (commandParts[0] == "/part" || commandParts[0] == "/p"))
     {
         if (n == 1)
             static_cast<ServerModel*>(parent())->partChannel(name());
@@ -266,7 +281,7 @@ void ChannelModel::parseCommand(const QString &msg)
         else
             appendCommandInfo("Invalid command. Correct usage: '/part' or '/part &lt;channelname&gt'';");
     }
-    else if (!_name.startsWith('#') && commandParts[0] == "/close")
+    else if (!name().startsWith('#') && commandParts[0] == "/close")
     {
         if (n == 1)
             static_cast<ServerModel*>(parent())->closeUser(name());

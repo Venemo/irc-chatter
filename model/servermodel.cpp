@@ -36,7 +36,7 @@ void ServerModel::backendConnectedToServer()
 void ServerModel::backendAddedBuffer(Irc::Buffer *buffer)
 {
     qDebug() << "backend added buffer " << buffer->receiver();
-    _channels->addItem(new ChannelModel(buffer->receiver(), this, buffer));
+    _channels->addItem(new ChannelModel(this, buffer));
 }
 
 void ServerModel::backendRemovedBuffer(Irc::Buffer *buffer)

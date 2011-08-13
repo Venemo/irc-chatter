@@ -13,8 +13,7 @@ class ChannelModel : public QObject
 {
     Q_OBJECT
 
-    GENPROPERTY(QString, _name, name, setName, nameChanged)
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged)
     GENPROPERTY_R(QString, _currentMessage, currentMessage)
     Q_PROPERTY(QString currentMessage READ currentMessage WRITE setCurrentMessage NOTIFY currentMessageChanged)
     GENPROPERTY_R(QStringListModel*, _users, users)
@@ -42,7 +41,7 @@ class ChannelModel : public QObject
     void appendChannelInfo(const QString &msg);
 
 protected:
-    explicit ChannelModel(QString name, ServerModel *parent, Irc::Buffer *backend);
+    explicit ChannelModel(ServerModel *parent, Irc::Buffer *backend);
 
 public:
     ~ChannelModel();
@@ -51,6 +50,7 @@ public:
 
     Q_INVOKABLE void autoCompleteNick();
     Q_INVOKABLE const QString colorForNick(const QString &nick);
+    QString name() const;
 
 signals:
     void nameChanged();
@@ -70,6 +70,7 @@ private slots:
     void receiveUnknownMessageFromBackend(const QString &userName, const QStringList &message);
     void receiveJoinedFromBackend(const QString &userName);
     void receivePartedFromBackend(const QString &userName, const QString &reason);
+    void receiveMotdFromBackend(QString motd);
 
 public slots:
     void sendCurrentMessage();
