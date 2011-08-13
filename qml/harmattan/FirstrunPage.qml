@@ -15,7 +15,7 @@ Page {
                 onClicked: {
                     if (isValid) {
                         appWindow.pageStack.push(progressPage);
-                        ircModel.connectToServer(serverUrlField.text, passwordField.text, nicknameField.text);
+                        ircModel.connectToServer(serverUrlField.text, passwordField.text, nicknameField.text, identField.text, realNameField.text);
                     }
                     else {
                         invalidBanner.show();
@@ -76,6 +76,9 @@ Page {
                 echoMode: TextInput.Password
             }
             TitleLabel {
+                text: "User settings"
+            }
+            Label {
                 text: "Your nickname"
             }
             TextField {
@@ -83,6 +86,24 @@ Page {
                 width: parent.width
                 text: ""
                 placeholderText: "Enter your nickname"
+            }
+            Label {
+                text: "Your ident"
+            }
+            TextField {
+                id: identField
+                width: parent.width
+                text: "irc-chatter"
+                placeholderText: "Enter your ident"
+            }
+            Label {
+                text: "Your Real Name"
+            }
+            TextField {
+                id: realNameField
+                width: parent.width
+                text: ""
+                placeholderText: "Enter your real name"
             }
         }
     }
