@@ -24,7 +24,6 @@ public:
     ServerModel *currentServer() { return currentChannel() ? static_cast<ServerModel*>(currentChannel()->parent()) : 0; }
 
     Q_INVOKABLE void connectToServer(const QString &url, const QString &nick);
-    void fillWithDummyData();
 
 private slots:
     void backendsConnectedToServer();
