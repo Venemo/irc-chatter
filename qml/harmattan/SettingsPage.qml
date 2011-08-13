@@ -13,7 +13,7 @@ Page {
         }
         ToolIcon {
             platformIconId: "toolbar-view-menu"
-            onClicked: (settingsMenu.status == DialogStatus.Closed) ? settingsMenu.open() : settingsMenu.close()
+            onClicked: (commonMenu.status == DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
         }
     }
 
@@ -130,17 +130,6 @@ Page {
         Component.onCompleted: {
             for (var i = 10; i <= 40; i++)
                 model.append({ name: i + " pixels", pixelSize: i });
-        }
-    }
-
-    Menu {
-        id: settingsMenu
-        visualParent: pageStack
-        MenuLayout {
-            MenuItem {
-                text: "Quit app"
-                onClicked: Qt.quit();
-            }
         }
     }
 }

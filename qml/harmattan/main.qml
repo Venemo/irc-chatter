@@ -3,7 +3,37 @@ import com.meego 1.0
 
 PageStackWindow {
     id: appWindow
-    initialPage: chatPage
+    initialPage: firstrunPage
+
+    // Common components
+
+    QueryDialog {
+        id: prereleaseDialog
+        titleText: "This is not working"
+        message: "This part of the GUI is currently 100% NON-functional.\nSorry guys."
+        acceptButtonText: "Ok, no problem"
+    }
+
+    Menu {
+        id: commonMenu
+        visualParent: pageStack
+        MenuLayout {
+            MenuItem {
+                text: "Quit app"
+                onClicked: Qt.quit();
+            }
+        }
+    }
+
+    // Pages
+
+    FirstrunPage {
+        id: firstrunPage
+    }
+
+    ProgressPage {
+        id: progressPage
+    }
 
     ChatPage {
         id: chatPage
@@ -11,12 +41,5 @@ PageStackWindow {
 
     SettingsPage {
         id: settingsPage
-    }
-
-    QueryDialog {
-        id: prereleaseDialog
-        titleText: "This is not working"
-        message: "This part of the GUI is currently 100% NON-functional.\nSorry guys."
-        acceptButtonText: "Ok, no problem"
     }
 }

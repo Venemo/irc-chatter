@@ -1,20 +1,94 @@
 import QtQuick 1.1
 import com.meego 1.0
+import com.meego.extras 1.0
 
 Page {
-    id: mainPage
-    tools: ToolBarLayout {
-        visible: true
+    id: firstrunPage
 
-        ToolIcon {
-            platformIconId: "toolbar-next";
+    property bool isValid: serverUrlField.text.length > 0 && nicknameField.text.length > 0
+
+    tools: ToolBarLayout {
+            id: commonToolbar
+
+            ToolIcon {
+                platformIconId: "toolbar-done"
+                onClicked: {
+                    if (isValid) {
+                        appWindow.pageStack.push(progressPage);
+                        ircModel.connectToServer(serverUrlField.text, passwordField.text, nicknameField.text);
+                    }
+                    else {
+                        invalidBanner.show();
+                    }
+                }
+
+            }
+            ToolIcon {
+                platformIconId: "toolbar-view-menu"
+                onClicked: (commonMenu.status == DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
+            }
+        }
+
+    Flickable {
+        id: configFlickable
+        anchors.fill: parent
+
+        interactive: true
+        contentWidth: parent.width
+        contentHeight: configColumn.height + 30
+        clip: true
+
+        Column {
+            id: configColumn
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: 10
+            spacing: 10
+
+            TitleLabel {
+                text: "Welcome to IRC Chatter!"
+            }
+            Label {
+                text: "This version is a v0.1 PREVIEW and it only allows you to connect to one server. This will be fixed in the final release."
+                width: parent.width
+            }
+            TitleLabel {
+                text: "Server settings"
+            }
+            Label {
+                text: "Server URL"
+            }
+            TextField {
+                id: serverUrlField
+                width: parent.width
+                text: "irc.freenode.net"
+                placeholderText: "Enter a server URL"
+            }
+            Label {
+                text: "Password"
+            }
+            TextField {
+                id: passwordField
+                width: parent.width
+                text: ""
+                placeholderText: "If it's needed, enter a password"
+                echoMode: TextInput.PasswordEchoOnEdit
+            }
+            TitleLabel {
+                text: "Your nickname"
+            }
+            TextField {
+                id: nicknameField
+                width: parent.width
+                text: ""
+                placeholderText: "Enter your nickname"
+            }
         }
     }
 
-    Row {
-        spacing: 10
+    InfoBanner {
+        id: invalidBanner
+        text: "The data you entered is invalid. Please fix it and press the Done button again."
     }
-
-
-
 }
