@@ -172,7 +172,15 @@ void ChannelModel::receiveUnknownMessageFromBackend(const QString &userName, con
 void ChannelModel::updateUserList()
 {
     QStringList list = _backend->names();
-    list.sort();
+    // workaround for bug: https://bugreports.qt.nokia.com/browse/QTBUG-12892
+    // found in http://www.harshj.com/2009/10/24/sorting-entries-in-a-qstringlist-case-insensitively/
+    // - Thank you!
+    QMap<QString, QString> strMap;
+    foreach (QString str, list)
+    {
+        strMap.insert( str.toLower(), str );
+    }
+    list = strMap.values();
     _users->setStringList(list);
 }
 
@@ -217,12 +225,11 @@ void ChannelModel::autoCompleteNick()
     {
         // The user hasn't typed anything, let's give him the name of the last spoke user
 
-        //...
+        // TODO
 
         return;
     }
-    else if (_currentMessage[_currentMessage.length() - 1] == ' ')
-        return;
+
 
     QString replacableFragment, newFragment;
 
@@ -233,12 +240,16 @@ void ChannelModel::autoCompleteNick()
         if (_possibleNickNames.count() <= 1)
             return;
 
-        replacableFragment = _possibleNickNames[_currentCompletionIndex] + _autoCompletionSuffix;
+        replacableFragment = _possibleNickNames[_currentCompletionIndex];
+        if (_currentCompletionPosition == 0)
+            replacableFragment += _autoCompletionSuffix;
         _currentCompletionIndex ++;
 
         if (_currentCompletionIndex >= _possibleNickNames.count())
             _currentCompletionIndex = 0;
     }
+    else if (_currentMessage[_currentMessage.length() - 1] == ' ')
+        return;
     else
     {
         // The user already has a message and is trying to start autocompleting a name
@@ -270,8 +281,6 @@ void ChannelModel::autoCompleteNick()
     newFragment = _possibleNickNames[_currentCompletionIndex];
     if (_currentCompletionPosition == 0)
         newFragment += _autoCompletionSuffix;
-
-    //qDebug() << "replacable fragment is: " << replacableFragment << ", new fragment is: " << newFragment;
 
     _currentMessage.replace(_currentCompletionPosition, replacableFragment.length(), newFragment);
     emit currentMessageChanged();
