@@ -71,6 +71,7 @@ private slots:
     void receiveJoinedFromBackend(const QString &userName);
     void receivePartedFromBackend(const QString &userName, QString reason);
     void receiveQuitFromBackend(const QString &userName, QString reason);
+    void receiveNickChangeFromBackend(const QString &oldNick, const QString &newNick);
     void receiveMotdFromBackend(QString motd);
     void channelNameChanged(const QString &newName);
 

@@ -38,6 +38,7 @@ ChannelModel::ChannelModel(ServerModel *parent, Irc::Buffer *backend) :
     connect(_backend, SIGNAL(joined(QString)), this, SLOT(receiveJoinedFromBackend(QString)));
     connect(_backend, SIGNAL(parted(QString,QString)), this, SLOT(receivePartedFromBackend(QString,QString)));
     connect(_backend, SIGNAL(quit(QString,QString)), this, SLOT(receiveQuitFromBackend(QString,QString)));
+    connect(_backend, SIGNAL(nickChanged(QString,QString)), this, SLOT(receiveNickChangeFromBackend(QString,QString)));
     connect(_backend, SIGNAL(receiverChanged(QString)), this, SLOT(channelNameChanged(QString)));
     connect(_backend, SIGNAL(receiverChanged(QString)), this, SIGNAL(nameChanged()));
 
@@ -81,6 +82,12 @@ void ChannelModel::receivePartedFromBackend(const QString &userName, QString rea
 void ChannelModel::receiveQuitFromBackend(const QString &userName, QString reason)
 {
     appendChannelInfo("<-- " + userName + " has left this server." + (reason.length() ? (" (Reason: " + processMessage(reason) + ")") : ""));
+    updateUserList();
+}
+
+void ChannelModel::receiveNickChangeFromBackend(const QString &oldNick, const QString &newNick)
+{
+    appendChannelInfo("*** " + oldNick + " has changed nick to " + newNick + ".");
     updateUserList();
 }
 
