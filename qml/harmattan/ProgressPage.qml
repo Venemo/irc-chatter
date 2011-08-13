@@ -6,16 +6,18 @@ Page {
     id: progressPage
     tools: ToolBarLayout {
         ToolIcon {
-            platformIconId: "toolbar-back"
-            onClicked: {
-                appWindow.pageStack.pop();
-                cancelledBanner.show();
-            }
-        }
-        ToolIcon {
             platformIconId: "toolbar-view-menu"
             onClicked: (commonMenu.status == DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
+            anchors.right: parent.right
         }
+    }
+
+    property bool isModelReady: false
+    property bool canPushChatPage: status == PageStatus.Active && isModelReady
+
+    onCanPushChatPageChanged: {
+        if (canPushChatPage)
+            appWindow.pageStack.push(chatPage);
     }
 
     BusyIndicator {
@@ -30,21 +32,10 @@ Page {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 10
     }
-    InfoBanner {
-        id: cancelledBanner
-        parent: firstrunPage
-        text: "Connection cancelled!"
-    }
-    InfoBanner {
-        id: connectedBanner
-        parent: chatPage
-        text: "Connection established successfully!"
-    }
     Connections {
         target: ircModel
         onReadyToDisplay: {
-            appWindow.pageStack.push(chatPage);
-            connectedBanner.show();
+            isModelReady = true;
         }
     }
 }

@@ -5,6 +5,24 @@ PageStackWindow {
     id: appWindow
     initialPage: firstrunPage
 
+    // Pages
+
+    FirstrunPage {
+        id: firstrunPage
+    }
+
+    ProgressPage {
+        id: progressPage
+    }
+
+    ChatPage {
+        id: chatPage
+    }
+
+    SettingsPage {
+        id: settingsPage
+    }
+
     // Common components
 
     QueryDialog {
@@ -23,23 +41,5 @@ PageStackWindow {
                 onClicked: Qt.quit();
             }
         }
-    }
-
-    // Pages
-
-    FirstrunPage {
-        id: firstrunPage
-    }
-
-    ProgressPage {
-        id: progressPage
-    }
-
-    ChatPage {
-        id: chatPage
-    }
-
-    SettingsPage {
-        id: settingsPage
     }
 }
