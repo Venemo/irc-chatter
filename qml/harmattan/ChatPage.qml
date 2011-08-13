@@ -227,6 +227,7 @@ Page {
         id: userSelectorDialog
         titleText: "User list of " + (ircModel.currentChannel === null ? "?" : ircModel.currentChannel.name)
         model: ircModel.currentChannel === null ? null : ircModel.currentChannel.users
+        searchFieldVisible: true
     }
 
 }
