@@ -73,7 +73,7 @@ Page {
                 width: parent.width
                 text: ""
                 placeholderText: "If it's needed, enter a password"
-                echoMode: TextInput.PasswordEchoOnEdit
+                echoMode: TextInput.Password
             }
             TitleLabel {
                 text: "Your nickname"
