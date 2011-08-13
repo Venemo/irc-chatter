@@ -38,10 +38,10 @@ Page {
             onClicked: userSelectorDialog.open();
             visible: ircModel.currentChannel === null ? false : (ircModel.currentChannel.name.charAt(0) === '#')
         }
-        ToolIcon {
-            platformIconId: "toolbar-settings";
-            onClicked: appWindow.pageStack.push(settingsPage)
-        }
+//        ToolIcon {
+//            platformIconId: "toolbar-settings";
+//            onClicked: appWindow.pageStack.push(settingsPage)
+//        }
         ToolIcon {
             platformIconId: "toolbar-view-menu";
             onClicked: (chatMenu.status == DialogStatus.Closed) ? chatMenu.open() : chatMenu.close()
@@ -225,7 +225,7 @@ Page {
 
     WorkingSelectionDialog {
         id: userSelectorDialog
-        titleText: "User list of " + ircModel.currentChannel === null? "?" : ircModel.currentChannel.name
+        titleText: "User list of " + (ircModel.currentChannel === null ? "?" : ircModel.currentChannel.name)
         model: ircModel.currentChannel === null ? null : ircModel.currentChannel.users
     }
 
