@@ -113,3 +113,10 @@ bool ServerModel::closeUser(const QString &userName)
     removeModelForBuffer(_backend->buffer(userName));
     return true;
 }
+
+bool ServerModel::changeNick(const QString &nick)
+{
+    qDebug() << "changing nick to " << nick;
+    _backend->setNick(nick);
+    return true;
+}

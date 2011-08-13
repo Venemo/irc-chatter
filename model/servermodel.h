@@ -34,6 +34,7 @@ public:
     Q_INVOKABLE bool partChannel(const QString &channelName);
     Q_INVOKABLE bool queryUser(const QString &userName);
     Q_INVOKABLE bool closeUser(const QString &userName);
+    Q_INVOKABLE bool changeNick(const QString &nick);
 
 signals:
     void channelsChanged();

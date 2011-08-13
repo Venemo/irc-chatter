@@ -342,6 +342,13 @@ void ChannelModel::parseCommand(const QString &msg)
         else
             appendCommandInfo("Invalid command. Correct usage: '/msg &lt;username&gt; &lt;message&gt;'");
     }
+    else if (commandParts[0] == "/nick")
+    {
+        if (n == 2)
+            static_cast<ServerModel*>(parent())->changeNick(commandParts[1]);
+        else
+            appendCommandInfo("Invalid command. Correct usage: '/nick &lt;new nick&gt;' ");
+    }
     else
         appendCommandInfo("Unknown command, maybe it will be supported later?");
 }
