@@ -65,6 +65,11 @@ void ServerModel::removeModelForBuffer(Irc::Buffer *buffer)
     }
 }
 
+void ServerModel::displayError(const QString &error)
+{
+    static_cast<IrcModel*>(parent())->currentChannel()->appendError(error);
+}
+
 void ServerModel::receiveNumericMessageFromBackend(const QString &name, uint x, const QStringList &message)
 {
     Q_UNUSED(name);
@@ -91,6 +96,12 @@ void ServerModel::receiveNumericMessageFromBackend(const QString &name, uint x, 
             }
         }
     }
+    else if (x == Irc::Rfc::ERR_NICKNAMEINUSE)
+        displayError("This nickname is already in use.");
+    else if (x == Irc::Rfc::ERR_NICKCOLLISION)
+        displayError("Nick name collision!");
+    else if (x >= 400)
+        displayError("An error occoured! Error code is: " + x);
 }
 
 bool ServerModel::joinChannel(const QString &channelName)

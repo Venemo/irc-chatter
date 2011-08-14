@@ -35,6 +35,7 @@ public:
     Q_INVOKABLE bool queryUser(const QString &userName);
     Q_INVOKABLE bool closeUser(const QString &userName);
     Q_INVOKABLE bool changeNick(const QString &nick);
+    Q_INVOKABLE void displayError(const QString &error);
 
 signals:
     void channelsChanged();

@@ -41,6 +41,7 @@ class ChannelModel : public QObject
     QString &processMessage(QString &msg);
     void appendCommandInfo(const QString &msg);
     void appendChannelInfo(const QString &msg);
+    void appendError(const QString &msg);
 
 protected:
     explicit ChannelModel(ServerModel *parent, Irc::Buffer *backend);

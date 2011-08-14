@@ -129,6 +129,14 @@ void ChannelModel::appendChannelInfo(const QString &msg)
     setChannelText(_channelText += "<span style='color: purple'>" + msg + "</span>");
 }
 
+void ChannelModel::appendError(const QString &msg)
+{
+    if (_channelText.length())
+        _channelText += "<br />";
+
+    setChannelText(_channelText += "<span style='color: red'>[ERROR] " + msg + "</span>");
+}
+
 void ChannelModel::receiveMessageFromBackend(const QString &userName, QString message)
 {
     if (_channelText.length())
