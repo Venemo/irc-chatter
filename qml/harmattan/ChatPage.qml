@@ -121,12 +121,30 @@ Page {
                         text: model.name
                         height: channelNameBg.width
                         verticalAlignment: Text.AlignVCenter
-                        color: (ircModel.currentChannelIndex == index) ? "white" : "lightgrey"
-                        font.bold: (ircModel.currentChannelIndex == index) ? true : false
+                        color: isCurrent ? "white" : (hasNewMessageWithUserNick ? "red" : (hasNewMessage ? "blue" : "lightgrey"))
+                        font.bold: isCurrent ? true : false
+
+                        property bool hasNewMessage: false
+                        property bool hasNewMessageWithUserNick: false
+                        property bool isCurrent: ircModel.currentChannelIndex == index
+
+                        Connections {
+                            target: ircModel.allChannels.getItem(index)
+                            onNewMessageReceived: {
+                                if (!isCurrent)
+                                    hasNewMessage = true;
+                            }
+                            onNewMessageWithUserNickReceived: {
+                                if (!isCurrent)
+                                    hasNewMessageWithUserNick = true;
+                            }
+                        }
 
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
+                                hasNewMessage = false;
+                                hasNewMessageWithUserNick = false;
                                 switchChannel(index);
                                 scrollToBottom();
                             }

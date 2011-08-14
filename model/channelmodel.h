@@ -43,7 +43,7 @@ protected:
     void setTopic(const QString &value);
 
     void parseCommand(const QString &msg);
-    QString &processMessage(QString &msg);
+    QString &processMessage(QString &msg, bool *hasUserNick = 0);
     void appendEmphasisedInfo(QString msg);
     void appendDeemphasisedInfo(QString msg);
     void appendError(QString msg);
@@ -64,6 +64,9 @@ signals:
     void serverChanged();
     void channelTextChanged();
     void topicChanged();
+
+    void newMessageReceived();
+    void newMessageWithUserNickReceived();
 
 private slots:
     void fakeMessage();

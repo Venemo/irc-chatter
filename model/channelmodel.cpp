@@ -104,7 +104,7 @@ void ChannelModel::receiveKickedFromBackend(const QString &origin, const QString
     appendEmphasisedInfo("*** " + origin + " has kicked " + nick + " with message '" + message + "'.");
 }
 
-QString &ChannelModel::processMessage(QString &msg)
+QString &ChannelModel::processMessage(QString &msg, bool *hasUserNick)
 {
     msg.replace('&', "&amp;");
     msg.replace('<', "&lt;");
@@ -113,7 +113,11 @@ QString &ChannelModel::processMessage(QString &msg)
     msg.replace(_urlRegexp, "<a href=\"\\1\">\\1</a>");
 
     if (msg.contains(_backend->session()->nick()))
+    {
         msg = "<span style='color:red'>" + msg + "</span>";
+        if (hasUserNick)
+            *hasUserNick = true;
+    }
 
     return msg;
 }
@@ -147,7 +151,13 @@ void ChannelModel::receiveMessageFromBackend(const QString &userName, QString me
     if (_channelText.length())
         _channelText += "<br />";
 
-    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick(userName) + "'>" + userName + "</span>: " + processMessage(message));
+    bool hasUserNick = false;
+    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick(userName) + "'>" + userName + "</span>: " + processMessage(message, &hasUserNick));
+
+    if (hasUserNick)
+        emit newMessageWithUserNickReceived();
+    else
+        emit newMessageReceived();
 }
 
 void ChannelModel::receiveNoticeFromBackend(const QString &userName, QString message)
