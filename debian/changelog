@@ -1,7 +1,0 @@
-irc-chatter (0.1.0) unstable; urgency=low
- 
-  * Initial version
-  * See http://wiki.meego.com/User:Venemo/IRC_Chatter for info
-  * See https://gitorious.org/colorful-apps/irc-chatter for source
-
- -- Timur Kristóf <venemo@msn.com>  Sun, 14 Aug 2011 22:41:22 +0200
