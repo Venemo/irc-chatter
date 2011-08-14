@@ -19,13 +19,21 @@ ChannelModel::ChannelModel(ServerModel *parent, Irc::Buffer *backend) :
     if (!_colors)
     {
         _colors = new QList<QString>();
+        // Red
         _colors->append("#ff0000");
+        // Green
         _colors->append("#00ff00");
+        // Blue
         _colors->append("#0000ff");
+        // Dark purple
         _colors->append("#400758");
+        // Dark green
         _colors->append("#0c5807");
+        // Dark orange
         _colors->append("#ba770e");
+        // Yellowish green (my favourite colour)
         _colors->append("#73ba0e");
+        // Yellow
         _colors->append("#cec700");
     }
 
