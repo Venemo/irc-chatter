@@ -59,48 +59,48 @@ QString ChannelModel::name() const
 
 void ChannelModel::channelNameChanged(const QString &newName)
 {
-    appendChannelInfo("Channel name is changed to " + newName);
+    appendDeemphasisedInfo("Channel name is changed to " + newName);
 }
 
 void ChannelModel::receiveMotdFromBackend(QString motd)
 {
-    appendChannelInfo("[MOTD] " + processMessage(motd));
+    appendDeemphasisedInfo("[MOTD] " + motd);
 }
 
 void ChannelModel::receiveJoinedFromBackend(const QString &userName)
 {
     if (userName != _backend->session()->nick())
-        appendChannelInfo("--> " + userName + " has joined this channel.");
+        appendDeemphasisedInfo("--> " + userName + " has joined this channel.");
 
     updateUserList();
 }
 
 void ChannelModel::receivePartedFromBackend(const QString &userName, QString reason)
 {
-    appendChannelInfo("<-- " + userName + " has parted this channel." + (reason.length() ? (" (Reason: " + processMessage(reason) + ")") : ""));
+    appendDeemphasisedInfo("<-- " + userName + " has parted this channel." + (reason.length() ? (" (Reason: " + reason + ")") : ""));
     updateUserList();
 }
 
 void ChannelModel::receiveQuitFromBackend(const QString &userName, QString reason)
 {
-    appendChannelInfo("<-- " + userName + " has left this server." + (reason.length() ? (" (Reason: " + processMessage(reason) + ")") : ""));
+    appendDeemphasisedInfo("<-- " + userName + " has left this server." + (reason.length() ? (" (Reason: " + reason + ")") : ""));
     updateUserList();
 }
 
 void ChannelModel::receiveNickChangeFromBackend(const QString &oldNick, const QString &newNick)
 {
-    appendChannelInfo("*** " + oldNick + " has changed nick to " + newNick + ".");
+    appendDeemphasisedInfo("*** " + oldNick + " has changed nick to " + newNick + ".");
     updateUserList();
 }
 
 void ChannelModel::receiveInviteFromBackend(const QString &origin, const QString &receiver, const QString &channel)
 {
-    appendCommandInfo("*** " + origin + " has invited " + receiver + " to " + channel + ".");
+    appendEmphasisedInfo("*** " + origin + " has invited " + receiver + " to " + channel + ".");
 }
 
 void ChannelModel::receiveKickedFromBackend(const QString &origin, const QString &nick, QString message)
 {
-    appendCommandInfo("*** " + origin + " has kicked " + nick + " with message '" + processMessage(message) + "'.");
+    appendEmphasisedInfo("*** " + origin + " has kicked " + nick + " with message '" + message + "'.");
 }
 
 QString &ChannelModel::processMessage(QString &msg)
@@ -113,28 +113,28 @@ QString &ChannelModel::processMessage(QString &msg)
     return msg;
 }
 
-void ChannelModel::appendCommandInfo(const QString &msg)
+void ChannelModel::appendEmphasisedInfo(QString msg)
 {
     if (_channelText.length())
         _channelText += "<br />";
 
-    setChannelText(_channelText += "<span style='color: orange'>" + msg + "</span>");
+    setChannelText(_channelText += "<span style='color: orange'>" + processMessage(msg) + "</span>");
 }
 
-void ChannelModel::appendChannelInfo(const QString &msg)
+void ChannelModel::appendDeemphasisedInfo(QString msg)
 {
     if (_channelText.length())
         _channelText += "<br />";
 
-    setChannelText(_channelText += "<span style='color: purple'>" + msg + "</span>");
+    setChannelText(_channelText += "<span style='color: purple'>" + processMessage(msg) + "</span>");
 }
 
-void ChannelModel::appendError(const QString &msg)
+void ChannelModel::appendError(QString msg)
 {
     if (_channelText.length())
         _channelText += "<br />";
 
-    setChannelText(_channelText += "<span style='color: red'>[ERROR] " + msg + "</span>");
+    setChannelText(_channelText += "<span style='color: red'>[ERROR] " + processMessage(msg) + "</span>");
 }
 
 void ChannelModel::receiveMessageFromBackend(const QString &userName, QString message)
@@ -168,7 +168,7 @@ void ChannelModel::receiveCtcpRequestFromBackend(const QString &userName, QStrin
 void ChannelModel::receiveCtcpReplyFromBackend(const QString &userName, QString message)
 {
     qDebug() << "CTCP reply received " << userName << message;
-    appendCommandInfo("CTCP Reply from " + userName + ": " + message);
+    appendEmphasisedInfo("CTCP Reply from " + userName + ": " + message);
 }
 
 void ChannelModel::receiveUnknownMessageFromBackend(const QString &userName, const QStringList &message)
@@ -195,7 +195,7 @@ void ChannelModel::updateUserList()
 void ChannelModel::setTopic(const QString &value)
 {
     _topic = value;
-    appendCommandInfo("[TOPIC] " + _topic);
+    appendEmphasisedInfo("[TOPIC] " + _topic);
     emit topicChanged();
 }
 
@@ -325,7 +325,7 @@ void ChannelModel::parseCommand(const QString &msg)
         if (n == 2)
             static_cast<ServerModel*>(parent())->joinChannel(commandParts[1]);
         else
-            appendCommandInfo("Invalid command. Correct usage: '/join &lt;channelname&gt;'");
+            appendEmphasisedInfo("Invalid command. Correct usage: '/join &lt;channelname&gt;'");
     }
     else if (name().startsWith('#') && (commandParts[0] == "/part" || commandParts[0] == "/p"))
     {
@@ -334,7 +334,7 @@ void ChannelModel::parseCommand(const QString &msg)
         else if (n == 2)
             static_cast<ServerModel*>(parent())->partChannel(commandParts[1]);
         else
-            appendCommandInfo("Invalid command. Correct usage: '/part' or '/part &lt;channelname&gt'';");
+            appendEmphasisedInfo("Invalid command. Correct usage: '/part' or '/part &lt;channelname&gt'';");
     }
     else if (!name().startsWith('#') && commandParts[0] == "/close")
     {
@@ -343,43 +343,43 @@ void ChannelModel::parseCommand(const QString &msg)
         else if (n == 2)
             static_cast<ServerModel*>(parent())->closeUser(commandParts[1]);
         else
-            appendCommandInfo("Invalid command. Correct usage: '/close' or '/close &lt;username&gt'';");
+            appendEmphasisedInfo("Invalid command. Correct usage: '/close' or '/close &lt;username&gt'';");
     }
     else if (commandParts[0] == "/quit" || commandParts[0] == "/q")
     {
         if (n == 1)
             QCoreApplication::instance()->quit();
         else
-            appendCommandInfo("Invalid command. Correct usage: '/quit'");
+            appendEmphasisedInfo("Invalid command. Correct usage: '/quit'");
     }
     else if (commandParts[0] == "/me")
     {
         if (n > 1)
             _backend->ctcpAction(msg.mid(4));
         else
-            appendCommandInfo("Invalid command. Correct usage: '/me &lt;message&gt;'");
+            appendEmphasisedInfo("Invalid command. Correct usage: '/me &lt;message&gt;'");
     }
     else if (commandParts[0] == "/msg")
     {
         if (n > 2)
-            appendCommandInfo("/msg is not supported yet, but planned to");
+            appendEmphasisedInfo("/msg is not supported yet, but planned to");
         else
-            appendCommandInfo("Invalid command. Correct usage: '/msg &lt;username&gt; &lt;message&gt;'");
+            appendEmphasisedInfo("Invalid command. Correct usage: '/msg &lt;username&gt; &lt;message&gt;'");
     }
     else if (commandParts[0] == "/nick")
     {
         if (n == 2)
             static_cast<ServerModel*>(parent())->changeNick(commandParts[1]);
         else
-            appendCommandInfo("Invalid command. Correct usage: '/nick &lt;new nick&gt;' ");
+            appendEmphasisedInfo("Invalid command. Correct usage: '/nick &lt;new nick&gt;' ");
     }
     else if (commandParts[0] == "/topic")
     {
         if (n == 1)
-            appendCommandInfo("[TOPIC] " + _topic);
+            appendEmphasisedInfo("[TOPIC] " + _topic);
         else
-            appendCommandInfo("Changing Topics is not supported yet!");
+            appendEmphasisedInfo("Changing Topics is not supported yet!");
     }
     else
-        appendCommandInfo("Unknown command, maybe it will be supported later?");
+        appendEmphasisedInfo("Unknown command, maybe it will be supported later?");
 }

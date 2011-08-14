@@ -34,18 +34,19 @@ class ChannelModel : public QObject
 
     static QList<QString> *_colors;
     static QRegExp _urlRegexp;
+
     friend class IrcModel;
     friend class ServerModel;
-
-    void parseCommand(const QString &msg);
-    QString &processMessage(QString &msg);
-    void appendCommandInfo(const QString &msg);
-    void appendChannelInfo(const QString &msg);
-    void appendError(const QString &msg);
 
 protected:
     explicit ChannelModel(ServerModel *parent, Irc::Buffer *backend);
     void setTopic(const QString &value);
+
+    void parseCommand(const QString &msg);
+    QString &processMessage(QString &msg);
+    void appendEmphasisedInfo(QString msg);
+    void appendDeemphasisedInfo(QString msg);
+    void appendError(QString msg);
 
 public:
     ~ChannelModel();
