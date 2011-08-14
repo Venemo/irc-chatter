@@ -1,5 +1,11 @@
-moc*
+moc_*
+qrc_*
+ui_*
 *.pro.user
 *.o
 *.core
-
+*~
+.goutputstream*
+Makefile
+debian/irc-chatter
+qtc_packaging
