@@ -8,14 +8,18 @@ HEADERS += \
     util.h \
     model/ircmodel.h \
     model/servermodel.h \
-    model/identitymodel.h
+    model/identitymodel.h \
+    appsettings.h \
+    serversettings.h
 
 SOURCES += \
     main.cpp \
     model/channelmodel.cpp \
     model/ircmodel.cpp \
     model/servermodel.cpp \
-    model/identitymodel.cpp
+    model/identitymodel.cpp \
+    appsettings.cpp \
+    serversettings.cpp
 
 RESOURCES += \
     harmattan-gui.qrc
@@ -49,3 +53,7 @@ unix {
     desktopfile.files = installables/irc-chatter-harmattan.desktop
     desktopfile.path = /usr/share/applications
 }
+
+
+
+
