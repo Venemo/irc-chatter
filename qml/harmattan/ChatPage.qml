@@ -213,7 +213,7 @@ Page {
             }
             MenuItem {
                 text: "Quit app"
-                onClicked: Qt.quit();
+                onClicked: quitDialog.open()
             }
         }
     }

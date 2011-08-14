@@ -32,13 +32,22 @@ PageStackWindow {
         acceptButtonText: "Ok, no problem"
     }
 
+    QueryDialog {
+        id: quitDialog
+        titleText: "Are you sure?"
+        message: "Do you want to quit the app?\nThis will disconnect you from IRC."
+        acceptButtonText: "Yes"
+        rejectButtonText: "No"
+        onAccepted: Qt.quit()
+    }
+
     Menu {
         id: commonMenu
         visualParent: pageStack
         MenuLayout {
             MenuItem {
                 text: "Quit app"
-                onClicked: Qt.quit();
+                onClicked: quitDialog.open()
             }
         }
     }
