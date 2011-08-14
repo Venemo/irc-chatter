@@ -5,7 +5,7 @@ Version=1.0
 Type=Application
 Terminal=false
 Name=IRC
-Exec=/usr/bin/irc-chatter
+Exec=invoker --single-instance --type=d /usr/bin/irc-chatter
 Icon=/usr/share/icons/hicolor/80x80/apps/irc-chatter-harmattan-icon.png
 X-HildonDesk-ShowInToolbar=true
 X-Osso-Type=application/x-executable

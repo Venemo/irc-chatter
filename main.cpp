@@ -5,7 +5,7 @@
 #include "model/ircmodel.h"
 #include "appsettings.h"
 
-int main(int argc, char *argv[])
+Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QApplication::setApplicationName("irc-chatter");
     QApplication::setOrganizationName("Venemo");
