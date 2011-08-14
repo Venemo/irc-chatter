@@ -184,6 +184,13 @@ void ChannelModel::updateUserList()
     _users->setStringList(list);
 }
 
+void ChannelModel::setTopic(const QString &value)
+{
+    _topic = value;
+    appendCommandInfo("[TOPIC] " + _topic);
+    emit topicChanged();
+}
+
 const QString ChannelModel::colorForNick(const QString &nick)
 {
     if (nick == _backend->session()->nick())
@@ -360,8 +367,8 @@ void ChannelModel::parseCommand(const QString &msg)
     }
     else if (commandParts[0] == "/topic")
     {
-        if (n > 1)
-            appendCommandInfo(_backend->topic());
+        if (n == 1)
+            appendCommandInfo("[TOPIC] " + _topic);
         else
             appendCommandInfo("Changing Topics is not supported yet!");
     }

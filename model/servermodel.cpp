@@ -68,12 +68,28 @@ void ServerModel::removeModelForBuffer(Irc::Buffer *buffer)
 void ServerModel::receiveNumericMessageFromBackend(const QString &name, uint x, const QStringList &message)
 {
     Q_UNUSED(name);
-    Q_UNUSED(message);
 
     if (x == Irc::Rfc::RPL_ENDOFNAMES)
     {
         foreach (ChannelModel *channel, _channels->getList())
-            channel->updateUserList();
+        {
+            if (channel->name() == message[1])
+            {
+                channel->updateUserList();
+                break;
+            }
+        }
+    }
+    else if (x == Irc::Rfc::RPL_TOPIC)
+    {
+        foreach (ChannelModel *channel, _channels->getList())
+        {
+            if (channel->name() == message[1])
+            {
+                channel->setTopic(message[2]);
+                break;
+            }
+        }
     }
 }
 

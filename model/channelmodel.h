@@ -22,6 +22,8 @@ class ChannelModel : public QObject
     Q_PROPERTY(QObject* server READ parent NOTIFY serverChanged)
     GENPROPERTY(QString, _channelText, channelText, setChannelText, channelTextChanged)
     Q_PROPERTY(QString channelText READ channelText NOTIFY channelTextChanged)
+    GENPROPERTY_R(QString, _topic, topic)
+    Q_PROPERTY(QString topic READ topic NOTIFY topicChanged)
 
     static QString _autoCompletionSuffix;
     QString _completionFragment;
@@ -42,6 +44,7 @@ class ChannelModel : public QObject
 
 protected:
     explicit ChannelModel(ServerModel *parent, Irc::Buffer *backend);
+    void setTopic(const QString &value);
 
 public:
     ~ChannelModel();
@@ -58,6 +61,7 @@ signals:
     void usersChanged();
     void serverChanged();
     void channelTextChanged();
+    void topicChanged();
 
 private slots:
     void fakeMessage();
