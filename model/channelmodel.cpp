@@ -110,6 +110,10 @@ QString &ChannelModel::processMessage(QString &msg)
     msg.replace('>', "&gt;");
     msg.replace('\n', "<br />");
     msg.replace(_urlRegexp, "<a href=\"\\1\">\\1</a>");
+
+    if (msg.contains(_backend->session()->nick()))
+        msg = "<span style='color:red'>" + msg + "</span>";
+
     return msg;
 }
 
