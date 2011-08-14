@@ -8,26 +8,26 @@ Page {
     property bool isValid: serverUrlField.text.length > 0 && nicknameField.text.length > 0
 
     tools: ToolBarLayout {
-            id: commonToolbar
+        id: commonToolbar
 
-            ToolIcon {
-                platformIconId: "toolbar-done"
-                onClicked: {
-                    if (isValid) {
-                        appWindow.pageStack.push(progressPage);
-                        ircModel.connectToServer(serverUrlField.text, passwordField.text, nicknameField.text, identField.text, realNameField.text, autojoinField.text);
-                    }
-                    else {
-                        invalidBanner.show();
-                    }
+        ToolIcon {
+            platformIconId: "toolbar-done"
+            onClicked: {
+                if (isValid) {
+                    appWindow.pageStack.push(progressPage);
+                    ircModel.connectToServer(serverUrlField.text, passwordField.text, nicknameField.text, identField.text, realNameField.text, autojoinField.text);
                 }
+                else {
+                    invalidBanner.show();
+                }
+            }
 
-            }
-            ToolIcon {
-                platformIconId: "toolbar-view-menu"
-                onClicked: (commonMenu.status == DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
-            }
         }
+        ToolIcon {
+            platformIconId: "toolbar-view-menu"
+            onClicked: (commonMenu.status == DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
+        }
+    }
 
     Flickable {
         id: configFlickable
