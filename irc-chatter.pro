@@ -41,11 +41,11 @@ CONFIG += qdeclarative-boostable
 QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
 QMAKE_LFLAGS += -pie -rdynamic
 
-
 unix {
-    INSTALLS += target
+    INSTALLS += target icon desktopfile
     target.path=/usr/bin
+    icon.files = installables/irc-chatter-harmattan-icon.png
+    icon.path = /usr/share/icons/hicolor/80x80/apps
+    desktopfile.files = installables/irc-chatter-harmattan.desktop
+    desktopfile.path = /usr/share/applications
 }
-
-
-
