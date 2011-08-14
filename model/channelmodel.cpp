@@ -22,6 +22,11 @@ ChannelModel::ChannelModel(ServerModel *parent, Irc::Buffer *backend) :
         _colors->append("#ff0000");
         _colors->append("#00ff00");
         _colors->append("#0000ff");
+        _colors->append("#400758");
+        _colors->append("#0c5807");
+        _colors->append("#ba770e");
+        _colors->append("#73ba0e");
+        _colors->append("#cec700");
     }
 
     if (!_backend)
