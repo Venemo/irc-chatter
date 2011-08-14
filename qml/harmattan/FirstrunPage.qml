@@ -15,7 +15,7 @@ Page {
                 onClicked: {
                     if (isValid) {
                         appWindow.pageStack.push(progressPage);
-                        ircModel.connectToServer(serverUrlField.text, passwordField.text, nicknameField.text, identField.text, realNameField.text);
+                        ircModel.connectToServer(serverUrlField.text, passwordField.text, nicknameField.text, identField.text, realNameField.text, autojoinField.text);
                     }
                     else {
                         invalidBanner.show();
@@ -104,6 +104,15 @@ Page {
                 width: parent.width
                 text: ""
                 placeholderText: "Enter your real name"
+            }
+            Label {
+                text: "Autojoin Channels"
+            }
+            TextField {
+                id:autojoinField
+                width: parent.width
+                text: "#harmattan, #irc-chatter"
+                placeholderText: "Enter channels to autojoin"
             }
         }
     }
