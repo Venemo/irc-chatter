@@ -107,7 +107,7 @@ QString &ChannelModel::processMessage(QString &msg)
 {
     msg.replace('&', "&amp;");
     msg.replace('<', "&lt;");
-    msg.replace('<', "&gt;");
+    msg.replace('>', "&gt;");
     msg.replace('\n', "<br />");
     msg.replace(_urlRegexp, "<a href=\"\\1\">\\1</a>");
     return msg;
@@ -357,6 +357,13 @@ void ChannelModel::parseCommand(const QString &msg)
             static_cast<ServerModel*>(parent())->changeNick(commandParts[1]);
         else
             appendCommandInfo("Invalid command. Correct usage: '/nick &lt;new nick&gt;' ");
+    }
+    else if (commandParts[0] == "/topic")
+    {
+        if (n > 1)
+            appendCommandInfo(_backend->topic());
+        else
+            appendCommandInfo("Changing Topics is not supported yet!");
     }
     else
         appendCommandInfo("Unknown command, maybe it will be supported later?");
