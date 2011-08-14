@@ -47,13 +47,6 @@ Page {
             spacing: 10
 
             TitleLabel {
-                text: "Welcome to IRC Chatter!"
-            }
-            Label {
-                text: "This version is a v0.1 PREVIEW and it only allows you to connect to one server. This will be fixed in the final release."
-                width: parent.width
-            }
-            TitleLabel {
                 text: "Server settings"
             }
             Label {
@@ -64,6 +57,7 @@ Page {
                 width: parent.width
                 text: "irc.freenode.net"
                 placeholderText: "Enter a server URL"
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
             }
             Label {
                 text: "Password"
@@ -74,6 +68,7 @@ Page {
                 text: ""
                 placeholderText: "If it's needed, enter a password"
                 echoMode: TextInput.Password
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
             }
             Label {
                 text: "Autojoin Channels"
@@ -83,6 +78,7 @@ Page {
                 width: parent.width
                 text: "#harmattan, #irc-chatter"
                 placeholderText: "Enter channels to autojoin"
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
             }
             TitleLabel {
                 text: "User settings"
@@ -95,6 +91,7 @@ Page {
                 width: parent.width
                 text: ""
                 placeholderText: "Enter your nickname"
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
             }
             Label {
                 text: "Your ident"
@@ -104,6 +101,7 @@ Page {
                 width: parent.width
                 text: "irc-chatter"
                 placeholderText: "Enter your ident"
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
             }
             Label {
                 text: "Your Real Name"
@@ -112,7 +110,8 @@ Page {
                 id: realNameField
                 width: parent.width
                 text: ""
-                placeholderText: "Enter your real name"
+                placeholderText: "If you wish, enter your real name"
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
             }
         }
     }
