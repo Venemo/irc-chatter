@@ -1,4 +1,5 @@
 
+#include <QtCore>
 #include "appsettings.h"
 
 #define APPSETTING_SERVERSETTINGS "ServerSettings"
@@ -16,7 +17,7 @@ AppSettings::AppSettings(QObject *parent) :
     stream >> n;
     for (int i = 0; i < n; i++)
     {
-        ServerSettings *server = new ServerSettings(this);
+        ServerSettings *server = new ServerSettings((QObject*)this);
         stream >> (*server);
         _serverSettings->addItem(server);
     }
@@ -60,8 +61,22 @@ QObjectListModel<ServerSettings> *AppSettings::serverSettings()
 void AppSettings::saveServerSettings()
 {
     QByteArray array;
-    QDataStream stream(array);
+    QBuffer buffer(&array);
+    QDataStream stream(&buffer);
+    buffer.open(QBuffer::WriteOnly);
     stream << _serverSettings->rowCount();
     foreach (ServerSettings *server, _serverSettings->getList())
         stream << (*server);
+    buffer.close();
+    _backend.setValue(APPSETTING_SERVERSETTINGS, array);
+}
+
+void AppSettings::appendServerSettings(ServerSettings *server)
+{
+    _serverSettings->addItem(server);
+}
+
+int AppSettings::serverSettingsCount() const
+{
+    return _serverSettings->rowCount();
 }

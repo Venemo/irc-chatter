@@ -1,11 +1,13 @@
 import QtQuick 1.1
 import com.meego 1.0
 import com.meego.extras 1.0
+import net.venemo.ircchatter 1.0
 
 Page {
     id: firstrunPage
 
     property bool isValid: serverUrlField.text.length > 0 && nicknameField.text.length > 0
+    property ServerSettings server: appSettings.serverSettings.getItem(0)
 
     tools: ToolBarLayout {
         id: commonToolbar
@@ -15,7 +17,8 @@ Page {
             onClicked: {
                 if (isValid) {
                     appWindow.pageStack.push(progressPage);
-                    ircModel.connectToServer(serverUrlField.text, passwordField.text, nicknameField.text, identField.text, realNameField.text, autojoinField.text);
+                    appSettings.saveServerSettings();
+                    ircModel.connectToServer(server, appSettings);
                 }
                 else {
                     invalidBanner.show();
@@ -55,9 +58,14 @@ Page {
             TextField {
                 id: serverUrlField
                 width: parent.width
-                text: "irc.freenode.net"
+                text: server.serverUrl
                 placeholderText: "Enter a server URL"
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+            }
+            Binding {
+                target: server
+                property: "serverUrl"
+                value: serverUrlField.text
             }
             Label {
                 text: "Password"
@@ -65,10 +73,15 @@ Page {
             TextField {
                 id: passwordField
                 width: parent.width
-                text: ""
+                text: server.serverPassword
                 placeholderText: "If it's needed, enter a password"
                 echoMode: TextInput.Password
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+            }
+            Binding {
+                target: server
+                property: "serverPassword"
+                value: passwordField.text
             }
             Label {
                 text: "Autojoin Channels"
@@ -76,9 +89,14 @@ Page {
             TextField {
                 id:autojoinField
                 width: parent.width
-                text: "#harmattan, #irc-chatter"
+                text: server.autoJoinChannelsInPlainString
                 placeholderText: "Enter channels to autojoin"
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+            }
+            Binding {
+                target: server
+                property: "autoJoinChannelsInPlainString"
+                value: autojoinField.text
             }
             TitleLabel {
                 text: "User settings"
@@ -89,9 +107,14 @@ Page {
             TextField {
                 id: nicknameField
                 width: parent.width
-                text: ""
+                text: appSettings.userNickname
                 placeholderText: "Enter your nickname"
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+            }
+            Binding {
+                target: appSettings
+                property: "userNickname"
+                value: nicknameField.text
             }
             Label {
                 text: "Your ident"
@@ -99,9 +122,14 @@ Page {
             TextField {
                 id: identField
                 width: parent.width
-                text: "irc-chatter"
+                text: appSettings.userIdent
                 placeholderText: "Enter your ident"
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+            }
+            Binding {
+                target: appSettings
+                property: "userIdent"
+                value: identField.text
             }
             Label {
                 text: "Your Real Name"
@@ -109,9 +137,14 @@ Page {
             TextField {
                 id: realNameField
                 width: parent.width
-                text: ""
+                text: appSettings.userRealName
                 placeholderText: "If you wish, enter your real name"
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+            }
+            Binding {
+                target: appSettings
+                property: "userRealName"
+                value: realNameField.text
             }
         }
     }

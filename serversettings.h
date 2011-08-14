@@ -15,11 +15,14 @@ class ServerSettings : public QObject
     Q_PROPERTY(QString serverPassword READ serverPassword WRITE setServerPassword NOTIFY serverPasswordChanged)
     GENPROPERTY(QStringList, _autoJoinChannels, autoJoinChannels, setAutoJoinChannels, autoJoinChannelsChanged)
     Q_PROPERTY(QStringList autoJoinChannels READ autoJoinChannels WRITE setAutoJoinChannels NOTIFY autoJoinChannelsChanged)
+    Q_PROPERTY(QString autoJoinChannelsInPlainString READ autoJoinChannelsInPlainString WRITE setAutoJoinChannelsInPlainString NOTIFY autoJoinChannelsChanged)
 
     friend QDataStream &operator>>(QDataStream &stream, ServerSettings &server);
 
 public:
-    explicit ServerSettings(QObject *parent = 0);
+    explicit ServerSettings(QObject *parent = 0, const QString &url = "irc.freenode.net", const QString &password = QString(), const QStringList &autoJoinChannels = QStringList());
+    QString autoJoinChannelsInPlainString() const;
+    void setAutoJoinChannelsInPlainString(const QString &value);
 
 signals:
     void serverUrlChanged();

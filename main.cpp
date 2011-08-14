@@ -12,8 +12,12 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
     IrcModel model(&app);
+    AppSettings settings(&app);
 
-    qmlRegisterUncreatableType<ServerSettings>("net.venemo.ircchatter", 1, 0, "ServerSettings", "This class is created in C++");
+    if (!settings.serverSettingsCount())
+        settings.appendServerSettings(new ServerSettings(&settings));
+
+    qmlRegisterType<ServerSettings>("net.venemo.ircchatter", 1, 0, "ServerSettings");
     qmlRegisterUncreatableType<AppSettings>("net.venemo.ircchatter", 1, 0, "AppSettings", "This class is created in C++, and only one instance is needed.");
     qmlRegisterUncreatableType<ChannelModel>("net.venemo.ircchatter", 1, 0, "ChannelModel", "This object is created in the model.");
     qmlRegisterUncreatableType<ChannelModel>("net.venemo.ircchatter", 1, 0, "ChannelModel", "This object is created in the model.");
@@ -22,6 +26,7 @@ int main(int argc, char *argv[])
     QDeclarativeView view;
     QObject::connect(view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
     view.rootContext()->setContextProperty("ircModel", &model);
+    view.rootContext()->setContextProperty("appSettings", &settings);
     view.setSource(QUrl("qrc:/qml/harmattan/main.qml"));
     view.showFullScreen();
 

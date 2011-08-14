@@ -1,7 +1,9 @@
 #include "ircmodel.h"
 #include <ircclient-qt/IrcSession>
+
 #include <QtCore>
 #include <QStringList>
+#include "appsettings.h"
 
 IrcModel::IrcModel(QObject *parent) :
     QObject(parent),
@@ -10,25 +12,30 @@ IrcModel::IrcModel(QObject *parent) :
 {
 }
 
-void IrcModel::connectToServer(const QString &url, const QString &password, const QString &nick, const QString &ident, const QString &fullName, const QString &autoJoin)
+void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
 {
     Irc::Session *session = new Irc::Session();
-    session->setNick(nick);
-    session->setPassword(password);
-    session->setIdent(ident);
-    if (fullName != "")
-        session->setRealName(fullName);
-    QStringList autoJoinList = autoJoin.split(",");
-    for (int i = 0; i < autoJoinList.count(); i++)
-        autoJoinList[i] = autoJoinList[i].trimmed();
-    session->setAutoJoinChannels(autoJoinList);
-    _servers->addItem(new ServerModel(this, url, session));
+
+    session->setNick(settings->userNickname());
+
+    if (settings->userIdent().length())
+        session->setIdent(settings->userIdent());
+    else
+        session->setIdent("ircchatter");
+
+    if (settings->userRealName().length())
+        session->setRealName(settings->userRealName());
+
+    session->setAutoJoinChannels(server->autoJoinChannels());
+    session->setPassword(server->serverPassword());
+
+    _servers->addItem(new ServerModel(this, server->serverUrl(), session));
     connect(session, SIGNAL(connected()), this, SLOT(backendsConnectedToServer()));
 }
 
 QObjectListModel<ChannelModel> *IrcModel::allChannels()
 {
-    // TODO: display all channels from all servers
+    // TODO: display all channels from all servers (currently only one is able to be displayed)
     if (_servers->rowCount())
         return ((ServerModel*)_servers->getItem(0))->channels();
 

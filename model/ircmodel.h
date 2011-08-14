@@ -6,6 +6,9 @@
 #include "servermodel.h"
 #include "qobjectlistmodel.h"
 
+class ServerSettings;
+class AppSettings;
+
 class IrcModel : public QObject
 {
     Q_OBJECT
@@ -23,7 +26,7 @@ public:
     ChannelModel *currentChannel() { return _servers->rowCount() ? static_cast<ChannelModel*>(allChannels()->getItem(_currentChannelIndex)) : 0; }
     ServerModel *currentServer() { return currentChannel() ? static_cast<ServerModel*>(currentChannel()->parent()) : 0; }
 
-    Q_INVOKABLE void connectToServer(const QString &url, const QString &password, const QString &nick, const QString &ident, const QString &fullName, const QString &autoJoin);
+    Q_INVOKABLE void connectToServer(ServerSettings *server, AppSettings *settings);
 
 private slots:
     void backendsConnectedToServer();

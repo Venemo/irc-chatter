@@ -33,6 +33,8 @@ public:
 
     QObjectListModel<ServerSettings> *serverSettings();
     Q_INVOKABLE void saveServerSettings();
+    Q_INVOKABLE void appendServerSettings(ServerSettings *server);
+    Q_INVOKABLE int serverSettingsCount() const;
 
 signals:
     void serverSettingsChanged();
