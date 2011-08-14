@@ -75,6 +75,15 @@ Page {
                 placeholderText: "If it's needed, enter a password"
                 echoMode: TextInput.Password
             }
+            Label {
+                text: "Autojoin Channels"
+            }
+            TextField {
+                id:autojoinField
+                width: parent.width
+                text: "#harmattan, #irc-chatter"
+                placeholderText: "Enter channels to autojoin"
+            }
             TitleLabel {
                 text: "User settings"
             }
@@ -104,15 +113,6 @@ Page {
                 width: parent.width
                 text: ""
                 placeholderText: "Enter your real name"
-            }
-            Label {
-                text: "Autojoin Channels"
-            }
-            TextField {
-                id:autojoinField
-                width: parent.width
-                text: "#harmattan, #irc-chatter"
-                placeholderText: "Enter channels to autojoin"
             }
         }
     }
