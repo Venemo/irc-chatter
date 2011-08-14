@@ -36,7 +36,7 @@ clean:
 
 	# Add here commands to clean up after the build process.
 	qmake-qt4 || qmake
-	$(MAKE) clean
+	-${MAKE} clean #TODO
 	rm Makefile
 
 	dh_clean 

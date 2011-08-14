@@ -1,5 +1,18 @@
-irc-chatter (0.1.0) unstable; urgency=low
- 
+irc-chatter (0.0.20110815-0~rzr0) lucid; urgency=low
+
+  * WIP: http://rzr.online.fr/q/snapshot#irc-chatter
+
+ -- Philippe Coval <rzr@gna.org>  Mon, 15 Aug 2011 00:34:26 +0200
+
+irc-chatter (0.0.0-0maemo0) UNRELEASED; urgency=low
+
+  * WIP: http://rzr.online.fr/q/harmattan
+  * TODO: remove this entry on release and put it back
+
+ -- Philippe Coval <rzr@gna.org>  Mon, 15 Aug 2011 00:34:26 +0200
+
+irc-chatter (0.1.0-0maemo0) harmattan; urgency=low
+
   * Initial version
   * See http://wiki.meego.com/User:Venemo/IRC_Chatter for info
   * See https://gitorious.org/colorful-apps/irc-chatter for source

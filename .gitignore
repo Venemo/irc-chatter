@@ -9,3 +9,6 @@ ui_*
 Makefile
 debian/irc-chatter
 qtc_packaging
+
+MANIFEST
+*~
