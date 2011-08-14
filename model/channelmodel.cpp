@@ -236,16 +236,6 @@ void ChannelModel::setCurrentMessage(const QString &value)
 
 void ChannelModel::autoCompleteNick()
 {
-    if (_currentMessage.length() == 0)
-    {
-        // The user hasn't typed anything, let's give him the name of the last spoke user
-
-        // TODO
-
-        return;
-    }
-
-
     QString replacableFragment, newFragment;
 
     if (_completionFragment.length())
