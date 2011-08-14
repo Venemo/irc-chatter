@@ -60,6 +60,7 @@ QString ChannelModel::name() const
 void ChannelModel::channelNameChanged(const QString &newName)
 {
     appendDeemphasisedInfo("Channel name is changed to " + newName);
+    emit nameChanged();
 }
 
 void ChannelModel::receiveMotdFromBackend(QString motd)
