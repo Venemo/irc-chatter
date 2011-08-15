@@ -48,12 +48,13 @@ class ChannelModel : public QObject
     static QString _autoCompletionSuffix;
     QString _completionFragment;
     QList<const QString*> _possibleNickNames;
-    int _currentCompletionIndex, _currentCompletionPosition;
+    int _currentCompletionIndex, _currentCompletionPosition, _displayedLines;
 
     Irc::Buffer *_backend;
 
     static QList<QString> *_colors;
     static QRegExp _urlRegexp;
+    static int _maxLineNumber, _deletableLines;
 
     friend class IrcModel;
     friend class ServerModel;
@@ -64,6 +65,8 @@ protected:
 
     void parseCommand(const QString &msg);
     QString &processMessage(QString &msg, bool *hasUserNick = 0);
+
+    void appendLine(const QString &line);
     void appendEmphasisedInfo(QString msg);
     void appendDeemphasisedInfo(QString msg);
     void appendError(QString msg);

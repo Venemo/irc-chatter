@@ -31,6 +31,8 @@
 
 QList<QString> *ChannelModel::_colors = 0;
 QString ChannelModel::_autoCompletionSuffix(", ");
+int ChannelModel::_maxLineNumber = 300;
+int ChannelModel::_deletableLines = 100;
 
 // This code is copypasted from Konversation - I hereby thank its authors
 QRegExp ChannelModel::_urlRegexp(QString("\\b((?:(?:([a-z][\\w-]+:/{1,3})|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|\\}\\]|[^\\s`!()\\[\\]{};:'\".,<>?%1%2%3%4%5%6])|[a-z0-9.\\-+_]+@[a-z0-9.\\-]+[.][a-z]{1,5}[^\\s/`!()\\[\\]{};:'\".,<>?%1%2%3%4%5%6]))").arg(QChar(0x00AB)).arg(QChar(0x00BB)).arg(QChar(0x201C)).arg(QChar(0x201D)).arg(QChar(0x2018)).arg(QChar(0x2019)));
@@ -38,6 +40,7 @@ QRegExp ChannelModel::_urlRegexp(QString("\\b((?:(?:([a-z][\\w-]+:/{1,3})|www\\d
 ChannelModel::ChannelModel(ServerModel *parent, Irc::Buffer *backend) :
     QObject(parent),
     _users(new QStringListModel(this)),
+    _displayedLines(0),
     _backend(backend)
 {
     if (!_colors)
@@ -159,37 +162,46 @@ QString &ChannelModel::processMessage(QString &msg, bool *hasUserNick)
     return msg;
 }
 
-void ChannelModel::appendEmphasisedInfo(QString msg)
+void ChannelModel::appendLine(const QString &line)
 {
     if (_channelText.length())
         _channelText += "<br />";
 
-    setChannelText(_channelText += "<span style='color: orange'>" + processMessage(msg) + "</span>");
+    if (_displayedLines > _maxLineNumber)
+    {
+        int position = 0;
+
+        // Find the Nth line
+        for (int i = 0; i < _deletableLines; i++)
+            position = _channelText.indexOf("<br />", position);
+
+        _channelText = _channelText.remove(0, position + 6);
+        _displayedLines -= _deletableLines;
+    }
+
+    setChannelText(_channelText += line);
+    _displayedLines++;
+}
+
+void ChannelModel::appendEmphasisedInfo(QString msg)
+{
+    appendLine("<span style='color: orange'>" + processMessage(msg) + "</span>");
 }
 
 void ChannelModel::appendDeemphasisedInfo(QString msg)
 {
-    if (_channelText.length())
-        _channelText += "<br />";
-
-    setChannelText(_channelText += "<span style='color: purple'>" + processMessage(msg) + "</span>");
+    appendLine("<span style='color: purple'>" + processMessage(msg) + "</span>");
 }
 
 void ChannelModel::appendError(QString msg)
 {
-    if (_channelText.length())
-        _channelText += "<br />";
-
-    setChannelText(_channelText += "<span style='color: red'>[ERROR] " + processMessage(msg) + "</span>");
+    appendLine("<span style='color: red'>[ERROR] " + processMessage(msg) + "</span>");
 }
 
 void ChannelModel::receiveMessageFromBackend(const QString &userName, QString message)
 {
-    if (_channelText.length())
-        _channelText += "<br />";
-
     bool hasUserNick = false;
-    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick(userName) + "'>" + userName + "</span>: " + processMessage(message, &hasUserNick));
+    appendLine(QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick(userName) + "'>" + userName + "</span>: " + processMessage(message, &hasUserNick));
 
     if (hasUserNick)
         emit newMessageWithUserNickReceived();
