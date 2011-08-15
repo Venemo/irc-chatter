@@ -68,6 +68,21 @@ Page {
                 value: serverUrlField.text
             }
             Label {
+                text: "Server Port"
+            }
+            TextField {
+                id: serverPortField
+                width: parent.width
+                text: server.serverPort
+                placeholderText: "Enter the server port"
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+            }
+            Binding {
+                target: server
+                property: "serverPort"
+                value: serverPortField.text
+            }
+            Label {
                 text: "Password"
             }
             TextField {
