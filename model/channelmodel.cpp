@@ -236,9 +236,9 @@ void ChannelModel::updateUserList()
     // found in http://www.harshj.com/2009/10/24/sorting-entries-in-a-qstringlist-case-insensitively/
     // - Thank you!
     QMap<QString, QString> strMap;
-    foreach (QString str, list)
+    foreach (const QString &str, list)
     {
-        strMap.insert( str.toLower(), str );
+        strMap.insert(str.toLower(), str);
     }
     list = strMap.values();
     _users->setStringList(list);
