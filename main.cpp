@@ -23,6 +23,27 @@
 #include "model/ircmodel.h"
 #include "appsettings.h"
 
+class AppFocusFilter : public QObject
+{
+public:
+    AppFocusFilter(IrcModel *parent) : QObject((QObject*)parent) { }
+
+    bool eventFilter(QObject *obj, QEvent *event)
+    {
+        Q_UNUSED(obj);
+
+        if (event->type() == QEvent::FocusIn)
+        {
+            static_cast<IrcModel*>(parent())->setIsAppInFocus(true);
+        }
+        else if (event->type() == QEvent::FocusOut)
+        {
+            static_cast<IrcModel*>(parent())->setIsAppInFocus(false);
+        }
+        return false;
+    }
+};
+
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QApplication::setApplicationName("irc-chatter");
@@ -31,6 +52,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QApplication app(argc, argv);
     IrcModel model(&app);
     AppSettings settings(&app);
+    app.installEventFilter(new AppFocusFilter(&model));
 
     if (!settings.serverSettingsCount())
         settings.appendServerSettings(new ServerSettings(&settings));

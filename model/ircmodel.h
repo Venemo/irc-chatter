@@ -39,6 +39,8 @@ class IrcModel : public QObject
     Q_PROPERTY(int currentChannelIndex READ currentChannelIndex WRITE setCurrentChannelIndex NOTIFY currentChannelIndexChanged)
     Q_PROPERTY(QObject* currentChannel READ currentChannel NOTIFY currentChannelIndexChanged)
     Q_PROPERTY(QObject* currentServer READ currentServer NOTIFY currentChannelIndexChanged)
+    GENPROPERTY(bool, _isAppInFocus, isAppInFocus, setIsAppInFocus, isAppInFocusChanged)
+    Q_PROPERTY(int isAppInFocus READ isAppInFocus WRITE setIsAppInFocus NOTIFY isAppInFocusChanged)
 
 public:
     explicit IrcModel(QObject *parent = 0);
@@ -56,6 +58,7 @@ signals:
     void serversChanged();
     void currentChannelIndexChanged();
     void readyToDisplay();
+    void isAppInFocusChanged();
 
 };
 
