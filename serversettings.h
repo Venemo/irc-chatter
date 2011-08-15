@@ -11,6 +11,8 @@ class ServerSettings : public QObject
     Q_OBJECT
     GENPROPERTY(QString, _serverUrl, serverUrl, setServerUrl, serverUrlChanged)
     Q_PROPERTY(QString serverUrl READ serverUrl WRITE setServerUrl NOTIFY serverUrlChanged)
+    GENPROPERTY(quint16, _serverPort, serverPort, setServerPort, serverPortChanged)
+    Q_PROPERTY(quint16 serverPort READ serverPort WRITE setServerPort NOTIFY serverPortChanged)
     GENPROPERTY(QString, _serverPassword, serverPassword, setServerPassword, serverPasswordChanged)
     Q_PROPERTY(QString serverPassword READ serverPassword WRITE setServerPassword NOTIFY serverPasswordChanged)
     GENPROPERTY(QStringList, _autoJoinChannels, autoJoinChannels, setAutoJoinChannels, autoJoinChannelsChanged)
