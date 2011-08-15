@@ -2,13 +2,13 @@ Source: irc-chatter
 Section: user/other
 Priority: extra
 Maintainer: Timur Kristóf (Venemo) <venemo@fedoraproject.org>
-Build-Depends: debhelper (>= 5), libqt4-dev (>= 4.7), qt-components-dev (>= 1.0), libircclient-qt-dev (>= 0.5)
+Build-Depends: debhelper (>= 5), libqt4-dev (>= 4.7), qt-components-dev (>= 1.0), libircclient-qt-dev (>= 0.5), applauncherd-dev
 Standards-Version: 3.7.3
 Homepage: http://wiki.meego.com/User:Venemo/IRC_Chatter
 
 Package: irc-chatter
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, applauncherd
 XB-Maemo-Display-Name: IRC Chatter
 Description: IRC client with a very nice GUI.
  IRC Chatter is an easy-to-use and user-friendly IRC

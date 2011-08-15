@@ -37,9 +37,9 @@ OTHER_FILES += \
     qml/harmattan/WorkingSelectionDialog.qml \
     qml/harmattan/CommonDialog.qml
 
-DEFINES += IRC_NO_DEPRECATED IRC_SHARED
-INCLUDEPATH += /usr/include/ircclient-qt
 CONFIG += libircclient-qt
+DEFINES += IRC_NO_DEPRECATED IRC_SHARED
+INCLUDEPATH += /usr/include/ircclient-qt /usr/include/applauncherd
 
 # enable booster
 CONFIG += qdeclarative-boostable
