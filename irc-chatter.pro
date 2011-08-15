@@ -1,5 +1,5 @@
 
-QT += declarative
+QT += declarative network
 symbian:TARGET.UID3 = 0xE3B586A7
 
 HEADERS += \

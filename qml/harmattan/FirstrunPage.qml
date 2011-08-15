@@ -98,6 +98,22 @@ Page {
                 property: "serverPassword"
                 value: passwordField.text
             }
+            CheckBox {
+                id: sslCheckbox
+                text: "Use SSL?"
+                checked: false
+                onClicked: {
+                    if (sslCheckbox.checked)
+                        serverPortField.text = 7000
+                    else
+                        serverPortField.text = 6667
+                }
+            }
+            Binding {
+                target: server
+                property: "serverSSL"
+                value: sslCheckbox.enabled
+            }
             Label {
                 text: "Autojoin Channels"
             }
@@ -113,6 +129,7 @@ Page {
                 property: "autoJoinChannelsInPlainString"
                 value: autojoinField.text
             }
+
             TitleLabel {
                 text: "User settings"
             }

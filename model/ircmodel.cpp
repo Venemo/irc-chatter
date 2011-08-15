@@ -4,6 +4,7 @@
 #include <QtCore>
 #include <QStringList>
 #include "appsettings.h"
+#include <QSslSocket>
 
 IrcModel::IrcModel(QObject *parent) :
     QObject(parent),
@@ -27,6 +28,14 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
         session->setRealName(settings->userRealName());
 
     session->setPort(server->serverPort());
+
+    if (server->serverSSL())
+    {
+        QSslSocket* socket = new QSslSocket(session);
+        socket->ignoreSslErrors();
+        socket->setPeerVerifyMode(QSslSocket::VerifyNone);
+        session->setSocket(socket);
+    }
 
     session->setAutoJoinChannels(server->autoJoinChannels());
     session->setPassword(server->serverPassword());
