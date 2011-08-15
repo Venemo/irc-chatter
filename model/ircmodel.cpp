@@ -26,6 +26,8 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
     if (settings->userRealName().length())
         session->setRealName(settings->userRealName());
 
+    session->setPort(server->serverPort());
+
     session->setAutoJoinChannels(server->autoJoinChannels());
     session->setPassword(server->serverPassword());
 
