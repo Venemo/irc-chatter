@@ -104,7 +104,7 @@ Page {
                     width: parent.width - sslCheckbox.width - parent.spacing
                     text: server.serverPort
                     placeholderText: "Enter the server port"
-                    inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+                    inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase | Qt.ImhDigitsOnly
                     validator: IntValidator { }
                 }
                 Binding {
