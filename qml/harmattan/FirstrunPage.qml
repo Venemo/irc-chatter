@@ -24,8 +24,15 @@ import net.venemo.ircchatter 1.0
 Page {
     id: firstrunPage
 
-    property bool isValid: serverUrlField.text.length > 0 && nicknameField.text.length > 0
+    property bool isValid: serverUrlField.text.length > 0 && nicknameField.text.length > 0 && serverPortField.acceptableInput
     property ServerSettings server: appSettings.serverSettings.getItem(0)
+
+    onStatusChanged: {
+        if (status == PageStatus.Activating) {
+            if (appSettings.areSettingsDeleted)
+                settingsDeletedBanner.show();
+        }
+    }
 
     tools: ToolBarLayout {
         id: commonToolbar
@@ -98,6 +105,7 @@ Page {
                     text: server.serverPort
                     placeholderText: "Enter the server port"
                     inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+                    validator: IntValidator { }
                 }
                 Binding {
                     target: server
@@ -107,7 +115,7 @@ Page {
                 CheckBox {
                     id: sslCheckbox
                     text: "SSL"
-                    checked: false
+                    checked: server.serverSSL
                     anchors.verticalCenter: serverPortField.verticalCenter
                     onClicked: {
                         if (sslCheckbox.checked)
@@ -208,5 +216,11 @@ Page {
     InfoBanner {
         id: invalidBanner
         text: "The data you entered is invalid. Please fix it and press the Done button again."
+    }
+
+    InfoBanner {
+        id: settingsDeletedBanner
+        text: "The new version of the app is incompatible with the old, so your settings have been deleted. Click on this banner to dismiss."
+        timerEnabled: false
     }
 }

@@ -24,14 +24,18 @@
 
 #include "serversettings.h"
 #include "qobjectlistmodel.h"
+#include "util.h"
 
-#define APPSETTINGS_VERSION 1
+// Increase this when anything changes in the settings
+#define APPSETTINGS_VERSION 2
 
 class QSettings;
 
 class AppSettings : public QObject
 {
     Q_OBJECT
+    GENPROPERTY_R(bool, _areSettingsDeleted, areSettingsDeleted)
+    Q_PROPERTY(bool areSettingsDeleted READ areSettingsDeleted NOTIFY areSettingsDeletedChanged)
     Q_PROPERTY(QObject* serverSettings READ serverSettings NOTIFY serverSettingsChanged)
     Q_PROPERTY(QString userNickname READ userNickname WRITE setUserNickname NOTIFY userNicknameChanged)
     Q_PROPERTY(QString userIdent READ userIdent WRITE setUserIdent NOTIFY userIdentChanged)
@@ -56,6 +60,7 @@ public:
     Q_INVOKABLE int serverSettingsCount() const;
 
 signals:
+    void areSettingsDeletedChanged();
     void serverSettingsChanged();
     void userNicknameChanged();
     void userIdentChanged();

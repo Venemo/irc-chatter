@@ -20,6 +20,7 @@
 
 #include "appsettings.h"
 
+#define APPSETTING_SETTINGSVERSION "SettingsVersion"
 #define APPSETTING_SERVERSETTINGS "ServerSettings"
 #define APPSETTING_USERNICKNAME "UserNickname"
 #define APPSETTING_USERIDENT "UserIdent"
@@ -27,17 +28,36 @@
 
 AppSettings::AppSettings(QObject *parent) :
     QObject(parent),
+    _areSettingsDeleted(false),
     _serverSettings(new QObjectListModel<ServerSettings>(this))
 {
-    QByteArray array = _backend.value(APPSETTING_SERVERSETTINGS).toByteArray();
-    QDataStream stream(array);
-    int n;
-    stream >> n;
-    for (int i = 0; i < n; i++)
+    // Checking for settings version
+
+    int savedSettingsVersion = _backend.value(APPSETTING_SETTINGSVERSION, 0).toInt();
+
+    if (savedSettingsVersion < APPSETTINGS_VERSION)
     {
-        ServerSettings *server = new ServerSettings((QObject*)this);
-        stream >> (*server);
-        _serverSettings->addItem(server);
+        // Clearing all settings if the saved version is different than current one
+        _backend.clear();
+        _backend.setValue(APPSETTING_SETTINGSVERSION, APPSETTINGS_VERSION);
+
+        _areSettingsDeleted = true;
+        emit areSettingsDeletedChanged();
+    }
+    else
+    {
+        // Deserializing server settings
+
+        QByteArray array = _backend.value(APPSETTING_SERVERSETTINGS).toByteArray();
+        QDataStream stream(array);
+        int n;
+        stream >> n;
+        for (int i = 0; i < n; i++)
+        {
+            ServerSettings *server = new ServerSettings((QObject*)this);
+            stream >> (*server);
+            _serverSettings->addItem(server);
+        }
     }
 }
 
