@@ -88,17 +88,39 @@ Page {
             Label {
                 text: "Server Port"
             }
-            TextField {
-                id: serverPortField
+            Row {
+                spacing: 10
                 width: parent.width
-                text: server.serverPort
-                placeholderText: "Enter the server port"
-                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            }
-            Binding {
-                target: server
-                property: "serverPort"
-                value: serverPortField.text
+
+                TextField {
+                    id: serverPortField
+                    width: parent.width - sslCheckbox.width - parent.spacing
+                    text: server.serverPort
+                    placeholderText: "Enter the server port"
+                    inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+                }
+                Binding {
+                    target: server
+                    property: "serverPort"
+                    value: serverPortField.text
+                }
+                CheckBox {
+                    id: sslCheckbox
+                    text: "SSL"
+                    checked: false
+                    anchors.verticalCenter: serverPortField.verticalCenter
+                    onClicked: {
+                        if (sslCheckbox.checked)
+                            serverPortField.text = 7000
+                        else
+                            serverPortField.text = 6667
+                    }
+                }
+                Binding {
+                    target: server
+                    property: "serverSSL"
+                    value: sslCheckbox.checked
+                }
             }
             Label {
                 text: "Password"
@@ -115,22 +137,6 @@ Page {
                 target: server
                 property: "serverPassword"
                 value: passwordField.text
-            }
-            CheckBox {
-                id: sslCheckbox
-                text: "Use SSL?"
-                checked: false
-                onClicked: {
-                    if (sslCheckbox.checked)
-                        serverPortField.text = 7000
-                    else
-                        serverPortField.text = 6667
-                }
-            }
-            Binding {
-                target: server
-                property: "serverSSL"
-                value: sslCheckbox.checked
             }
             Label {
                 text: "Autojoin Channels"
