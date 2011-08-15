@@ -1,15 +1,39 @@
+// This file is part of IRC Chatter, the first IRC Client for MeeGo.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <http://www.gnu.org/licenses/>.
+//
+// Copyright (C) 2011, Timur Kristóf <venemo@fedoraproject.org>
+// Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
+//
+// Authors of code borrowed from Konversation (URL regex and colorForNick method):
+// Copyright (C) 2010 Eike Hein <hein@kde.org>
+// Copyright (C) 2006 Michael Kreitzer <mrgrim@gr1m.org>
 
 #include <QtCore>
 #include <ircclient-qt/IrcSession>
 #include <ircclient-qt/IrcBuffer>
 #include <ircclient-qt/IrcUtil>
 #include <ircclient-qt/IrcGlobal>
+
 #include "channelmodel.h"
 #include "servermodel.h"
 
 QList<QString> *ChannelModel::_colors = 0;
-QRegExp ChannelModel::_urlRegexp(QString("\\b((?:(?:([a-z][\\w-]+:/{1,3})|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|\\}\\]|[^\\s`!()\\[\\]{};:'\".,<>?%1%2%3%4%5%6])|[a-z0-9.\\-+_]+@[a-z0-9.\\-]+[.][a-z]{1,5}[^\\s/`!()\\[\\]{};:'\".,<>?%1%2%3%4%5%6]))").arg(QChar(0x00AB)).arg(QChar(0x00BB)).arg(QChar(0x201C)).arg(QChar(0x201D)).arg(QChar(0x2018)).arg(QChar(0x2019)));
 QString ChannelModel::_autoCompletionSuffix(", ");
+
+// This code is copypasted from Konversation - I hereby thank its authors
+QRegExp ChannelModel::_urlRegexp(QString("\\b((?:(?:([a-z][\\w-]+:/{1,3})|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|\\}\\]|[^\\s`!()\\[\\]{};:'\".,<>?%1%2%3%4%5%6])|[a-z0-9.\\-+_]+@[a-z0-9.\\-]+[.][a-z]{1,5}[^\\s/`!()\\[\\]{};:'\".,<>?%1%2%3%4%5%6]))").arg(QChar(0x00AB)).arg(QChar(0x00BB)).arg(QChar(0x201C)).arg(QChar(0x201D)).arg(QChar(0x2018)).arg(QChar(0x2019)));
 
 ChannelModel::ChannelModel(ServerModel *parent, Irc::Buffer *backend) :
     QObject(parent),
@@ -227,6 +251,7 @@ void ChannelModel::setTopic(const QString &value)
     emit topicChanged();
 }
 
+// This code is copypasted from Konversation (and modified by Timur Kristóf) - I hereby thank its authors
 const QString ChannelModel::colorForNick(const QString &nick)
 {
     if (nick == _backend->session()->nick())
