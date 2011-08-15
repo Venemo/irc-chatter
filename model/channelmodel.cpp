@@ -289,7 +289,7 @@ void ChannelModel::setCurrentMessage(const QString &value)
 
 void ChannelModel::autoCompleteNick()
 {
-    QString replacableFragment, newFragment;
+    QString newFragment;
 
     if (_completionFragment.length())
     {
@@ -298,9 +298,6 @@ void ChannelModel::autoCompleteNick()
         if (_possibleNickNames.count() <= 1)
             return;
 
-        replacableFragment = _possibleNickNames[_currentCompletionIndex];
-        if (_currentCompletionPosition == 0)
-            replacableFragment += _autoCompletionSuffix;
         _currentCompletionIndex ++;
 
         if (_currentCompletionIndex >= _possibleNickNames.count())
@@ -315,33 +312,32 @@ void ChannelModel::autoCompleteNick()
         if (_currentMessage.contains(' '))
         {
             _currentCompletionPosition = _currentMessage.lastIndexOf(' ') + 1;
-            replacableFragment = _currentMessage.mid(_currentCompletionPosition);
+            _completionFragment = _currentMessage.mid(_currentCompletionPosition);
         }
         else
         {
             _currentCompletionPosition = 0;
-            replacableFragment = _currentMessage;
+            _completionFragment = _currentMessage;
         }
 
         _possibleNickNames.clear();
         _currentCompletionIndex = 0;
 
-        foreach (QString nick, _users->stringList())
-            if (nick.startsWith(replacableFragment, Qt::CaseInsensitive))
-                _possibleNickNames.append(nick);
+        foreach (const QString &nick, _users->stringList())
+            if (nick.startsWith(_completionFragment, Qt::CaseInsensitive))
+                _possibleNickNames.append(&nick);
 
         if (!_possibleNickNames.count())
             return;
-
-        _completionFragment = replacableFragment;
     }
 
-    newFragment = _possibleNickNames[_currentCompletionIndex];
+    newFragment = *_possibleNickNames[_currentCompletionIndex];
     if (_currentCompletionPosition == 0)
         newFragment += _autoCompletionSuffix;
 
-    _currentMessage.replace(_currentCompletionPosition, replacableFragment.length(), newFragment);
+    _currentMessage.replace(_currentCompletionPosition, _completionFragment.length(), newFragment);
     emit currentMessageChanged();
+    _completionFragment = newFragment;
 }
 
 void ChannelModel::fakeMessage()

@@ -47,7 +47,7 @@ class ChannelModel : public QObject
 
     static QString _autoCompletionSuffix;
     QString _completionFragment;
-    QList<QString> _possibleNickNames;
+    QList<const QString*> _possibleNickNames;
     int _currentCompletionIndex, _currentCompletionPosition;
 
     Irc::Buffer *_backend;
