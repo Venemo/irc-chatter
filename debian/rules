@@ -7,15 +7,16 @@
 # This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+export DH_VERBOSE=1
+
+package?=irc-chatter
+
 
 configure: configure-stamp
 configure-stamp:
 	dh_testdir
-	
 	# Add here commands to configure the package.
 	qmake-qt4 || qmake
-	
 	touch configure-stamp
 
 
@@ -25,7 +26,7 @@ build-stamp: configure-stamp
 	dh_testdir
 
 	# Add here commands to compile the package.
-	$(MAKE) -j4
+	$(MAKE)
 
 	touch $@
 
@@ -47,8 +48,10 @@ install: build
 	dh_clean -k 
 	dh_installdirs
 
-	# Add here commands to install the package into debian/irc-chatter.
-	$(MAKE) INSTALL_ROOT="$(CURDIR)/debian/irc-chatter" install
+	# Add here commands to install the package into debian/${package}.
+	$(MAKE) INSTALL_ROOT="$(CURDIR)/debian/${package}" install
+	chmod a+rx "$(CURDIR)/debian/${package}/usr/bin/${package}"
+
 
 # Build architecture-independent files here.
 binary-indep: build install

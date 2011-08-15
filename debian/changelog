@@ -1,9 +1,3 @@
-irc-chatter (0.0.20110815-0~rzr0) lucid; urgency=low
-
-  * WIP: http://rzr.online.fr/q/snapshot#irc-chatter
-
- -- Philippe Coval <rzr@gna.org>  Mon, 15 Aug 2011 00:34:26 +0200
-
 irc-chatter (0.0.0-0maemo0) UNRELEASED; urgency=low
 
   * WIP: http://rzr.online.fr/q/harmattan
