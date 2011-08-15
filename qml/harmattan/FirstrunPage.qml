@@ -112,7 +112,7 @@ Page {
             Binding {
                 target: server
                 property: "serverSSL"
-                value: sslCheckbox.enabled
+                value: sslCheckbox.checked
             }
             Label {
                 text: "Autojoin Channels"
