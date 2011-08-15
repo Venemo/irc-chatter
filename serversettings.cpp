@@ -20,7 +20,7 @@
 
 #include "serversettings.h"
 
-ServerSettings::ServerSettings(QObject *parent, const QString &url, const quint16 &port, const bool ssl, const QString &password, const QStringList &autoJoinChannels) :
+ServerSettings::ServerSettings(QObject *parent, const QString &url, const quint16 &port, bool ssl, const QString &password, const QStringList &autoJoinChannels) :
     QObject(parent),
     _serverUrl(url),
     _serverPort(port),

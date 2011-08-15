@@ -44,7 +44,7 @@ class ServerSettings : public QObject
     friend QDataStream &operator>>(QDataStream &stream, ServerSettings &server);
 
 public:
-    explicit ServerSettings(QObject *parent = 0, const QString &url = "irc.freenode.net", const quint16 &port = 6667, const bool ssl = false, const QString &password = QString(), const QStringList &autoJoinChannels = QStringList());
+    explicit ServerSettings(QObject *parent = 0, const QString &url = "irc.freenode.net", const quint16 &port = 6667, bool ssl = false, const QString &password = QString(), const QStringList &autoJoinChannels = QStringList());
     QString autoJoinChannelsInPlainString() const;
     void setAutoJoinChannelsInPlainString(const QString &value);
 
