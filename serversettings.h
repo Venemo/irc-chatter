@@ -17,6 +17,7 @@ class ServerSettings : public QObject
     Q_PROPERTY(QStringList autoJoinChannels READ autoJoinChannels WRITE setAutoJoinChannels NOTIFY autoJoinChannelsChanged)
     Q_PROPERTY(QString autoJoinChannelsInPlainString READ autoJoinChannelsInPlainString WRITE setAutoJoinChannelsInPlainString NOTIFY autoJoinChannelsChanged)
 
+
     friend QDataStream &operator>>(QDataStream &stream, ServerSettings &server);
 
 public:
