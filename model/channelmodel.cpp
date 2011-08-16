@@ -413,7 +413,10 @@ void ChannelModel::parseCommand(const QString &msg)
     else if (commandParts[0] == "/msg")
     {
         if (n > 2)
-            appendEmphasisedInfo("/msg is not supported yet, but planned to");
+        {
+            quint16 length = commandParts[0].length() + commandParts[1].length();
+            static_cast<ServerModel*>(parent())->msgUser(commandParts[1], msg.mid(length+1));
+        }
         else
             appendEmphasisedInfo("Invalid command. Correct usage: '/msg &lt;username&gt; &lt;message&gt;'");
     }

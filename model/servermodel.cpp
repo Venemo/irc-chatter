@@ -170,3 +170,12 @@ bool ServerModel::changeNick(const QString &nick)
     _backend->setNick(nick);
     return true;
 }
+
+bool ServerModel::msgUser(const QString &userName, const QString &msg)
+{
+    qDebug() << "msging user " << userName;
+    if (!_backend->buffer(userName))
+        _backend->addBuffer(userName);
+    _backend->buffer(userName)->message(msg);
+    return true;
+}

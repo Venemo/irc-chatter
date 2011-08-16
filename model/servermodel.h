@@ -55,6 +55,7 @@ public:
     Q_INVOKABLE bool closeUser(const QString &userName);
     Q_INVOKABLE bool changeNick(const QString &nick);
     Q_INVOKABLE void displayError(const QString &error);
+    Q_INVOKABLE bool msgUser(const QString &userName, const QString &msg);
 
 signals:
     void channelsChanged();
