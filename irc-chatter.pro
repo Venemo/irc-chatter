@@ -55,8 +55,9 @@ unix {
     desktopfile.path = /usr/share/applications
 }
 
-
-
-
-
-
+# for harmattan
+INSTALLS += splashportrait splashlandscape
+splashportrait.files = installables/irc-chatter-splash-harmattan-portrait.jpg
+splashportrait.path = /usr/share/irc-chatter
+splashlandscape.files = installables/irc-chatter-splash-harmattan-landscape.jpg
+splashlandscape.path = /usr/share/irc-chatter
