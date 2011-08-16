@@ -410,7 +410,7 @@ void ChannelModel::parseCommand(const QString &msg)
         else
             appendEmphasisedInfo("Invalid command. Correct usage: '/me &lt;message&gt;'");
     }
-    else if (commandParts[0] == "/msg")
+    else if (commandParts[0] == "/msg" || commandParts[0] == "/m")
     {
         if (n > 2)
         {
