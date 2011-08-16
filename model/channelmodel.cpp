@@ -396,7 +396,7 @@ void ChannelModel::parseCommand(const QString &msg)
         else
             appendEmphasisedInfo("Invalid command. Correct usage: '/close' or '/close &lt;username&gt'';");
     }
-    else if (commandParts[0] == "/quit" || commandParts[0] == "/q")
+    else if (commandParts[0] == "/quit")
     {
         if (n == 1)
             QCoreApplication::instance()->quit();
@@ -430,6 +430,13 @@ void ChannelModel::parseCommand(const QString &msg)
             appendEmphasisedInfo("[TOPIC] " + _topic);
         else
             appendEmphasisedInfo("Changing Topics is not supported yet!");
+    }
+    else if (commandParts[0] == "/query" || commandParts[0] == "/q")
+    {
+        if (n == 2)
+            static_cast<ServerModel*>(parent())->queryUser(commandParts[1]);
+        else
+            appendEmphasisedInfo("Invalid command. Correct usage: '/query &lt;username&gt;' ");
     }
     else
         appendEmphasisedInfo("Unknown command, maybe it will be supported later?");

@@ -65,6 +65,7 @@ private slots:
     void backendAddedBuffer(Irc::Buffer *buffer);
     void backendRemovedBuffer(Irc::Buffer *buffer);
     void receiveNumericMessageFromBackend(const QString &name, uint x, const QStringList &message);
+    void backendDisconnectedFromServer();
 
 };
 

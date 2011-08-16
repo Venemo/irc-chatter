@@ -36,7 +36,7 @@ ServerModel::ServerModel(IrcModel *parent, const QString &url, Irc::Session *bac
         connect(_backend, SIGNAL(connected()), this, SLOT(backendConnectedToServer()));
         connect(_backend, SIGNAL(bufferAdded(Irc::Buffer*)), this, SLOT(backendAddedBuffer(Irc::Buffer*)));
         connect(_backend, SIGNAL(bufferRemoved(Irc::Buffer*)), this, SLOT(backendRemovedBuffer(Irc::Buffer*)));
-        connect(_backend, SIGNAL(disconnected()), this, SLOT(backend->reconnectToServer();));
+        connect(_backend, SIGNAL(disconnected()), this, SLOT(backendDisconnectedFromServer()));
         _backend->connectToServer(_url);
     }
 }
