@@ -55,6 +55,11 @@ void ServerModel::backendConnectedToServer()
     connect(_backend->defaultBuffer(), SIGNAL(numericMessageReceived(QString,uint,QStringList)), this, SLOT(receiveNumericMessageFromBackend(QString,uint,QStringList)));
 }
 
+void ServerModel::backendDisconnectedFromServer()
+{
+
+}
+
 void ServerModel::backendAddedBuffer(Irc::Buffer *buffer)
 {
     qDebug() << "backend added buffer " << buffer->receiver();
