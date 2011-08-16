@@ -58,10 +58,10 @@ void ServerSettings::setAutoJoinChannelsInPlainString(const QString &value)
 
 QDataStream &operator<<(QDataStream &stream, const ServerSettings &server)
 {
-    return stream << server.serverUrl() << server.serverPassword() << server.autoJoinChannels();
+    return stream << server.serverUrl() << server.serverPassword() << server.autoJoinChannels() << server.serverSSL() << server.serverPort();
 }
 
 QDataStream &operator>>(QDataStream &stream, ServerSettings &server)
 {
-    return stream >> server._serverUrl >> server._serverPassword >> server._autoJoinChannels;
+    return stream >> server._serverUrl >> server._serverPassword >> server._autoJoinChannels >> server._serverSSL >> server._serverPort;
 }

@@ -27,7 +27,7 @@
 #include "util.h"
 
 // Increase this when anything changes in the settings
-#define APPSETTINGS_VERSION 2
+#define APPSETTINGS_VERSION 3
 
 class QSettings;
 
