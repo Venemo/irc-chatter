@@ -1,12 +1,53 @@
-irc-chatter (0.0.0-0maemo0) UNRELEASED; urgency=low
+irc-chatter (0.0.20110817-0~rzr1) lucid; urgency=low
 
-  * WIP: http://rzr.online.fr/q/harmattan
-  * TODO: remove this entry on release and put it back
+  * WIP: http://rzr.online.fr/q/snapshot#irc-chatter
 
- -- Philippe Coval <rzr@gna.org>  Mon, 15 Aug 2011 00:34:26 +0200
+ -- Philippe Coval <rzr@gna.org>  Wed, 17 Aug 2011 09:03:03 +0200
 
-irc-chatter (0.1.0-0maemo0) harmattan; urgency=low
+irc-chatter (0.0.20110817-0~rzr0) lucid; urgency=low
 
+  * WIP: http://rzr.online.fr/q/snapshot#irc-chatter
+
+ -- Philippe Coval <rzr@gna.org>  Wed, 17 Aug 2011 09:01:05 +0200
+
+irc-chatter (0.0.20110817-0~rzr0) lucid; urgency=low
+
+  * WIP: http://rzr.online.fr/q/snapshot#irc-chatter
+
+ -- Philippe Coval <rzr@gna.org>  Wed, 17 Aug 2011 08:58:01 +0200
+
+irc-chatter (0.0.20110817-0~rzr0) lucid; urgency=low
+
+  * WIP: http://rzr.online.fr/q/snapshot#irc-chatter
+
+ -- Philippe Coval <rzr@gna.org>  Wed, 17 Aug 2011 08:55:03 +0200
+
+irc-chatter (0.0.20110817-0~rzr0) lucid; urgency=low
+
+  * WIP: http://rzr.online.fr/q/snapshot#irc-chatter
+
+ -- Philippe Coval <rzr@gna.org>  Wed, 17 Aug 2011 08:52:06 +0200
+
+irc-chatter (0.0.20110817-0~rzr0) lucid; urgency=low
+
+  * WIP: http://rzr.online.fr/q/snapshot#irc-chatter
+
+ -- Philippe Coval <rzr@gna.org>  Wed, 17 Aug 2011 08:48:08 +0200
+
+irc-chatter (0.1.1) unstable; urgency=low
+ 
+  * Some small optimalizations
+  * Message view deletes the last 100 messages if there are more than 300
+  * Support for setting server port
+  * Support for connecting with SSL
+  * Now using applauncherd for boosting startup time
+  * Added splash screens for both portrait and landscape
+  * License changed to GPLv2+
+
+ -- Timur Kristóf <venemo@msn.com>  Sun, 14 Aug 2011 22:41:22 +0200
+
+irc-chatter (0.1.0) unstable; urgency=low
+ 
   * Initial version
   * See http://wiki.meego.com/User:Venemo/IRC_Chatter for info
   * See https://gitorious.org/colorful-apps/irc-chatter for source
