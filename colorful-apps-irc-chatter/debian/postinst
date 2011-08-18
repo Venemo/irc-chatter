@@ -1,3 +1,0 @@
-#!/bin/sh
-chmod +x /usr/bin/irc-chatter
-echo "IRC Chatter installed - enjoy!"

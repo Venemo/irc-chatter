@@ -1,11 +1,12 @@
-irc-chatter (0.0.20110817-0~rzr1) lucid; urgency=low
+irc-chatter (0.0.20110818-0~rzr1) lucid; urgency=low
 
   * WIP: http://rzr.online.fr/q/snapshot#irc-chatter
 
- -- Philippe Coval <rzr@gna.org>  Wed, 17 Aug 2011 09:03:03 +0200
+ -- Philippe Coval <rzr@gna.org>  Thu, 18 Aug 2011 23:50:59 +0200
 
 irc-chatter (0.0.0-0) UNRELEASED; urgency=low
 
+  * TODO: remove on release
   * WIP: http://rzr.online.fr/q/snapshot#irc-chatter
 
  -- Philippe Coval <rzr@gna.org>  Wed, 17 Aug 2011 08:48:08 +0200
@@ -29,3 +30,10 @@ irc-chatter (0.1.0) unstable; urgency=low
   * See https://gitorious.org/colorful-apps/irc-chatter for source
 
  -- Timur Kristóf <venemo@msn.com>  Sun, 14 Aug 2011 22:41:22 +0200
+
+irc-chatter (0.0.0-0) UNRELEASED; urgency=low
+
+  * TODO: remove on release
+  * WIP: http://rzr.online.fr/q/snapshot#irc-chatter
+
+ -- Philippe Coval <rzr@gna.org>  Wed, 1 Jan 0000 08:48:08 +0200
