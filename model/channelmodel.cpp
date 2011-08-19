@@ -449,7 +449,7 @@ void ChannelModel::parseCommand(const QString &msg)
             static_cast<ServerModel*>(parent())->kickUser(commandParts[1], commandParts[2], _backend->session()->nick());
         else if (n != 1)
         {
-            QString reason = msg.mid(commandParts[0].length() + commandParts[1].length() + commandParts[2].length() +2 );
+            QString reason = msg.mid(commandParts[0].length() + commandParts[1].length() + commandParts[2].length() + 3);
             static_cast<ServerModel*>(parent())->kickUser(commandParts[1], commandParts[2], reason);
         }
         else
