@@ -124,7 +124,7 @@ void ServerModel::receiveNumericMessageFromBackend(const QString &name, uint x, 
     else if (x == Irc::Rfc::ERR_NICKCOLLISION)
         displayError("Nick name collision!");
     else if (x >= 400)
-        displayError("An error occoured! Error code is: " + x);
+        displayError("An error occoured! Error code is: " + QString::number(x));
 }
 
 bool ServerModel::joinChannel(const QString &channelName)
