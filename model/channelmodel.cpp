@@ -443,17 +443,11 @@ void ChannelModel::parseCommand(const QString &msg)
     }
     else if (commandParts[0] == "/kick" || commandParts[0] == "/k")
     {
-        if (n == 1)
-        {
-            static_cast<ServerModel*>(parent())->kickUser(commandParts[1], name(), QString("bleh"));
-            appendEmphasisedInfo(commandParts[1] +" has been kicked from " + name() + " (" + QString("bleh") +")");
-        }
-        else if (n == 2)
-        {
-            static_cast<ServerModel*>(parent())->kickUser(commandParts[1], commandParts[2], QString("bleh"));
-            appendEmphasisedInfo(commandParts[1] +" has been kicked from " + commandParts[2] + " (" + QString("bleh") +")");
-        }
+        if (n == 2)
+            static_cast<ServerModel*>(parent())->kickUser(commandParts[1], name(), _backend->session()->nick());
         else if (n == 3)
+            static_cast<ServerModel*>(parent())->kickUser(commandParts[1], commandParts[2], _backend->session()->nick());
+        else if (n != 1)
         {
             QString reason = msg.mid(commandParts[0].length() + commandParts[1].length() + commandParts[2].length() +2 );
             static_cast<ServerModel*>(parent())->kickUser(commandParts[1], commandParts[2], reason);
