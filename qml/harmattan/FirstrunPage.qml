@@ -203,7 +203,7 @@ Page {
                 width: parent.width
                 text: appSettings.userRealName
                 placeholderText: "If you wish, enter your real name"
-                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+                inputMethodHints: Qt.ImhNoPredictiveText
             }
             Binding {
                 target: appSettings

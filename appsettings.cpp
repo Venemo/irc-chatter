@@ -25,6 +25,9 @@
 #define APPSETTING_USERNICKNAME "UserNickname"
 #define APPSETTING_USERIDENT "UserIdent"
 #define APPSETTING_USERREALNAME "UserRealName"
+#define APPSETTING_PARTMESSAGE "PartMessage"
+#define APPSETTING_KICKMESSAGE "KickMessage"
+#define APPSETTING_FONTSIZE "FontSize"
 
 AppSettings::AppSettings(QObject *parent) :
     QObject(parent),
