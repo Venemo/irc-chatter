@@ -94,6 +94,36 @@ void AppSettings::setUserRealName(const QString &value)
     _backend.setValue(APPSETTING_USERREALNAME, value);
 }
 
+QString AppSettings::kickMessage() const
+{
+
+}
+
+void AppSettings::setKickMessage(const QString &value)
+{
+
+}
+
+QString AppSettings::partMessage() const
+{
+
+}
+
+void AppSettings::setPartMessage(const QString &value)
+{
+
+}
+
+quint16 AppSettings::fontSize() const
+{
+
+}
+
+void AppSettings::setFontSize(const quint16 &value)
+{
+
+}
+
 QObjectListModel<ServerSettings> *AppSettings::serverSettings()
 {
     return _serverSettings;

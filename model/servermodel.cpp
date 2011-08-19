@@ -179,3 +179,10 @@ bool ServerModel::msgUser(const QString &userName, const QString &msg)
     _backend->buffer(userName)->message(msg);
     return true;
 }
+
+bool ServerModel::kickUser(const QString &user, const QString &channel, const QString &message)
+{
+    qDebug() << "kick user" << user << " from " << channel << " reason - " << message;
+    _backend->kick(user, channel, message);
+    return true;
+}

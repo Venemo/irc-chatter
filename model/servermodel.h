@@ -56,6 +56,7 @@ public:
     Q_INVOKABLE bool changeNick(const QString &nick);
     Q_INVOKABLE void displayError(const QString &error);
     Q_INVOKABLE bool msgUser(const QString &userName, const QString &msg);
+    Q_INVOKABLE bool kickUser(const QString &user, const QString &channel, const QString &message);
 
 signals:
     void channelsChanged();
