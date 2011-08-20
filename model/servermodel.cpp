@@ -24,6 +24,7 @@
 
 #include "servermodel.h"
 #include "ircmodel.h"
+#include "appsettings.h"
 
 ServerModel::ServerModel(IrcModel *parent, const QString &url, Irc::Session *backend) :
     QObject((QObject*)parent),
@@ -146,7 +147,7 @@ bool ServerModel::joinChannel(const QString &channelName)
 bool ServerModel::partChannel(const QString &channelName)
 {
     qDebug() << "parting channel " << channelName;
-    _backend->part(channelName, "Leaving this channel. (with IRC Chatter, the first MeeGo IRC client)");
+    _backend->part(channelName, _settings->partMessage());
     return true;
 }
 
@@ -180,9 +181,12 @@ bool ServerModel::msgUser(const QString &userName, const QString &msg)
     return true;
 }
 
-bool ServerModel::kickUser(const QString &user, const QString &channel, const QString &message)
+bool ServerModel::kickUser(const QString &user, const QString &channel, const QString &message = QString(""))
 {
-    qDebug() << "kick user" << user << " from " << channel << " reason - " << message;
-    _backend->kick(user, channel, message);
+    qDebug() << "kick user" << user << " from " << channel;
+    if (message.length())
+        _backend->kick(user, channel, message);
+    else
+        _backend->kick(user, channel, _settings->kickMessage());
     return true;
 }

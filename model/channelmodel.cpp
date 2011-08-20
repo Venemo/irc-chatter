@@ -444,9 +444,9 @@ void ChannelModel::parseCommand(const QString &msg)
     else if (commandParts[0] == "/kick" || commandParts[0] == "/k")
     {
         if (n == 2)
-            static_cast<ServerModel*>(parent())->kickUser(commandParts[1], name(), _backend->session()->nick());
+            static_cast<ServerModel*>(parent())->kickUser(commandParts[1], name());
         else if (n == 3)
-            static_cast<ServerModel*>(parent())->kickUser(commandParts[1], commandParts[2], _backend->session()->nick());
+            static_cast<ServerModel*>(parent())->kickUser(commandParts[1], commandParts[2]);
         else if (n != 1)
         {
             QString reason = msg.mid(commandParts[0].length() + commandParts[1].length() + commandParts[2].length() + 3);

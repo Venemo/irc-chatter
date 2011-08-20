@@ -96,7 +96,7 @@ void AppSettings::setUserRealName(const QString &value)
 
 QString AppSettings::kickMessage() const
 {
-    return _backend.value(APPSETTING_KICKMESSAGE).toString();
+    return _backend.value(APPSETTING_KICKMESSAGE, "Kindergarten is elsewhere!").toString();
 }
 
 void AppSettings::setKickMessage(const QString &value)
@@ -106,7 +106,7 @@ void AppSettings::setKickMessage(const QString &value)
 
 QString AppSettings::partMessage() const
 {
-    return _backend.value(APPSETTING_PARTMESSAGE).toString();
+    return _backend.value(APPSETTING_PARTMESSAGE, "Leaving this channel. (with IRC Chatter, the first MeeGo IRC client)").toString();
 }
 
 void AppSettings::setPartMessage(const QString &value)
