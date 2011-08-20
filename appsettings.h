@@ -60,6 +60,8 @@ public:
     void setPartMessage(const QString &value);
     QString kickMessage() const;
     void setKickMessage(const QString &value);
+    QString quitMessage() const;
+    void setQuitMessage(const QString &value);
     quint16 fontSize() const;
     void setFontSize(const quint16 &value);
 

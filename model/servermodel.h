@@ -40,9 +40,11 @@ class ServerModel : public QObject
 
     QString _password;
     Irc::Session *_backend;
-    AppSettings *_settings;
 
     friend class IrcModel;
+    friend class AppSettings;
+
+    AppSettings *_settings;
 
     void removeModelForBuffer(Irc::Buffer *buffer);
 

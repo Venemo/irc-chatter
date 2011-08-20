@@ -32,6 +32,7 @@ ServerModel::ServerModel(IrcModel *parent, const QString &url, Irc::Session *bac
     _url(url),
     _backend(backend)
 {
+    _settings = new AppSettings(this);
     if (_backend)
     {
         connect(_backend, SIGNAL(connected()), this, SLOT(backendConnectedToServer()));
@@ -146,7 +147,7 @@ bool ServerModel::joinChannel(const QString &channelName)
 
 bool ServerModel::partChannel(const QString &channelName)
 {
-    qDebug() << "parting channel " << channelName << _settings->partMessage();
+    qDebug() << "parting channel " << channelName;
     _backend->part(channelName, _settings->partMessage());
     return true;
 }
@@ -183,10 +184,10 @@ bool ServerModel::msgUser(const QString &userName, const QString &msg)
 
 bool ServerModel::kickUser(const QString &user, const QString &channel, const QString &message)
 {
-    qDebug() << "kick user" << user << " from " << channel << _settings->kickMessage();
+    qDebug() << "kick user" << user << " from " << channel;
     if (message.length())
-        _backend->kick(user, channel, _settings->kickMessage());
-    else
         _backend->kick(user, channel, message);
+    else
+        _backend->kick(user, channel, _settings->kickMessage());
     return true;
 }
