@@ -36,11 +36,6 @@ Page {
         }
     }
 
-    onStatusChanged: {
-        if (status == PageStatus.Active)
-            prereleaseDialog.open();
-    }
-
     Flickable {
         id: settingsFlickable
         anchors.fill: parent
@@ -158,7 +153,7 @@ Page {
             TextField {
                 id: kickField
                 width: parent.width
-                text: appSettings.partMessage
+                text: appSettings.kickMessage
                 inputMethodHints: Qt.ImhNoPredictiveText
             }
             Binding {
