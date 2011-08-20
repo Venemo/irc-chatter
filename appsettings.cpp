@@ -96,32 +96,32 @@ void AppSettings::setUserRealName(const QString &value)
 
 QString AppSettings::kickMessage() const
 {
-
+    return _backend.value(APPSETTING_KICKMESSAGE).toString();
 }
 
 void AppSettings::setKickMessage(const QString &value)
 {
-
+    _backend.setValue(APPSETTING_KICKMESSAGE, value);
 }
 
 QString AppSettings::partMessage() const
 {
-
+    return _backend.value(APPSETTING_PARTMESSAGE).toString();
 }
 
 void AppSettings::setPartMessage(const QString &value)
 {
-
+    _backend.setValue(APPSETTING_PARTMESSAGE, value);
 }
 
 quint16 AppSettings::fontSize() const
 {
-
+    return _backend.value(APPSETTING_FONTSIZE).toUInt();
 }
 
 void AppSettings::setFontSize(const quint16 &value)
 {
-
+    _backend.value(APPSETTING_FONTSIZE, value);
 }
 
 QObjectListModel<ServerSettings> *AppSettings::serverSettings()
