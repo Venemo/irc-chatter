@@ -134,6 +134,20 @@ Page {
                 text: "User Configuration"
             }
             Label {
+                text: "Quit Message"
+            }
+            TextField {
+                id: quitField
+                width: parent.width
+                text: appSettings.quitMessage
+                inputMethodHints: Qt.ImhNoPredictiveText
+            }
+            Binding {
+                target: appSettings
+                property: "quitMessage"
+                value: quitField.text
+            }
+            Label {
                 text: "Part Message"
             }
             TextField {
@@ -160,6 +174,31 @@ Page {
                 target: appSettings
                 property: "kickMessage"
                 value: kickField.text
+            }
+            Label {
+                text: "Font Size"
+            }
+            Row {
+                spacing: 10
+                width: parent.width
+                Slider {
+                    id: fontSlider
+                    minimumValue: 12
+                    maximumValue: 40
+                    stepSize: 1
+                    width: parent.width - 60
+                    valueIndicatorVisible: true
+                    value: 24
+                }
+                Binding {
+                    target: appSettings
+                    property: "fontSize"
+                    value: fontSlider.value
+                }
+                Label {
+                    text: fontSlider.value
+                    width: 100
+                }
             }
         }
     }
