@@ -40,6 +40,9 @@ class AppSettings : public QObject
     Q_PROPERTY(QString userNickname READ userNickname WRITE setUserNickname NOTIFY userNicknameChanged)
     Q_PROPERTY(QString userIdent READ userIdent WRITE setUserIdent NOTIFY userIdentChanged)
     Q_PROPERTY(QString userRealName READ userRealName WRITE setUserRealName NOTIFY userRealNameChanged)
+    Q_PROPERTY(QString kickMessage READ kickMessage WRITE setKickMessage NOTIFY kickMessageChanged)
+    Q_PROPERTY(QString partMessage READ partMessage WRITE setPartMessage NOTIFY partMessageChanged)
+    Q_PROPERTY(quint16 fontSize READ fontSize WRITE setFontSize NOTIFY fontSizeChanged)
 
     QSettings _backend;
     QObjectListModel<ServerSettings> *_serverSettings;
@@ -53,6 +56,14 @@ public:
     void setUserIdent(const QString &value);
     QString userRealName() const;
     void setUserRealName(const QString &value);
+    QString partMessage() const;
+    void setPartMessage(const QString &value);
+    QString kickMessage() const;
+    void setKickMessage(const QString &value);
+    QString quitMessage() const;
+    void setQuitMessage(const QString &value);
+    quint16 fontSize() const;
+    void setFontSize(const quint16 &value);
 
     QObjectListModel<ServerSettings> *serverSettings();
     Q_INVOKABLE void saveServerSettings();
@@ -65,6 +76,9 @@ signals:
     void userNicknameChanged();
     void userIdentChanged();
     void userRealNameChanged();
+    void kickMessageChanged();
+    void partMessageChanged();
+    void fontSizeChanged();
 
 };
 

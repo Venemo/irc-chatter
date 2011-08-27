@@ -24,6 +24,7 @@
 #include "util.h"
 #include "qobjectlistmodel.h"
 #include "channelmodel.h"
+#include "appsettings.h"
 
 namespace Irc { class Session; }
 class IrcModel;
@@ -41,6 +42,9 @@ class ServerModel : public QObject
     Irc::Session *_backend;
 
     friend class IrcModel;
+    friend class AppSettings;
+
+    AppSettings *_settings;
 
     void removeModelForBuffer(Irc::Buffer *buffer);
 
@@ -56,6 +60,7 @@ public:
     Q_INVOKABLE bool changeNick(const QString &nick);
     Q_INVOKABLE void displayError(const QString &error);
     Q_INVOKABLE bool msgUser(const QString &userName, const QString &msg);
+    Q_INVOKABLE bool kickUser(const QString &user, const QString &channel, const QString &message = QString(""));
 
 signals:
     void channelsChanged();
