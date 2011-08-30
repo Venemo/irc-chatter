@@ -264,7 +264,10 @@ Page {
         id: userSelectorDialog
         titleText: "User list of " + (ircModel.currentChannel === null ? "?" : ircModel.currentChannel.name)
         model: ircModel.currentChannel === null ? null : ircModel.currentChannel.users
+        onStatusChanged: {
+            if (status == DialogStatus.Closed)
+                ircModel.currentChannel.queryUser(selectedIndex)
+        }
         searchFieldVisible: true
     }
-
 }

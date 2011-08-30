@@ -458,3 +458,8 @@ void ChannelModel::parseCommand(const QString &msg)
     else
         appendEmphasisedInfo("Unknown command, maybe it will be supported later?");
 }
+
+void ChannelModel::queryUser(const quint16 &index)
+{
+    static_cast<ServerModel*>(parent())->queryUser(_users->stringList().at(index));
+}
