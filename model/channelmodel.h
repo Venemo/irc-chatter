@@ -55,6 +55,8 @@ class ChannelModel : public QObject
     static QList<QString> *_colors;
     static QRegExp _urlRegexp;
     static int _maxLineNumber, _deletableLines;
+    QList<const QString*> _sentMessages;
+    quint16 _sentMessagesCount;
 
     friend class IrcModel;
     friend class ServerModel;
@@ -79,6 +81,7 @@ public:
     Q_INVOKABLE void autoCompleteNick();
     Q_INVOKABLE const QString colorForNick(const QString &nick);
     Q_INVOKABLE void queryUser(const quint16 &index);
+    Q_INVOKABLE const QString getSentMessages(quint16 &type);
     QString name() const;
 
 signals:

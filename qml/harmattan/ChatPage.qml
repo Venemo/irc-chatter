@@ -194,6 +194,8 @@ Page {
         }
         inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
         Keys.onReturnPressed: sendCurrentMessage()
+        Keys.onUpPressed: text = ircModel.currentChannel.getSentMessages(1)
+        Keys.onDownPressed: text = ircModel.currentChannel.getSentMessages(2)
 
         ToolIcon {
             id: tabButton
@@ -266,7 +268,10 @@ Page {
         model: ircModel.currentChannel === null ? null : ircModel.currentChannel.users
         onStatusChanged: {
             if (status == DialogStatus.Closed)
-                ircModel.currentChannel.queryUser(selectedIndex)
+                if (selectedIndex >= 0) {
+                    ircModel.currentChannel.queryUser(selectedIndex)
+                    selectedIndex: -1
+                }
         }
         searchFieldVisible: true
     }

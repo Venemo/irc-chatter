@@ -64,6 +64,8 @@ ChannelModel::ChannelModel(ServerModel *parent, Irc::Buffer *backend) :
         _colors->append("#cec700");
     }
 
+    _sentMessagesCount = -1;
+
     if (!_backend)
         qDebug() << "A channel backend is null, this is an error. The app will segfault.";
 
@@ -279,8 +281,11 @@ const QString ChannelModel::colorForNick(const QString &nick)
 
 void ChannelModel::sendCurrentMessage()
 {
+    _sentMessages.append(_currentMessage);
+    _sentMessagesCount = _sentMessages.count();
     if (_currentMessage.length() > 0)
     {
+        _sentMessages.append(_currentMessage);
         if (_currentMessage.startsWith("/"))
             parseCommand(_currentMessage);
         else
@@ -462,4 +467,29 @@ void ChannelModel::parseCommand(const QString &msg)
 void ChannelModel::queryUser(const quint16 &index)
 {
     static_cast<ServerModel*>(parent())->queryUser(_users->stringList().at(index));
+}
+
+const QString ChannelModel::getSentMessages(quint16 &type)
+{
+    if (type == 1){
+        if (_sentMessagesCount == -1)
+            return QString("");
+        else if (_sentMessagesCount != 0){
+            return _sentMessages.at(_sentMessagesCount);
+            _sentMessagesCount -= _sentMessages;
+        }
+        else {
+            return _sentMessages.at(0);
+        }
+
+    }
+    else {
+        if (_sentMessagesCount == -1 || _sentMessages.count() == _sentMessagesCount) {
+            return QString("");
+        }
+        else {
+            return _sentMessages.at(_sentMessagesCount);
+            _sentMessagesCount += 1;
+        }
+    }
 }
