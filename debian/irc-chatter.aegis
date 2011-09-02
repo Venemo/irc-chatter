@@ -1,0 +1,5 @@
+<aegis>
+  <request context="INSTALL">
+    <credential name="UID::user"/>
+  </request>
+</aegis>
