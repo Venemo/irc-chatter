@@ -18,7 +18,7 @@
 
 import QtQuick 1.1
 import com.meego 1.0
-import com.meego.extras 1.0
+import com.nokia.extras 1.0
 import net.venemo.ircchatter 1.0
 
 Page {
@@ -203,7 +203,7 @@ Page {
                 width: parent.width
                 text: appSettings.userRealName
                 placeholderText: "If you wish, enter your real name"
-                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+                inputMethodHints: Qt.ImhNoPredictiveText
             }
             Binding {
                 target: appSettings

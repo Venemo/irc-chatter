@@ -18,7 +18,8 @@
 
 import QtQuick 1.1
 import com.meego 1.0
-import com.meego.extras 1.0
+import com.nokia.extras 1.0
+import net.venemo.ircchatter 1.0
 
 Page {
     id: settingsPage
@@ -33,11 +34,6 @@ Page {
             platformIconId: "toolbar-view-menu"
             onClicked: (commonMenu.status == DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
         }
-    }
-
-    onStatusChanged: {
-        if (status == PageStatus.Active)
-            prereleaseDialog.open();
     }
 
     Flickable {
@@ -57,7 +53,7 @@ Page {
             anchors.top: parent.top
             anchors.topMargin: 20
 
-            TitleLabel {
+            /*TitleLabel {
                 text: "Display"
             }
             Label {
@@ -133,6 +129,76 @@ Page {
                 width: parent.width - 100
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Configure servers"
+            }*/
+            TitleLabel {
+                text: "User Configuration"
+            }
+            Label {
+                text: "Quit Message"
+            }
+            TextField {
+                id: quitField
+                width: parent.width
+                text: appSettings.quitMessage
+                inputMethodHints: Qt.ImhNoPredictiveText
+            }
+            Binding {
+                target: appSettings
+                property: "quitMessage"
+                value: quitField.text
+            }
+            Label {
+                text: "Part Message"
+            }
+            TextField {
+                id: partField
+                width: parent.width
+                text: appSettings.partMessage
+                inputMethodHints: Qt.ImhNoPredictiveText
+            }
+            Binding {
+                target: appSettings
+                property: "partMessage"
+                value: partField.text
+            }
+            Label {
+                text: "Kick Message"
+            }
+            TextField {
+                id: kickField
+                width: parent.width
+                text: appSettings.kickMessage
+                inputMethodHints: Qt.ImhNoPredictiveText
+            }
+            Binding {
+                target: appSettings
+                property: "kickMessage"
+                value: kickField.text
+            }
+            Label {
+                text: "Font Size"
+            }
+            Row {
+                spacing: 10
+                width: parent.width
+                Slider {
+                    id: fontSlider
+                    minimumValue: 12
+                    maximumValue: 40
+                    stepSize: 1
+                    width: parent.width - 60
+                    valueIndicatorVisible: true
+                    value: 24
+                }
+                Binding {
+                    target: appSettings
+                    property: "fontSize"
+                    value: fontSlider.value
+                }
+                Label {
+                    text: fontSlider.value
+                    width: 100
+                }
             }
         }
     }

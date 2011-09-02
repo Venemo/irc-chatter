@@ -18,6 +18,7 @@
 
 import QtQuick 1.1
 import com.meego 1.0
+import net.venemo.ircchatter 1.0
 
 Page {
     id: mainPage
@@ -56,10 +57,10 @@ Page {
             onClicked: userSelectorDialog.open();
             visible: ircModel.currentChannel === null ? false : (ircModel.currentChannel.name.charAt(0) === '#')
         }
-//        ToolIcon {
-//            platformIconId: "toolbar-settings";
-//            onClicked: appWindow.pageStack.push(settingsPage)
-//        }
+        ToolIcon {
+            platformIconId: "toolbar-settings";
+            onClicked: appWindow.pageStack.push(settingsPage)
+        }
         ToolIcon {
             platformIconId: "toolbar-view-menu";
             onClicked: (chatMenu.status == DialogStatus.Closed) ? chatMenu.open() : chatMenu.close()
@@ -87,8 +88,8 @@ Page {
             readOnly: true
             wrapMode: TextEdit.WordWrap
             textFormat: TextEdit.RichText
-            font.pixelSize: 24
             text: ircModel.currentChannel !== null ? ircModel.currentChannel.channelText : ""
+            //font:
 
             onTextChanged: {
                 var should = Math.max(0,  chatArea.height - chatFlickable.height);
@@ -263,7 +264,10 @@ Page {
         id: userSelectorDialog
         titleText: "User list of " + (ircModel.currentChannel === null ? "?" : ircModel.currentChannel.name)
         model: ircModel.currentChannel === null ? null : ircModel.currentChannel.users
+        onStatusChanged: {
+            if (status == DialogStatus.Closed)
+                ircModel.currentChannel.queryUser(selectedIndex)
+        }
         searchFieldVisible: true
     }
-
 }

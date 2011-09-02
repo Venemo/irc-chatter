@@ -78,6 +78,7 @@ public:
 
     Q_INVOKABLE void autoCompleteNick();
     Q_INVOKABLE const QString colorForNick(const QString &nick);
+    Q_INVOKABLE void queryUser(const quint16 &index);
     QString name() const;
 
 signals:

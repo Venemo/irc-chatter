@@ -24,6 +24,7 @@
 
 #include "servermodel.h"
 #include "ircmodel.h"
+#include "appsettings.h"
 
 ServerModel::ServerModel(IrcModel *parent, const QString &url, Irc::Session *backend) :
     QObject((QObject*)parent),
@@ -31,6 +32,7 @@ ServerModel::ServerModel(IrcModel *parent, const QString &url, Irc::Session *bac
     _url(url),
     _backend(backend)
 {
+    _settings = new AppSettings(this);
     if (_backend)
     {
         connect(_backend, SIGNAL(connected()), this, SLOT(backendConnectedToServer()));
@@ -45,7 +47,7 @@ ServerModel::~ServerModel()
 {
     if (_backend)
     {
-        _backend->quit("IRC Chatter (the first MeeGo IRC client) closed.");
+        _backend->quit(_settings->quitMessage());
         _backend->deleteLater();
     }
 }
@@ -124,7 +126,7 @@ void ServerModel::receiveNumericMessageFromBackend(const QString &name, uint x, 
     else if (x == Irc::Rfc::ERR_NICKCOLLISION)
         displayError("Nick name collision!");
     else if (x >= 400)
-        displayError("An error occoured! Error code is: " + x);
+        displayError("An error occoured! Error code is: " + QString::number(x));
 }
 
 bool ServerModel::joinChannel(const QString &channelName)
@@ -146,7 +148,7 @@ bool ServerModel::joinChannel(const QString &channelName)
 bool ServerModel::partChannel(const QString &channelName)
 {
     qDebug() << "parting channel " << channelName;
-    _backend->part(channelName, "Leaving this channel. (with IRC Chatter, the first MeeGo IRC client)");
+    _backend->part(channelName, _settings->partMessage());
     return true;
 }
 
@@ -177,5 +179,15 @@ bool ServerModel::msgUser(const QString &userName, const QString &msg)
     if (!_backend->buffer(userName))
         _backend->addBuffer(userName);
     _backend->buffer(userName)->message(msg);
+    return true;
+}
+
+bool ServerModel::kickUser(const QString &user, const QString &channel, const QString &message)
+{
+    qDebug() << "kick user" << user << " from " << channel;
+    if (message.length())
+        _backend->kick(user, channel, message);
+    else
+        _backend->kick(user, channel, _settings->kickMessage());
     return true;
 }

@@ -17,6 +17,7 @@
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
 #include <QtCore>
+#include <QDebug>
 
 #include "appsettings.h"
 
@@ -25,6 +26,10 @@
 #define APPSETTING_USERNICKNAME "UserNickname"
 #define APPSETTING_USERIDENT "UserIdent"
 #define APPSETTING_USERREALNAME "UserRealName"
+#define APPSETTING_PARTMESSAGE "PartMessage"
+#define APPSETTING_KICKMESSAGE "KickMessage"
+#define APPSETTING_QUITMESSAGE "QuitMessage"
+#define APPSETTING_FONTSIZE "FontSize"
 
 AppSettings::AppSettings(QObject *parent) :
     QObject(parent),
@@ -89,6 +94,47 @@ QString AppSettings::userRealName() const
 void AppSettings::setUserRealName(const QString &value)
 {
     _backend.setValue(APPSETTING_USERREALNAME, value);
+}
+
+QString AppSettings::kickMessage() const
+{
+    return _backend.value(APPSETTING_KICKMESSAGE, QVariant("Kindergarten is elsewhere!")).toString();
+}
+
+void AppSettings::setKickMessage(const QString &value)
+{
+    _backend.setValue(APPSETTING_KICKMESSAGE, value);
+}
+
+QString AppSettings::partMessage() const
+{
+    return _backend.value(APPSETTING_PARTMESSAGE, QVariant("Leaving this channel. (with IRC Chatter, the first MeeGo IRC client)")).toString();
+}
+
+void AppSettings::setPartMessage(const QString &value)
+{
+    _backend.setValue(APPSETTING_PARTMESSAGE, value);
+}
+
+QString AppSettings::quitMessage() const
+{
+    return _backend.value(APPSETTING_QUITMESSAGE, QVariant("IRC Chatter (the first MeeGo IRC client) closed.")).toString();
+}
+
+void AppSettings::setQuitMessage(const QString &value)
+{
+    _backend.setValue(APPSETTING_QUITMESSAGE, value);
+}
+
+
+quint16 AppSettings::fontSize() const
+{
+    return _backend.value(APPSETTING_FONTSIZE, QVariant(24)).toUInt();
+}
+
+void AppSettings::setFontSize(const quint16 &value)
+{
+    _backend.setValue(APPSETTING_FONTSIZE, value);
 }
 
 QObjectListModel<ServerSettings> *AppSettings::serverSettings()
