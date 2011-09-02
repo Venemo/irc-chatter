@@ -28,6 +28,7 @@
 #define APPSETTING_USERREALNAME "UserRealName"
 #define APPSETTING_PARTMESSAGE "PartMessage"
 #define APPSETTING_KICKMESSAGE "KickMessage"
+#define APPSETTING_QUITMESSAGE "QuitMessage"
 #define APPSETTING_FONTSIZE "FontSize"
 
 AppSettings::AppSettings(QObject *parent) :
@@ -115,14 +116,25 @@ void AppSettings::setPartMessage(const QString &value)
     _backend.setValue(APPSETTING_PARTMESSAGE, value);
 }
 
+QString AppSettings::quitMessage() const
+{
+    return _backend.value(APPSETTING_QUITMESSAGE, QVariant("IRC Chatter (the first MeeGo IRC client) closed.")).toString();
+}
+
+void AppSettings::setQuitMessage(const QString &value)
+{
+    _backend.setValue(APPSETTING_QUITMESSAGE, value);
+}
+
+
 quint16 AppSettings::fontSize() const
 {
-    return _backend.value(APPSETTING_FONTSIZE).toUInt();
+    return _backend.value(APPSETTING_FONTSIZE, QVariant(24)).toUInt();
 }
 
 void AppSettings::setFontSize(const quint16 &value)
 {
-    _backend.value(APPSETTING_FONTSIZE, value);
+    _backend.setValue(APPSETTING_FONTSIZE, value);
 }
 
 QObjectListModel<ServerSettings> *AppSettings::serverSettings()

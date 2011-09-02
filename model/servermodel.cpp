@@ -47,7 +47,7 @@ ServerModel::~ServerModel()
 {
     if (_backend)
     {
-        _backend->quit("IRC Chatter (the first MeeGo IRC client) closed.");
+        _backend->quit(_settings->quitMessage());
         _backend->deleteLater();
     }
 }

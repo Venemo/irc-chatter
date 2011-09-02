@@ -42,6 +42,7 @@ class AppSettings : public QObject
     Q_PROPERTY(QString userRealName READ userRealName WRITE setUserRealName NOTIFY userRealNameChanged)
     Q_PROPERTY(QString kickMessage READ kickMessage WRITE setKickMessage NOTIFY kickMessageChanged)
     Q_PROPERTY(QString partMessage READ partMessage WRITE setPartMessage NOTIFY partMessageChanged)
+    Q_PROPERTY(QString quitMessage READ quitMessage WRITE setQuitMessage NOTIFY quitMessageChanged)
     Q_PROPERTY(quint16 fontSize READ fontSize WRITE setFontSize NOTIFY fontSizeChanged)
 
     QSettings _backend;
@@ -78,6 +79,7 @@ signals:
     void userRealNameChanged();
     void kickMessageChanged();
     void partMessageChanged();
+    void quitMessageChanged();
     void fontSizeChanged();
 
 };
