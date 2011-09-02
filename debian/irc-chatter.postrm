@@ -23,7 +23,7 @@
 
 case "$1" in
    purge)
-   rm /home/user/.config/Venemo/irc-chatter.conf
+   rm -r /home/user/.config/irc-chatter
    ;;
     remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
         ;;
