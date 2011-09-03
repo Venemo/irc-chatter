@@ -97,7 +97,7 @@ Page {
             wrapMode: TextEdit.WordWrap
             textFormat: TextEdit.RichText
             text: ircModel.currentChannel !== null ? ircModel.currentChannel.channelText : ""
-            //font:
+            font.pixelSize: appSettings.fontSize
 
             onTextChanged: {
                 var should = Math.max(0,  chatArea.height - chatFlickable.height);

@@ -188,7 +188,7 @@ Page {
                     stepSize: 1
                     width: parent.width - 60
                     valueIndicatorVisible: true
-                    value: 24
+                    value: appSettings.fontSize
                 }
                 Binding {
                     target: appSettings

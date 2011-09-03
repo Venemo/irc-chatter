@@ -295,7 +295,6 @@ void ChannelModel::sendCurrentMessage()
 
 void ChannelModel::setCurrentMessage(const QString &value)
 {
-    qDebug() << "Setting message to" << value;
     if (_completionFragment.length())
         _completionFragment.clear();
 
