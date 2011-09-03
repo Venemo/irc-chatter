@@ -40,6 +40,14 @@ Page {
     function scrollToBottom() {
         chatFlickable.contentY = Math.max(0,  chatArea.height - chatFlickable.height)
     }
+    function upKeyPressed() {
+        messageField.text = ircModel.currentChannel.getSentMessagesUp()
+        console.debug("Up pressed")
+    }
+    function downKeyPressed() {
+        messageField.text = ircModel.currentChannel.getSentMessagesDown()
+        console.debug("Down pressed")
+    }
 
     tools: ToolBarLayout {
         visible: true
@@ -194,8 +202,8 @@ Page {
         }
         inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
         Keys.onReturnPressed: sendCurrentMessage()
-        Keys.onUpPressed: text = ircModel.currentChannel.getSentMessages(1)
-        Keys.onDownPressed: text = ircModel.currentChannel.getSentMessages(2)
+        Keys.onUpPressed: upKeyPressed()
+        Keys.onDownPressed: downKeyPressed()
 
         ToolIcon {
             id: tabButton
@@ -270,7 +278,9 @@ Page {
             if (status == DialogStatus.Closed)
                 if (selectedIndex >= 0) {
                     ircModel.currentChannel.queryUser(selectedIndex)
-                    selectedIndex: -1
+                    console.debug(selectedIndex)
+                    selectedIndex = -1
+                    console.debug(selectedIndex)
                 }
         }
         searchFieldVisible: true

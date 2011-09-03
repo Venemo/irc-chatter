@@ -9,8 +9,7 @@ HEADERS += \
     model/ircmodel.h \
     model/servermodel.h \
     appsettings.h \
-    serversettings.h \
-    model/notificationmodel.h
+    serversettings.h
 
 SOURCES += \
     main.cpp \
@@ -18,8 +17,7 @@ SOURCES += \
     model/ircmodel.cpp \
     model/servermodel.cpp \
     appsettings.cpp \
-    serversettings.cpp \
-    model/notificationmodel.cpp
+    serversettings.cpp
 
 RESOURCES += \
     harmattan-gui.qrc
