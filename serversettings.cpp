@@ -39,14 +39,7 @@ ServerSettings::ServerSettings(QObject *parent, const QString &url, const quint1
 
 QString ServerSettings::autoJoinChannelsInPlainString() const
 {
-    QString s;
-    for (int i = 0; i < _autoJoinChannels.count(); i++)
-    {
-        s += _autoJoinChannels[i];
-        if (i != _autoJoinChannels.count() - 1)
-            s += ", ";
-    }
-    return s;
+    return _autoJoinChannels.join(", ");
 }
 
 void ServerSettings::setAutoJoinChannelsInPlainString(const QString &value)
