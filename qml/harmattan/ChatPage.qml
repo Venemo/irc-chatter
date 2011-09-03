@@ -23,6 +23,8 @@ import net.venemo.ircchatter 1.0
 Page {
     id: mainPage
 
+    onStatusChanged: if (mainPage.status == PageStatus.Active) chatArea.font.pixelSize = appSettings.fontSize
+
     property bool shouldUpdateCurrentMessage: true
 
     function sendCurrentMessage() {
