@@ -32,8 +32,6 @@ ServerSettings::ServerSettings(QObject *parent, const QString &url, const quint1
     {
         _autoJoinChannels.append("#irc-chatter");
         _autoJoinChannels.append("#harmattan");
-        _autoJoinChannels.append("#maemo");
-        _autoJoinChannels.append("#meego");
     }
 }
 
