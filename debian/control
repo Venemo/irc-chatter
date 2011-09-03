@@ -1,8 +1,10 @@
 Source: irc-chatter
 Section: user/other
 Priority: extra
-Maintainer: Timur Kristóf (Venemo) <venemo@fedoraproject.org>
-Build-Depends: debhelper (>= 5), libqt4-dev (>= 4.7), qt-components-dev, libircclient-qt-dev (>= 0.5), applauncherd-dev
+Maintainer: Timur Kristof (Venemo) <venemo@fedoraproject.org>
+Build-Depends: debhelper (>= 5), 
+ libqt4-dev (>= 4.7), qt-components-dev, libircclient-qt-dev (>= 0.5), 
+ applauncherd-dev, pkg-config
 Standards-Version: 3.7.3
 Homepage: http://wiki.meego.com/User:Venemo/IRC_Chatter
 
