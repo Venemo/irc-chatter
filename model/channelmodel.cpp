@@ -423,7 +423,7 @@ void ChannelModel::parseCommand(const QString &msg)
         else
             appendEmphasisedInfo("Invalid command. Correct usage: '/msg &lt;username&gt; &lt;message&gt;'");
     }
-    else if (commandParts[0] == "/nick")
+    else if (commandParts[0] == "/nick" || commandParts[0] == "/n")
     {
         if (n == 2)
             static_cast<ServerModel*>(parent())->changeNick(commandParts[1]);
