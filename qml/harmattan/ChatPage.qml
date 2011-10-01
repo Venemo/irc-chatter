@@ -234,13 +234,8 @@ Page {
         visualParent: pageStack
         MenuLayout {
             MenuItem {
-                text: "Close / Part"
-                onClicked: {
-                    if (ircModel.currentChannel.name.charAt(0) === '#')
-                        ircModel.currentServer.partChannel(ircModel.currentChannel.name)
-                    else
-                        ircModel.currentServer.closeUser(ircModel.currentChannel.name)
-                }
+                text: ircModel.currentChannel.name.charAt(0) === '#' ? "Part" : "Close"
+                onClicked:  areYouSureToPartDialog.open()
             }
             MenuItem {
                 text: "Quit app"
@@ -257,6 +252,20 @@ Page {
                 ircModel.currentServer.joinChannel(joinText);
             else if (isQuery)
                 ircModel.currentServer.queryUser(joinText);
+        }
+    }
+
+    QueryDialog {
+        id: areYouSureToPartDialog
+        acceptButtonText: "Yes"
+        rejectButtonText: "No"
+        titleText: "Are you sure?"
+        message: ircModel.currentChannel.name.charAt(0) === '#' ? "Do you want to part this channel?" : "Do you want to close this conversation?"
+        onAccepted: {
+            if (ircModel.currentChannel.name.charAt(0) === '#')
+                ircModel.currentServer.partChannel(ircModel.currentChannel.name)
+            else
+                ircModel.currentServer.closeUser(ircModel.currentChannel.name)
         }
     }
 
