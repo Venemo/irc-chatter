@@ -21,6 +21,7 @@
 #define IRCMODEL_H
 
 #include <QObject>
+#include <QNetworkConfigurationManager>
 
 #include "channelmodel.h"
 #include "servermodel.h"
@@ -28,6 +29,8 @@
 
 class ServerSettings;
 class AppSettings;
+
+typedef QPair<ServerSettings*, AppSettings*> IrcSettingPair;
 
 class IrcModel : public QObject
 {
@@ -41,6 +44,12 @@ class IrcModel : public QObject
     Q_PROPERTY(QObject* currentServer READ currentServer NOTIFY currentChannelIndexChanged)
     GENPROPERTY(bool, _isAppInFocus, isAppInFocus, setIsAppInFocus, isAppInFocusChanged)
     Q_PROPERTY(int isAppInFocus READ isAppInFocus WRITE setIsAppInFocus NOTIFY isAppInFocusChanged)
+    GENPROPERTY(bool, _isWaitingForConnection, isWaitingForConnection, setIsWaitingForConnection, isWaitingForConnectionChanged)
+    Q_PROPERTY(int isWaitingForConnection READ isWaitingForConnection WRITE setIsWaitingForConnection NOTIFY isWaitingForConnectionChanged)
+    Q_PROPERTY(bool isOnline READ isOnline NOTIFY isOnlineChanged)
+
+    QNetworkConfigurationManager *_networkConfigurationManager;
+    QList<IrcSettingPair> _queue;
 
 public:
     explicit IrcModel(QObject *parent = 0);
@@ -49,9 +58,11 @@ public:
     ServerModel *currentServer() { return currentChannel() ? static_cast<ServerModel*>(currentChannel()->parent()) : 0; }
 
     Q_INVOKABLE void connectToServer(ServerSettings *server, AppSettings *settings);
+    bool isOnline() const;
 
 private slots:
     void backendsConnectedToServer();
+    void onlineStateChanged();
 
 signals:
     void allChannelsChanged();
@@ -59,6 +70,8 @@ signals:
     void currentChannelIndexChanged();
     void readyToDisplay();
     void isAppInFocusChanged();
+    void isWaitingForConnectionChanged();
+    void isOnlineChanged();
 
 };
 

@@ -45,7 +45,7 @@ Page {
         platformStyle: BusyIndicatorStyle { size: "large" }
     }
     Label {
-        text: "Connecting, please wait..."
+        text: ircModel.isOnline ? "Connecting, please wait..." : "Please establish an internet connection"
         anchors.top: connectingIndicator.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 10
