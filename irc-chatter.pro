@@ -62,4 +62,5 @@ splashportrait.path = /usr/share/irc-chatter
 splashlandscape.files = installables/irc-chatter-splash-harmattan-landscape.jpg
 splashlandscape.path = /usr/share/irc-chatter
 CONFIG += link_pkgconfig
-PKGCONFIG += duicontrolpanel qdeclarative-boostable
+PKGCONFIG += qdeclarative-boostable
+LIBS += -licui18n -licuuc -licudata -lm

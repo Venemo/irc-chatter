@@ -19,8 +19,9 @@
 #include <QtCore>
 #include <QStringList>
 #include <QSslSocket>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
 #include <ircclient-qt/IrcSession>
-#include <duicontrolpanel/DuiControlPanelIf>
 
 #include "ircmodel.h"
 #include "appsettings.h"
@@ -72,8 +73,11 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
     {
         _queue.append(IrcSettingPair(server, settings));
         setIsWaitingForConnection(true);
-        DuiControlPanelIf cp;
-        cp.appletPage("Internet");
+
+        // Dummy HTTP request - this is how it's done. - FIXME! Is there a proper way to do this?
+        // Need to get to the "Connect to internet" dialog
+        QNetworkAccessManager *man = new QNetworkAccessManager(this);
+        man->get(QNetworkRequest(QUrl("http://venemo.net/")));
     }
 }
 
