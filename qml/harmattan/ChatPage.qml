@@ -38,6 +38,8 @@ Page {
         shouldUpdateCurrentMessage = false;
         ircModel.currentChannelIndex = index;
         shouldUpdateCurrentMessage = true;
+        scrollToBottom();
+        messageField.forceActiveFocus();
     }
     function scrollToBottom() {
         chatFlickable.contentY = Math.max(0,  chatArea.height - chatFlickable.height)
@@ -175,7 +177,6 @@ Page {
                                 hasNewMessage = false;
                                 hasNewMessageWithUserNick = false;
                                 switchChannel(index);
-                                scrollToBottom();
                             }
                         }
                     }
