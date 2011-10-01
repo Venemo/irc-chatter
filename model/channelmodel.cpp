@@ -205,7 +205,7 @@ void ChannelModel::receiveMessageFromBackend(const QString &userName, QString me
     bool hasUserNick = false;
     appendLine(QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick(userName) + "'>" + userName + "</span>: " + processMessage(message, &hasUserNick));
 
-    if (hasUserNick)
+    if (hasUserNick || !name().startsWith('#'))
         emit newMessageWithUserNickReceived();
     else
         emit newMessageReceived();
@@ -379,15 +379,15 @@ void ChannelModel::parseCommand(const QString &msg)
         if (n == 2)
         {
             // Allow the user to spare the '#' character which is handy for VKB
-            if (!commandParts.at(1).startsWith('#'))
+            if (!commandParts[1].startsWith('#'))
                 commandParts[1].insert(0, '#');
 
             static_cast<ServerModel*>(parent())->joinChannel(commandParts[1]);
         }
         else
-		{
+        {
             appendEmphasisedInfo("Invalid command. Correct usage: '/join &lt;channelname&gt;'");
-		}
+        }
     }
     else if (name().startsWith('#') && (commandParts[0] == "/part" || commandParts[0] == "/p"))
     {
