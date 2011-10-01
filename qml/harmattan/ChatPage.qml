@@ -120,7 +120,7 @@ Page {
     }
     Rectangle {
         id: channelNameBg
-        color: "green"
+        color: "#f9a300"
         width: 60
         anchors.top: parent.top
         anchors.right: parent.right
@@ -150,7 +150,7 @@ Page {
                         text: model.name
                         height: channelNameBg.width
                         verticalAlignment: Text.AlignVCenter
-                        color: isCurrent ? "white" : (hasNewMessageWithUserNick ? "red" : (hasNewMessage ? "blue" : "lightgrey"))
+                        color: isCurrent ? "white" : (hasNewMessageWithUserNick ? "red" : (hasNewMessage ? "blue" : "black"))
                         font.bold: isCurrent ? true : false
 
                         property bool hasNewMessage: false
