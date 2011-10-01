@@ -50,6 +50,7 @@ class IrcModel : public QObject
 
     QNetworkConfigurationManager *_networkConfigurationManager;
     QList<IrcSettingPair> _queue;
+    QList<IrcSettingPair> _activeConnections;
 
 public:
     explicit IrcModel(QObject *parent = 0);

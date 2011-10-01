@@ -101,6 +101,7 @@ void IrcModel::onlineStateChanged()
             foreach (const IrcSettingPair &pair, _queue)
             {
                 _queue.removeAll(pair);
+                _activeConnections.append(pair);
                 connectToServer(pair.first, pair.second);
             }
         }
