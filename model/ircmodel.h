@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QNetworkConfigurationManager>
+#include <QNetworkSession>
 
 #include "channelmodel.h"
 #include "servermodel.h"
@@ -49,6 +50,7 @@ class IrcModel : public QObject
     Q_PROPERTY(bool isOnline READ isOnline NOTIFY isOnlineChanged)
 
     QNetworkConfigurationManager *_networkConfigurationManager;
+    QNetworkSession *_networkSession;
     QList<IrcSettingPair> _queue;
     QList<IrcSettingPair> _activeConnections;
 

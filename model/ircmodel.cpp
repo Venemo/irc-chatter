@@ -19,8 +19,6 @@
 #include <QtCore>
 #include <QStringList>
 #include <QSslSocket>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
 #include <ircclient-qt/IrcSession>
 
 #include "ircmodel.h"
@@ -30,7 +28,8 @@ IrcModel::IrcModel(QObject *parent) :
     QObject(parent),
     _servers(new QObjectListModel<ServerModel>(this)),
     _currentChannelIndex(-1),
-    _networkConfigurationManager(new QNetworkConfigurationManager(this))
+    _networkConfigurationManager(new QNetworkConfigurationManager(this)),
+    _networkSession(0)
 {
     connect(_networkConfigurationManager, SIGNAL(onlineStateChanged(bool)), this, SLOT(onlineStateChanged()));
 }
@@ -71,13 +70,18 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
     }
     else
     {
+        // Putting this IRC connection to the waiting queue
         _queue.append(IrcSettingPair(server, settings));
         setIsWaitingForConnection(true);
 
-        // Dummy HTTP request - this is how it's done. - FIXME! Is there a proper way to do this?
-        // Need to get to the "Connect to internet" dialog
-        QNetworkAccessManager *man = new QNetworkAccessManager(this);
-        man->get(QNetworkRequest(QUrl("http://venemo.net/")));
+        // Trying to establish a connection
+        const bool canConnect = (_networkConfigurationManager->capabilities() & QNetworkConfigurationManager::CanStartAndStopInterfaces);
+        QNetworkConfiguration config = _networkConfigurationManager->defaultConfiguration();
+        if (config.isValid() && canConnect)
+        {
+            _networkSession = new QNetworkSession(config, this);
+            _networkSession->open();
+        }
     }
 }
 
@@ -109,6 +113,11 @@ void IrcModel::onlineStateChanged()
                 connectToServer(pair.first, pair.second);
             }
         }
+    }
+    else
+    {
+        if (_networkSession)
+            _networkSession->deleteLater();
     }
 
     emit isOnlineChanged();
