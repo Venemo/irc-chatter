@@ -165,6 +165,7 @@ void IrcModel::onlineStateChanged(bool online)
         {
             qDebug() << "disconnecting from server " << server->url();
             server->_backend->disconnectFromServer();
+            server->_backend->socket()->disconnectFromHost();
         }
 
         attemptConnectionLater();
