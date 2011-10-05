@@ -203,7 +203,7 @@ void ChannelModel::appendError(QString msg)
 void ChannelModel::receiveMessageFromBackend(const QString &userName, QString message)
 {
     bool hasUserNick = false;
-    appendLine(QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick(userName) + "'>" + userName + "</span>: " + processMessage(message, &hasUserNick));
+    appendLine(QTime::currentTime().toString("HH:mm") + " <a href='user://" + userName +"' style='text-decoration: none; color: " + colorForNick(userName) + "'>" + userName + "</a>: " + processMessage(message, &hasUserNick));
 
     if (hasUserNick || !name().startsWith('#'))
         emit newMessageWithUserNickReceived();

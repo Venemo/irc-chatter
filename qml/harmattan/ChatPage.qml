@@ -112,7 +112,12 @@ Page {
             Connections {
                 target: chatArea.children[3]
                 onLinkActivated: {
-                    Qt.openUrlExternally(link);
+                    // User queries
+                    if (!link.indexOf("user://"))
+                        ircModel.currentServer.queryUser(link.replace("user://", ""));
+                    // Normal links
+                    else if (link.indexOf("://") || !(link.indexOf("www.")))
+                        Qt.openUrlExternally(link);
                 }
             }
         }
