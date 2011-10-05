@@ -52,7 +52,6 @@ class IrcModel : public QObject
     QNetworkConfigurationManager *_networkConfigurationManager;
     QNetworkSession *_networkSession;
     QList<IrcSettingPair> _queue;
-    QList<IrcSettingPair> _activeConnections;
 
 public:
     explicit IrcModel(QObject *parent = 0);
@@ -61,11 +60,17 @@ public:
     ServerModel *currentServer() { return currentChannel() ? static_cast<ServerModel*>(currentChannel()->parent()) : 0; }
 
     Q_INVOKABLE void connectToServer(ServerSettings *server, AppSettings *settings);
-    bool isOnline() const;
+    Q_INVOKABLE bool isOnline() const;
+
+public slots:
+    Q_INVOKABLE void attemptConnection();
+    Q_INVOKABLE void attemptConnectionLater();
 
 private slots:
     void backendsConnectedToServer();
-    void onlineStateChanged();
+    void onlineStateChanged(bool online);
+    void networkSessionError(QNetworkSession::SessionError error);
+    void networkSessionStateChanged(QNetworkSession::State state);
 
 signals:
     void allChannelsChanged();
