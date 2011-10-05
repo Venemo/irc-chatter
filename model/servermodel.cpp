@@ -126,12 +126,49 @@ void ServerModel::receiveNumericMessageFromBackend(const QString &name, uint x, 
     }
     else if (x == Irc::Rfc::ERR_NICKNAMEINUSE)
     {
-        displayError("The nickname " + _backend->nick() + " is already in use. Trying another one.");
-        changeNick(_backend->nick() + "_");
+        QString newNick = _backend->nick() + "_";
+        displayError("The nickname '" + _backend->nick() + "'' is already in use. Trying '" + newNick + "'.");
+        changeNick(newNick);
     }
     else if (x == Irc::Rfc::ERR_NICKCOLLISION)
     {
         displayError("Nick name collision!");
+    }
+    else if (x == Irc::Rfc::ERR_BANLISTFULL)
+    {
+        displayError("Ban list is full.");
+    }
+    else if (x == Irc::Rfc::ERR_BANNEDFROMCHAN)
+    {
+        displayError("You are banned from this channel.");
+    }
+    else if (x == Irc::Rfc::ERR_CANNOTSENDTOCHAN)
+    {
+        displayError("You can't send messages to this channel.");
+    }
+    else if (x == Irc::Rfc::ERR_CHANNELISFULL)
+    {
+        displayError("Channel is full.");
+    }
+    else if (x == Irc::Rfc::ERR_CHANOPRIVSNEEDED)
+    {
+        displayError("Channel operator privileges are needed.");
+    }
+    else if (x == Irc::Rfc::ERR_INVITEONLYCHAN)
+    {
+        displayError("You can only join this channel if you're invited.");
+    }
+    else if (x == Irc::Rfc::ERR_NOSUCHCHANNEL)
+    {
+        displayError("There is no such channel.");
+    }
+    else if (x == Irc::Rfc::ERR_NOSUCHNICK)
+    {
+        displayError("There is no such nickname.");
+    }
+    else if (x == Irc::Rfc::ERR_UNKNOWNCOMMAND)
+    {
+        displayError("Unknown command.");
     }
     else if (x >= 400)
     {
