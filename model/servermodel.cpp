@@ -59,7 +59,7 @@ void ServerModel::backendConnectedToServer()
 
 void ServerModel::backendDisconnectedFromServer()
 {
-
+    qDebug() << "backend for " << url() << " has been disconnected from the server";
 }
 
 void ServerModel::backendAddedBuffer(Irc::Buffer *buffer)
@@ -122,11 +122,18 @@ void ServerModel::receiveNumericMessageFromBackend(const QString &name, uint x, 
         }
     }
     else if (x == Irc::Rfc::ERR_NICKNAMEINUSE)
-        displayError("This nickname is already in use.");
+    {
+        displayError("The nickname " + _backend->nick() + " is already in use. Trying another one.");
+        changeNick(_backend->nick() + "_");
+    }
     else if (x == Irc::Rfc::ERR_NICKCOLLISION)
+    {
         displayError("Nick name collision!");
+    }
     else if (x >= 400)
+    {
         displayError("An error occoured! Error code is: " + QString::number(x));
+    }
 }
 
 bool ServerModel::joinChannel(const QString &channelName)
