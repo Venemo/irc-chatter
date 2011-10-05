@@ -30,7 +30,8 @@ ServerModel::ServerModel(IrcModel *parent, const QString &url, Irc::Session *bac
     QObject((QObject*)parent),
     _channels(new QObjectListModel<ChannelModel>(this)),
     _url(url),
-    _backend(backend)
+    _backend(backend),
+    _isDefaultBufferConnected(false)
 {
     _settings = new AppSettings(this);
     if (_backend)
@@ -54,7 +55,9 @@ ServerModel::~ServerModel()
 
 void ServerModel::backendConnectedToServer()
 {
-    connect(_backend->defaultBuffer(), SIGNAL(numericMessageReceived(QString,uint,QStringList)), this, SLOT(receiveNumericMessageFromBackend(QString,uint,QStringList)));
+    qDebug() << "backend of " << url() << " is now connected to server";
+    if (!_isDefaultBufferConnected)
+        _isDefaultBufferConnected = connect(_backend->defaultBuffer(), SIGNAL(numericMessageReceived(QString,uint,QStringList)), this, SLOT(receiveNumericMessageFromBackend(QString,uint,QStringList)));
 }
 
 void ServerModel::backendDisconnectedFromServer()
