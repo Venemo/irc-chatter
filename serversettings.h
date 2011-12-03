@@ -55,6 +55,9 @@ signals:
     void serverPortChanged();
     void serverSSLChanged();
 
+private slots:
+    void backendAsksForPassword(QString *password);
+
 };
 
 QDataStream &operator<<(QDataStream &stream, const ServerSettings &server);

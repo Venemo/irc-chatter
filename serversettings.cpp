@@ -47,6 +47,11 @@ void ServerSettings::setAutoJoinChannelsInPlainString(const QString &value)
         _autoJoinChannels[i] = _autoJoinChannels[i].trimmed();
 }
 
+void ServerSettings::backendAsksForPassword(QString *password)
+{
+    *password = _serverPassword;
+}
+
 QDataStream &operator<<(QDataStream &stream, const ServerSettings &server)
 {
     return stream << server.serverUrl() << server.serverPassword() << server.autoJoinChannels() << server.serverSSL() << server.serverPort();

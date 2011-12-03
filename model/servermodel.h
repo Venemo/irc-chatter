@@ -40,7 +40,6 @@ class ServerModel : public QObject
     Q_PROPERTY(QString url READ url NOTIFY urlChanged)
 
     QHash<QString, ChannelModel*> _channels;
-    QString _password;
     IrcSession *_backend;
     AppSettings *_settings;
 

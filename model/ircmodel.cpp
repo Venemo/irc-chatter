@@ -61,10 +61,10 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
 
         // TODO:
         //session->setAutoJoinChannels(server->autoJoinChannels());
-        //session->setPassword(server->serverPassword());
 
         ServerModel *serverModel = new ServerModel(this, server->serverUrl(), session);
         _servers.append(serverModel);
+        connect(session, SIGNAL(password(QString*)), server, SLOT(backendAsksForPassword(QString*)));
         connect(session, SIGNAL(connected()), this, SLOT(backendsConnectedToServer()));
         connect(serverModel, SIGNAL(channelsChanged()), this, SLOT(refreshChannelList()));
     }
@@ -83,10 +83,7 @@ void IrcModel::refreshChannelList()
 
     foreach (ServerModel *server, _servers)
     {
-        foreach (ChannelModel *channel, server->_channels)
-        {
-            allChannelsList->append(channel);
-        }
+        *allChannelsList += server->_channels.values();
     }
 
     _allChannels.setList(allChannelsList);
