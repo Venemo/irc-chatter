@@ -37,13 +37,13 @@ class IrcModel : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QObject* allChannels READ allChannels NOTIFY allChannelsChanged)
-    GENPROPERTY(int, _currentChannelIndex, currentChannelIndex, setCurrentChannelIndex, currentChannelIndexChanged)
+    GENPROPERTY_F(int, _currentChannelIndex, currentChannelIndex, setCurrentChannelIndex, currentChannelIndexChanged)
     Q_PROPERTY(int currentChannelIndex READ currentChannelIndex WRITE setCurrentChannelIndex NOTIFY currentChannelIndexChanged)
     Q_PROPERTY(QObject* currentChannel READ currentChannel NOTIFY currentChannelIndexChanged)
     Q_PROPERTY(QObject* currentServer READ currentServer NOTIFY currentChannelIndexChanged)
-    GENPROPERTY(bool, _isAppInFocus, isAppInFocus, setIsAppInFocus, isAppInFocusChanged)
+    GENPROPERTY_F(bool, _isAppInFocus, isAppInFocus, setIsAppInFocus, isAppInFocusChanged)
     Q_PROPERTY(int isAppInFocus READ isAppInFocus WRITE setIsAppInFocus NOTIFY isAppInFocusChanged)
-    GENPROPERTY(bool, _isWaitingForConnection, isWaitingForConnection, setIsWaitingForConnection, isWaitingForConnectionChanged)
+    GENPROPERTY_F(bool, _isWaitingForConnection, isWaitingForConnection, setIsWaitingForConnection, isWaitingForConnectionChanged)
     Q_PROPERTY(int isWaitingForConnection READ isWaitingForConnection WRITE setIsWaitingForConnection NOTIFY isWaitingForConnectionChanged)
     Q_PROPERTY(bool isOnline READ isOnline NOTIFY isOnlineChanged)
 
