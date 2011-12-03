@@ -439,6 +439,12 @@ void ChannelModel::parseCommand(const QString &msg)
         else
             appendEmphasisedInfo("Invalid command. Correct usage: '/ctcp &lt;user name&gt; [request]'");
     }
+    else if (commandParts[0] == '/raw')
+    {
+        QString rawCommand = msg.remove(0, 4);
+        appendEmphasisedInfo("Sending raw command '" + rawCommand + "' to the server.");
+        _backend->sendRaw(rawCommand);
+    }
     else
         appendEmphasisedInfo("Unknown command, maybe it will be supported later?");
 }
