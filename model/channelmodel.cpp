@@ -89,24 +89,29 @@ void ChannelModel::receiveJoined(const QString &userName)
     if (userName != _backend->nickName())
         appendDeemphasisedInfo("--> " + userName + " has joined this channel.");
 
+    _soFarReceivedUserNames.append(userName);
     updateUserList();
 }
 
 void ChannelModel::receiveParted(const QString &userName, QString reason)
 {
     appendDeemphasisedInfo("<-- " + userName + " has parted this channel." + (reason.length() ? (" (Reason: " + reason + ")") : ""));
+    _soFarReceivedUserNames.removeAll(userName);
     updateUserList();
 }
 
 void ChannelModel::receiveQuit(const QString &userName, QString reason)
 {
     appendDeemphasisedInfo("<-- " + userName + " has left this server." + (reason.length() ? (" (Reason: " + reason + ")") : ""));
+    _soFarReceivedUserNames.removeAll(userName);
     updateUserList();
 }
 
 void ChannelModel::receiveNickChange(const QString &oldNick, const QString &newNick)
 {
     appendDeemphasisedInfo("*** " + oldNick + " has changed nick to " + newNick + ".");
+    _soFarReceivedUserNames.removeAll(oldNick);
+    _soFarReceivedUserNames.append(newNick);
     updateUserList();
 }
 
@@ -204,17 +209,17 @@ void ChannelModel::receiveCtcpReply(const QString &userName, QString message)
 
 void ChannelModel::updateUserList()
 {
-    QStringList list;
+    _soFarReceivedUserNames = _soFarReceivedUserNames.toSet().toList();
     // workaround for bug: https://bugreports.qt.nokia.com/browse/QTBUG-12892
     // found in http://www.harshj.com/2009/10/24/sorting-entries-in-a-qstringlist-case-insensitively/
     // - Thank you!
     QMap<QString, QString> strMap;
-    foreach (const QString &str, list)
+    foreach (const QString &str, _soFarReceivedUserNames)
     {
         strMap.insert(str.toLower(), str);
     }
-    list = strMap.values();
-    _users->setStringList(list);
+    _soFarReceivedUserNames = strMap.values();
+    _users->setStringList(_soFarReceivedUserNames);
 }
 
 void ChannelModel::receiveTopic(const QString &value)

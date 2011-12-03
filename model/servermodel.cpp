@@ -186,6 +186,10 @@ void ServerModel::processNumericMessage(IrcNumericMessage *message)
     {
         _channels[message->parameters()[1]]->updateUserList();
     }
+    else if (message->code() == Irc::RPL_NAMREPLY || message->code() == Irc::RPL_NAMREPLY_)
+    {
+        _channels[message->parameters()[2]]->_soFarReceivedUserNames += message->parameters().at(3).split(' ', QString::SkipEmptyParts);
+    }
     else if (message->code() == Irc::ERR_NICKNAMEINUSE)
     {
         QString newNick = _backend->nickName() + "_";
@@ -236,6 +240,10 @@ void ServerModel::processNumericMessage(IrcNumericMessage *message)
     {
         displayError("An error occoured! Error code is: " + QString::number(message->code()));
     }
+    else
+    {
+        //qDebug() << message->code() << "received from" << url() << "command is" << message->command() << "parameters are" << message->parameters();
+    }
 }
 
 void ServerModel::joinChannel(const QString &channelName)
@@ -246,6 +254,7 @@ void ServerModel::joinChannel(const QString &channelName)
     {
         addModelForChannel(channelName);
         _backend->sendCommand(IrcCommand::createJoin(channelName));
+        //_backend->sendCommand(IrcCommand::createNames(channelName));
     }
 }
 

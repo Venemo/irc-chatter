@@ -53,6 +53,7 @@ class ChannelModel : public QObject
     int _currentCompletionIndex, _currentCompletionPosition, _displayedLines;
 
     IrcSession *_backend;
+    QList<QString> _soFarReceivedUserNames;
 
     static QList<QString> *_colors;
     static QRegExp _urlRegexp;
