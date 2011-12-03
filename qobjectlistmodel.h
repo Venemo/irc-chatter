@@ -43,10 +43,10 @@ template<typename X>
 class QObjectListModel : public QObjectListModelMagic
 {
     QHash<int, QByteArray> _roles;
-    QList<X*> _list;
+    QList<X*> *_list;
 
 public:
-    explicit QObjectListModel(QObject *parent = 0, const QList<X*> &list = QList<X*>());
+    explicit QObjectListModel(QObject *parent = 0, QList<X*> *list = new QList<X*>());
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
@@ -62,7 +62,7 @@ public:
 };
 
 template<typename T>
-QObjectListModel<T>::QObjectListModel(QObject *parent, const QList<T*> &list)
+QObjectListModel<T>::QObjectListModel(QObject *parent, QList<T*> *list)
     : QObjectListModelMagic(parent),
       _list(list)
 {
@@ -78,20 +78,20 @@ QObjectListModel<T>::QObjectListModel(QObject *parent, const QList<T*> &list)
 template<typename T>
 QList<T*> &QObjectListModel<T>::getList()
 {
-    return _list;
+    return *_list;
 }
 
 template<typename T>
 int QObjectListModel<T>::indexOf(QObject *obj) const
 {
-    return _list.indexOf((T*) obj);
+    return _list->indexOf((T*) obj);
 }
 
 template<typename T>
 int QObjectListModel<T>::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return _list.count();
+    return _list->count();
 }
 
 template<typename T>
@@ -104,29 +104,29 @@ int QObjectListModel<T>::columnCount(const QModelIndex &parent) const
 template<typename T>
 QVariant QObjectListModel<T>::data(const QModelIndex &index, int role) const
 {
-    if (index.row() < 0 || index.row() >= _list.count())
+    if (index.row() < 0 || index.row() >= _list->count())
         return QVariant();
 
-    const QObject *obj = _list[index.row()];
+    const QObject *obj = _list->at(index.row());
     return obj->property(_roles[role].data());
 }
 
 template<typename T>
 bool QObjectListModel<T>::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (index.row() < 0 || index.row() >= _list.count())
+    if (index.row() < 0 || index.row() >= _list->count())
         return false;
 
-    QObject *obj = _list[index.row()];
+    QObject *obj = _list->at(index.row());
     return obj->setProperty(_roles[role].data(), value);
 }
 
 template<typename T>
 void QObjectListModel<T>::addItem(T *item)
 {
-    int z = _list.count();
+    int z = _list->count();
     beginInsertRows(QModelIndex(), z, z);
-    _list.append(item);
+    _list->append(item);
     connect(item, SIGNAL(destroyed()), this, SLOT(removeDestroyedItem()));
     endInsertRows();
 
@@ -143,9 +143,9 @@ void QObjectListModel<T>::removeDestroyedItem()
 template<typename T>
 void QObjectListModel<T>::removeItem(T *item)
 {
-    int z = _list.indexOf(item);
+    int z = _list->indexOf(item);
     beginRemoveRows(QModelIndex(), z, z);
-    _list.removeAt(z);
+    _list->removeAt(z);
     disconnect(item, SIGNAL(destroyed()), this, SLOT(removeDestroyedItem()));
     endRemoveRows();
 }
@@ -155,17 +155,17 @@ void QObjectListModel<T>::removeItem(int index)
 {
     beginRemoveRows(QModelIndex(), index, index);
     disconnect(_list[index], SIGNAL(destroyed()), this, SLOT(removeDestroyedItem()));
-    _list.removeAt(index);
+    _list->removeAt(index);
     endRemoveRows();
 }
 
 template<typename T>
 QObject* QObjectListModel<T>::getItem(int index)
 {
-    if (index >= _list.count() || index < 0)
+    if (index >= _list->count() || index < 0)
         return 0;
 
-    return _list[index];
+    return _list->at(index);
 }
 
 #endif // QOBJECTLISTMODEL_H
