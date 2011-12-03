@@ -69,23 +69,28 @@ void ServerModel::backendDisconnectedFromServer()
 
 void ServerModel::backendReceivedMessage(IrcMessage *message)
 {
+    QString channelName;
+
     switch (message->type())
     {
     case IrcMessage::Private:
+        channelName = ((IrcPrivateMessage*)message)->target().startsWith('#')
+                ? ((IrcPrivateMessage*)message)->target() // This is a channel message
+                : ((IrcPrivateMessage*)message)->sender().name(); // This is a private message
         if (((IrcPrivateMessage*)message)->isAction())
         {
             // This is a CTCP action
-            findOrCreateChannel(message->sender().name())->receiveCtcpAction(message->sender().name(), ((IrcPrivateMessage*)message)->message());
+            findOrCreateChannel(channelName)->receiveCtcpAction(message->sender().name(), ((IrcPrivateMessage*)message)->message());
         }
         else if (((IrcPrivateMessage*)message)->isRequest())
         {
             // This is a CTCP request
-            findOrCreateChannel(message->sender().name())->receiveCtcpRequest(message->sender().name(), ((IrcPrivateMessage*)message)->message());
+            findOrCreateChannel(channelName)->receiveCtcpRequest(message->sender().name(), ((IrcPrivateMessage*)message)->message());
         }
         else
         {
-            // This is a normal private message
-            findOrCreateChannel(message->sender().name())->receiveMessage(message->sender().name(), ((IrcPrivateMessage*)message)->message());
+            // This is a normal message
+            findOrCreateChannel(channelName)->receiveMessage(message->sender().name(), ((IrcPrivateMessage*)message)->message());
         }
         break;
     case IrcMessage::Join:
@@ -116,7 +121,16 @@ void ServerModel::backendReceivedMessage(IrcMessage *message)
             _channels[((IrcTopicMessage*)message)->channel()]->receiveTopic(((IrcTopicMessage*)message)->topic());
         break;
     case IrcMessage::Notice:
-        findOrCreateChannel(message->sender().name())->receiveMessage(message->sender().name(), ((IrcNoticeMessage*)message)->message());
+        if (((IrcNoticeMessage*)message)->target().startsWith('#'))
+        {
+            // This is a channel message
+            findOrCreateChannel(((IrcNoticeMessage*)message)->target())->receiveMessage(message->sender().name(), ((IrcNoticeMessage*)message)->message());
+        }
+        else
+        {
+            // This is a private message
+            findOrCreateChannel(message->sender().name())->receiveMessage(message->sender().name(), ((IrcNoticeMessage*)message)->message());
+        }
         break;
     case IrcMessage::Kick:
     case IrcMessage::Mode:

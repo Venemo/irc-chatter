@@ -95,7 +95,6 @@ void IrcModel::backendsConnectedToServer()
         qDebug() << "this is the first connection, and it succeeded";
         setCurrentChannelIndex(0);
         emit readyToDisplay();
-        emit allChannelsChanged();
     }
 }
 
