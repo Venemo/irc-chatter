@@ -24,6 +24,14 @@
 #include "ircmodel.h"
 #include "appsettings.h"
 
+static bool channelLessThan(ChannelModel * m1, ChannelModel *m2)
+{
+    if (m1->channelType() == m2->channelType())
+        return m1->name() < m2->name();
+
+    return m1->channelType() < m2->channelType();
+}
+
 IrcModel::IrcModel(QObject *parent) :
     QObject(parent),
     _currentChannelIndex(-1),
@@ -40,7 +48,6 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
     if (_networkConfigurationManager->isOnline())
     {
         IrcSession *session = new IrcSession();
-
         session->setNickName(settings->userNickname());
 
         if (settings->userIdent().length())
@@ -81,7 +88,9 @@ void IrcModel::refreshChannelList()
 
     foreach (ServerModel *server, _servers)
     {
-        *allChannelsList += server->_channels.values();
+        QList<ChannelModel*> serverChannels = server->_channels.values();
+        qSort(serverChannels.begin(), serverChannels.end(), channelLessThan);
+        *allChannelsList += serverChannels;
     }
 
     _allChannels.setList(allChannelsList);
@@ -190,7 +199,7 @@ void IrcModel::networkSessionError(QNetworkSession::SessionError error)
         if (!_networkConfigurationManager->isOnline())
             attemptConnectionLater();
         break;
-    // isOnlineChanged already takes care of this
+        // isOnlineChanged already takes care of this
     case QNetworkSession::SessionAbortedError:
     default:
         break;
