@@ -57,6 +57,9 @@ ServerModel::~ServerModel()
 void ServerModel::backendConnectedToServer()
 {
     qDebug() << "backend of " << url() << " is now connected to server";
+
+    foreach (QString channelName, _autoJoinChannels)
+        joinChannel(channelName);
 }
 
 void ServerModel::backendDisconnectedFromServer()

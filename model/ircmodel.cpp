@@ -59,10 +59,8 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
             session->setSocket(socket);
         }
 
-        // TODO:
-        //session->setAutoJoinChannels(server->autoJoinChannels());
-
         ServerModel *serverModel = new ServerModel(this, server->serverUrl(), session);
+        serverModel->_autoJoinChannels = server->autoJoinChannels();
         _servers.append(serverModel);
         connect(session, SIGNAL(password(QString*)), server, SLOT(backendAsksForPassword(QString*)));
         connect(session, SIGNAL(connected()), this, SLOT(backendsConnectedToServer()));
