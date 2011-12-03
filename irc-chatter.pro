@@ -1,10 +1,13 @@
 
-QT += declarative network
-symbian:TARGET.UID3 = 0xE3B586A7
+TARGET = irc-chatter
+TEMPLATE = app
+VERSION = 0.2.0
+QT += core declarative network
 
 DEFINES += \
     COMMUNI_STATIC \
-    HAVE_ICU
+    HAVE_ICU \
+    APP_VERSION=\\\"$$VERSION\\\"
 
 include(communi.pri)
 
@@ -43,12 +46,10 @@ OTHER_FILES += \
     qml/harmattan/WorkingSelectionDialog.qml \
     qml/harmattan/CommonDialog.qml
 
-# enable booster
-CONFIG += qdeclarative-boostable
-QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
-QMAKE_LFLAGS += -pie -rdynamic
-
 unix {
+    QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
+    QMAKE_LFLAGS += -pie -rdynamic
+
     INSTALLS += target icon desktopfile
     target.path=/usr/bin
     icon.files = installables/irc-chatter-harmattan-icon.png
@@ -58,13 +59,18 @@ unix {
 }
 
 contains(MEEGO_EDITION, harmattan) {
-    # for harmattan
+    # for Harmattan
+    CONFIG += qdeclarative-boostable link_pkgconfig
+    PKGCONFIG += qdeclarative-boostable
+    INCLUDEPATH += /usr/include/applauncherd
+
     INSTALLS += splashportrait splashlandscape
     splashportrait.files = installables/irc-chatter-splash-harmattan-portrait.jpg
     splashportrait.path = /usr/share/irc-chatter
     splashlandscape.files = installables/irc-chatter-splash-harmattan-landscape.jpg
     splashlandscape.path = /usr/share/irc-chatter
-    CONFIG += link_pkgconfig
-    PKGCONFIG += qdeclarative-boostable
-    INCLUDEPATH += /usr/include/applauncherd
+}
+
+symbian {
+    TARGET.UID3 = 0xE3B586A7
 }

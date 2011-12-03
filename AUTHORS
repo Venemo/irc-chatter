@@ -1,14 +1,27 @@
 Authors of IRC Chatter
 ======================
-Timur Kristóf <venemo@fedoraproject.org>
-Hiemanshu Sharma <mail@theindiangeek.in>
 
-Authors of code borrowed from Konversation (URL regex and colorForNick method):
-Copyright (C) 2006-2008 Eike Hein <hein@kde.org>
-Copyright (C) 2006 Michael Kreitzer <mrgrim@gr1m.org>
+Copyright (C) 2011, Timur Kristóf <venemo@fedoraproject.org>
+Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
+Contributors and Special thanks to
+==================================
+László Papp
+Robin Burchell
+Gary Birkett
+
+Author of the code from the Communi IRC library
+===============================================
+
+Copyright (C) J-P Nurmi
+
+Authors of the code borrowed from Konversation
+==========================================
+(Noted where appropriate)
+
+Copyright (C) 2006-2008, Eike Hein <hein@kde.org>
+Copyright (C) 2006, Michael Kreitzer <mrgrim@gr1m.org>
 
 Author of the icon for IRC Chatter
 ==================================
-Johannes Siipola
-
+Copyright (C) 2011, Johannes Siipola

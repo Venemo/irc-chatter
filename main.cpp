@@ -49,6 +49,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QApplication::setApplicationName("irc-chatter");
     QApplication::setOrganizationName("irc-chatter");
+    QApplication::setApplicationVersion(APP_VERSION);
 
     QApplication *app = MDeclarativeCache::qApplication(argc, argv);
     IrcModel *model = new IrcModel(app);
