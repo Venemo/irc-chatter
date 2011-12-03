@@ -45,7 +45,7 @@ ChannelModel::ChannelModel(ServerModel *parent, const QString &name, IrcSession 
     _users(new QStringListModel(this)),
     _displayedLines(0),
     _backend(backend),
-    _sentMessagesCount(0)
+    _sentMessagesIndex(-1)
 {
     if (!_colors)
     {
@@ -247,9 +247,6 @@ void ChannelModel::sendCurrentMessage()
 {
     if (_currentMessage.length() > 0)
     {
-        _sentMessages.append(_currentMessage);
-        _sentMessagesCount = _sentMessages.count();
-
         if (_currentMessage.startsWith("/"))
         {
             parseCommand(_currentMessage);
@@ -260,6 +257,8 @@ void ChannelModel::sendCurrentMessage()
             _backend->sendCommand(IrcCommand::createMessage(_name, _currentMessage));
         }
 
+        _sentMessages.insert(0, _currentMessage);
+        _sentMessagesIndex = -1;
         setCurrentMessage(QString());
     }
 }
@@ -449,29 +448,35 @@ void ChannelModel::queryUser(const quint16 &index)
     static_cast<ServerModel*>(parent())->queryUser(_users->stringList().at(index));
 }
 
-QString ChannelModel::getSentMessagesUp()
+void ChannelModel::getSentMessagesUp()
 {
-    if (_sentMessagesCount == -1) {
-        return QString("");
-    }
-    else if (_sentMessagesCount != 0) {
-        _sentMessagesCount -= 1;
-        return QVariant(_sentMessages.at(_sentMessagesCount)).toString();
-    }
-    else {
-        return QVariant(_sentMessages.at(0)).toString();
+    if (_sentMessagesIndex == -1)
+        _sentMessagesTemp = _currentMessage;
+
+    if (_sentMessagesIndex < _sentMessages.count() - 1)
+    {
+        _sentMessagesIndex++;
+        adjustForSentMessagesIndex();
     }
 }
-QString ChannelModel::getSentMessagesDown()
+
+void ChannelModel::getSentMessagesDown()
 {
-    if (_sentMessagesCount == -1 || _sentMessagesCount == _sentMessages.count())
-        return QString("");
-    else if (_sentMessages.count() == _sentMessagesCount+1) {
-        _sentMessagesCount += 1;
-        return QString("");
+    if (_sentMessagesIndex > -1)
+    {
+        _sentMessagesIndex--;
+        adjustForSentMessagesIndex();
     }
-    else {
-        _sentMessagesCount += 1;
-        return QVariant(_sentMessages.at(_sentMessagesCount)).toString();
+}
+
+void ChannelModel::adjustForSentMessagesIndex()
+{
+    if (_sentMessagesIndex == -1)
+    {
+        setCurrentMessage(_sentMessagesTemp);
+    }
+    else
+    {
+        setCurrentMessage(_sentMessages[_sentMessagesIndex]);
     }
 }

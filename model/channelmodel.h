@@ -50,18 +50,16 @@ private:
     GENPROPERTY_R(unsigned, _channelType, channelType)
 
     static QString _autoCompletionSuffix;
-    QString _completionFragment;
+    QString _completionFragment, _sentMessagesTemp;
     QList<const QString*> _possibleNickNames;
-    int _currentCompletionIndex, _currentCompletionPosition, _displayedLines;
+    int _currentCompletionIndex, _currentCompletionPosition, _displayedLines, _sentMessagesIndex;
 
     IrcSession *_backend;
-    QList<QString> _soFarReceivedUserNames;
+    QStringList _soFarReceivedUserNames, _sentMessages;
 
     static QList<QString> *_colors;
     static QRegExp _urlRegexp;
     static int _maxLineNumber, _deletableLines;
-    QList<QString> _sentMessages;
-    qint16 _sentMessagesCount;
 
     friend class IrcModel;
     friend class ServerModel;
@@ -69,6 +67,7 @@ private:
 protected:
     explicit ChannelModel(ServerModel *parent, const QString &name, IrcSession *backend);
 
+    void adjustForSentMessagesIndex();
     void parseCommand(const QString &msg);
     QString &processMessage(QString &msg, bool *hasUserNick = 0);
 
@@ -99,8 +98,8 @@ public:
     Q_INVOKABLE void autoCompleteNick();
     Q_INVOKABLE const QString colorForNick(const QString &nick);
     Q_INVOKABLE void queryUser(const quint16 &index);
-    Q_INVOKABLE QString getSentMessagesUp();
-    Q_INVOKABLE QString getSentMessagesDown();
+    Q_INVOKABLE void getSentMessagesUp();
+    Q_INVOKABLE void getSentMessagesDown();
 
     enum ChannelType
     {
