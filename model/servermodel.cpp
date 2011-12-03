@@ -32,7 +32,8 @@
 ServerModel::ServerModel(IrcModel *parent, const QString &url, IrcSession *backend) :
     QObject((QObject*)parent),
     _url(url),
-    _backend(backend)
+    _backend(backend),
+    _defaultChannel(0)
 {
     _settings = new AppSettings(this);
     if (_backend)
@@ -77,6 +78,7 @@ void ServerModel::backendReceivedMessage(IrcMessage *message)
         channelName = ((IrcPrivateMessage*)message)->target().startsWith('#')
                 ? ((IrcPrivateMessage*)message)->target() // This is a channel message
                 : ((IrcPrivateMessage*)message)->sender().name(); // This is a private message
+
         if (((IrcPrivateMessage*)message)->isAction())
         {
             // This is a CTCP action
@@ -160,6 +162,8 @@ void ServerModel::addModelForChannel(const QString &sender)
     if (!_channels[sender])
     {
         _channels[sender] = new ChannelModel(this, sender, _backend);
+        if (_channels.count() == 1)
+            _defaultChannel = _channels[sender];
         emit this->channelsChanged();
     }
 }
@@ -177,7 +181,8 @@ void ServerModel::removeModelForChannel(const QString &sender)
 
 void ServerModel::displayError(const QString &error)
 {
-    static_cast<IrcModel*>(parent())->currentChannel()->appendError(error);
+    if (_defaultChannel)
+        _defaultChannel->appendError(error);
 }
 
 void ServerModel::processNumericMessage(IrcNumericMessage *message)
@@ -189,6 +194,11 @@ void ServerModel::processNumericMessage(IrcNumericMessage *message)
     else if (message->code() == Irc::RPL_NAMREPLY || message->code() == Irc::RPL_NAMREPLY_)
     {
         _channels[message->parameters()[2]]->_soFarReceivedUserNames += message->parameters().at(3).split(' ', QString::SkipEmptyParts);
+    }
+    else if (message->code() == Irc::RPL_MOTD)
+    {
+        if (_defaultChannel)
+            _defaultChannel->receiveMotd(message->parameters().at(1));
     }
     else if (message->code() == Irc::ERR_NICKNAMEINUSE)
     {

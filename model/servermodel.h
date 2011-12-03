@@ -42,6 +42,7 @@ class ServerModel : public QObject
     QHash<QString, ChannelModel*> _channels;
     IrcSession *_backend;
     AppSettings *_settings;
+    ChannelModel *_defaultChannel;
     QStringList _autoJoinChannels;
 
     friend class IrcModel;
