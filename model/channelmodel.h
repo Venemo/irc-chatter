@@ -32,6 +32,7 @@ class ServerModel;
 
 class ChannelModel : public QObject
 {
+private:
     Q_OBJECT
 
     GENPROPERTY_R(QString, _name, name)
@@ -46,6 +47,7 @@ class ChannelModel : public QObject
     Q_PROPERTY(QString channelText READ channelText NOTIFY channelTextChanged)
     GENPROPERTY_R(QString, _topic, topic)
     Q_PROPERTY(QString topic READ topic NOTIFY topicChanged)
+    GENPROPERTY_R(unsigned, _channelType, channelType)
 
     static QString _autoCompletionSuffix;
     QString _completionFragment;
@@ -99,6 +101,13 @@ public:
     Q_INVOKABLE void queryUser(const quint16 &index);
     Q_INVOKABLE QString getSentMessagesUp();
     Q_INVOKABLE QString getSentMessagesDown();
+
+    enum ChannelType
+    {
+        Server = 0,
+        Channel = 1,
+        Query = 2
+    };
 
 signals:
     void nameChanged();
