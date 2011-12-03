@@ -65,7 +65,6 @@ class ChannelModel : public QObject
 
 protected:
     explicit ChannelModel(ServerModel *parent, const QString &name, IrcSession *backend);
-    void setTopic(const QString &value);
 
     void parseCommand(const QString &msg);
     QString &processMessage(QString &msg, bool *hasUserNick = 0);
@@ -76,7 +75,6 @@ protected:
     void appendError(QString msg);
 
     void receiveMessage(const QString &userName, QString message);
-    void receiveNotice(const QString &userName, QString message);
     void receiveCtcpAction(const QString &userName, QString message);
     void receiveCtcpRequest(const QString &userName, QString message);
     void receiveCtcpReply(const QString &userName, QString message);
@@ -87,6 +85,7 @@ protected:
     void receiveMotd(QString motd);
     void receiveInvite(const QString &origin, const QString &receiver, const QString &channel);
     void receiveKicked(const QString &origin, const QString &nick, QString message);
+    void receiveTopic(const QString &value);
     void channelNameChanged(const QString &newName);
 
 public:
@@ -113,7 +112,6 @@ signals:
 
 private slots:
     void fakeMessage();
-    void backendReceivedMessage(IrcMessage *message);
 
 public slots:
     void sendCurrentMessage();

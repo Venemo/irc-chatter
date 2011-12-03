@@ -20,6 +20,7 @@
 #define SERVERMODEL_H
 
 #include <QObject>
+#include <QHash>
 
 #include "util.h"
 #include "qobjectlistmodel.h"
@@ -35,11 +36,10 @@ class ServerModel : public QObject
 {
     Q_OBJECT
 
-    GENPROPERTY_R(QObjectListModel<ChannelModel>*, _channels, channels)
-    Q_PROPERTY(QObject* channels READ channels NOTIFY channelsChanged)
     GENPROPERTY_R(QString, _url, url)
     Q_PROPERTY(QString url READ url NOTIFY urlChanged)
 
+    QHash<QString, ChannelModel*> _channels;
     QString _password;
     IrcSession *_backend;
     AppSettings *_settings;
@@ -47,12 +47,13 @@ class ServerModel : public QObject
     friend class IrcModel;
     friend class AppSettings;
 
-    void addModelForSender(const QString &sender);
-    void removeModelForSender(const QString &sender);
+    void addModelForChannel(const QString &sender);
+    void removeModelForChannel(const QString &sender);
     void processNumericMessage(IrcNumericMessage *message);
 
 protected:
     explicit ServerModel(IrcModel *parent, const QString &url, IrcSession *backend);
+    ChannelModel *findOrCreateChannel(const QString &channelName);
 
 public:
     ~ServerModel();

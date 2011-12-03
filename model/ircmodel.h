@@ -37,8 +37,6 @@ class IrcModel : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QObject* allChannels READ allChannels NOTIFY allChannelsChanged)
-    GENPROPERTY_R(QObjectListModel<ServerModel>*, _servers, servers)
-    Q_PROPERTY(QObject* servers READ servers NOTIFY serversChanged)
     GENPROPERTY(int, _currentChannelIndex, currentChannelIndex, setCurrentChannelIndex, currentChannelIndexChanged)
     Q_PROPERTY(int currentChannelIndex READ currentChannelIndex WRITE setCurrentChannelIndex NOTIFY currentChannelIndexChanged)
     Q_PROPERTY(QObject* currentChannel READ currentChannel NOTIFY currentChannelIndexChanged)
@@ -52,12 +50,14 @@ class IrcModel : public QObject
     QNetworkConfigurationManager *_networkConfigurationManager;
     QNetworkSession *_networkSession;
     QList<IrcSettingPair> _queue;
+    QList<ServerModel*> _servers;
+    QObjectListModel<ChannelModel> _allChannels;
 
 public:
     explicit IrcModel(QObject *parent = 0);
-    QObjectListModel<ChannelModel> *allChannels();
-    ChannelModel *currentChannel() { return _servers->rowCount() ? static_cast<ChannelModel*>(allChannels()->getItem(_currentChannelIndex)) : 0; }
-    ServerModel *currentServer() { return currentChannel() ? static_cast<ServerModel*>(currentChannel()->parent()) : 0; }
+    inline QObjectListModel<ChannelModel> *allChannels() { return &_allChannels; }
+    inline ChannelModel *currentChannel() { return _servers.count() ? static_cast<ChannelModel*>(allChannels()->getItem(_currentChannelIndex)) : 0; }
+    inline ServerModel *currentServer() { return currentChannel() ? static_cast<ServerModel*>(currentChannel()->parent()) : 0; }
 
     Q_INVOKABLE void connectToServer(ServerSettings *server, AppSettings *settings);
     Q_INVOKABLE bool isOnline() const;
@@ -65,6 +65,7 @@ public:
 public slots:
     Q_INVOKABLE void attemptConnection();
     Q_INVOKABLE void attemptConnectionLater();
+    void refreshChannelList();
 
 private slots:
     void backendsConnectedToServer();

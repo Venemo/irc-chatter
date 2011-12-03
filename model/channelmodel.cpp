@@ -44,7 +44,8 @@ ChannelModel::ChannelModel(ServerModel *parent, const QString &name, IrcSession 
     _name(name),
     _users(new QStringListModel(this)),
     _displayedLines(0),
-    _backend(backend)
+    _backend(backend),
+    _sentMessagesCount(0)
 {
     if (!_colors)
     {
@@ -66,22 +67,10 @@ ChannelModel::ChannelModel(ServerModel *parent, const QString &name, IrcSession 
         // Yellow
         _colors->append("#cec700");
     }
-
-    _sentMessagesCount = -1;
-
-    if (!_backend)
-        qDebug() << "A channel backend is null, this is an error. The app will segfault.";
 }
 
 ChannelModel::~ChannelModel()
 {
-    if (_backend)
-        _backend->deleteLater();
-}
-
-void ChannelModel::backendReceivedMessage(IrcMessage *message)
-{
-
 }
 
 void ChannelModel::channelNameChanged(const QString &newName)
@@ -196,18 +185,9 @@ void ChannelModel::receiveMessage(const QString &userName, QString message)
         emit newMessageReceived();
 }
 
-void ChannelModel::receiveNotice(const QString &userName, QString message)
-{
-    // Notice is basically a "private message", and that is supposed to be displayed the same way as a normal message
-    receiveMessage(userName, message);
-}
-
 void ChannelModel::receiveCtcpAction(const QString &userName, QString message)
 {
-    if (_channelText.length())
-        _channelText += "<br />";
-
-    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " * <span style='color: " + colorForNick(userName) + "'>" + userName + "</span> " + processMessage(message));
+    appendLine(QTime::currentTime().toString("HH:mm") + " * <span style='color: " + colorForNick(userName) + "'>" + userName + "</span> " + processMessage(message));
 }
 
 void ChannelModel::receiveCtcpRequest(const QString &userName, QString message)
@@ -237,7 +217,7 @@ void ChannelModel::updateUserList()
     _users->setStringList(list);
 }
 
-void ChannelModel::setTopic(const QString &value)
+void ChannelModel::receiveTopic(const QString &value)
 {
     _topic = value;
     appendEmphasisedInfo("[TOPIC] " + _topic);
@@ -266,9 +246,14 @@ void ChannelModel::sendCurrentMessage()
         _sentMessagesCount = _sentMessages.count();
 
         if (_currentMessage.startsWith("/"))
+        {
             parseCommand(_currentMessage);
+        }
         else
+        {
+            receiveMessage(_backend->nickName(), _currentMessage);
             _backend->sendCommand(IrcCommand::createMessage(_name, _currentMessage));
+        }
 
         setCurrentMessage(QString());
     }

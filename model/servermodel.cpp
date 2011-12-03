@@ -17,13 +17,13 @@
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
 #include <QtCore>
+#include <Irc>
 #include <IrcSession>
 #include <IrcSender>
 #include <IrcUtil>
 #include <IrcGlobal>
 #include <IrcMessage>
 #include <IrcCommand>
-#include <Irc>
 
 #include "servermodel.h"
 #include "ircmodel.h"
@@ -31,7 +31,6 @@
 
 ServerModel::ServerModel(IrcModel *parent, const QString &url, IrcSession *backend) :
     QObject((QObject*)parent),
-    _channels(new QObjectListModel<ChannelModel>(this)),
     _url(url),
     _backend(backend)
 {
@@ -69,45 +68,61 @@ void ServerModel::backendReceivedMessage(IrcMessage *message)
 {
     switch (message->type())
     {
-    case IrcMessage::Numeric:
-        processNumericMessage((IrcNumericMessage*)message);
-        break;
     case IrcMessage::Private:
         if (((IrcPrivateMessage*)message)->isAction())
         {
             // This is a CTCP action
+            findOrCreateChannel(message->sender().name())->receiveCtcpAction(message->sender().name(), ((IrcPrivateMessage*)message)->message());
         }
         else if (((IrcPrivateMessage*)message)->isRequest())
         {
             // This is a CTCP request
+            findOrCreateChannel(message->sender().name())->receiveCtcpRequest(message->sender().name(), ((IrcPrivateMessage*)message)->message());
         }
         else
         {
             // This is a normal private message
+            findOrCreateChannel(message->sender().name())->receiveMessage(message->sender().name(), ((IrcPrivateMessage*)message)->message());
         }
         break;
     case IrcMessage::Join:
         // This is a join message
+        if (_channels[((IrcJoinMessage*)message)->channel()])
+            _channels[((IrcJoinMessage*)message)->channel()]->receiveJoined(message->sender().name());
         break;
     case IrcMessage::Part:
         // This is a part message
+        if (_channels[((IrcPartMessage*)message)->channel()])
+            _channels[((IrcPartMessage*)message)->channel()]->receiveParted(message->sender().name(), ((IrcPartMessage*)message)->reason());
         break;
     case IrcMessage::Nick:
         // This is a nick change message
+        // TODO: display this in all channels the user is on.
         break;
     case IrcMessage::Quit:
         // This is a quit message
+        // TODO: display this in all channels the user is on.
         break;
     case IrcMessage::Invite:
         // This is an invite message
+        // TODO
         break;
     case IrcMessage::Topic:
+        // This is a topic message
+        if (_channels[((IrcTopicMessage*)message)->channel()])
+            _channels[((IrcTopicMessage*)message)->channel()]->receiveTopic(((IrcTopicMessage*)message)->topic());
+        break;
+    case IrcMessage::Notice:
+        findOrCreateChannel(message->sender().name())->receiveMessage(message->sender().name(), ((IrcNoticeMessage*)message)->message());
+        break;
     case IrcMessage::Kick:
     case IrcMessage::Mode:
-    case IrcMessage::Notice:
     case IrcMessage::Ping:
     case IrcMessage::Pong:
     case IrcMessage::Error:
+        break;
+    case IrcMessage::Numeric:
+        processNumericMessage((IrcNumericMessage*)message);
         break;
     case IrcMessage::Unknown:
     default:
@@ -116,28 +131,30 @@ void ServerModel::backendReceivedMessage(IrcMessage *message)
     }
 }
 
-void ServerModel::addModelForSender(const QString &sender)
+ChannelModel *ServerModel::findOrCreateChannel(const QString &channelName)
 {
-    foreach (ChannelModel *channel, _channels->getList())
-        if (channel->name() == sender)
-            return;
-
-    _channels->addItem(new ChannelModel(this, sender, _backend));
+    if (!_channels[channelName])
+        addModelForChannel(channelName);
+    return _channels[channelName];
 }
 
-void ServerModel::removeModelForSender(const QString &sender)
+void ServerModel::addModelForChannel(const QString &sender)
 {
-    foreach (ChannelModel *channel, _channels->getList())
+    if (!_channels[sender])
     {
-        if (channel->name() == sender)
-        {
-            if (channel == static_cast<IrcModel*>(parent())->currentChannel())
-                static_cast<IrcModel*>(parent())->setCurrentChannelIndex(static_cast<IrcModel*>(parent())->currentChannelIndex() - 1);
+        _channels[sender] = new ChannelModel(this, sender, _backend);
+        emit this->channelsChanged();
+    }
+}
 
-            _channels->removeItem(channel);
-            channel->deleteLater();
-            break;
-        }
+void ServerModel::removeModelForChannel(const QString &sender)
+{
+    if (_channels[sender])
+    {
+        if (_channels[sender] == static_cast<IrcModel*>(parent())->currentChannel())
+            static_cast<IrcModel*>(parent())->setCurrentChannelIndex(static_cast<IrcModel*>(parent())->currentChannelIndex() - 1);
+        _channels.remove(sender);
+        emit this->channelsChanged();
     }
 }
 
@@ -150,14 +167,7 @@ void ServerModel::processNumericMessage(IrcNumericMessage *message)
 {
     if (message->code() == Irc::RPL_ENDOFNAMES)
     {
-        foreach (ChannelModel *channel, _channels->getList())
-        {
-            if (channel->name() == message->parameters()[1])
-            {
-                channel->updateUserList();
-                break;
-            }
-        }
+        _channels[message->parameters()[1]]->updateUserList();
     }
     else if (message->code() == Irc::ERR_NICKNAMEINUSE)
     {
@@ -215,33 +225,34 @@ void ServerModel::joinChannel(const QString &channelName)
 {
     qDebug() << "joining channel " << channelName;
 
-    foreach (ChannelModel *channel, _channels->getList())
+    if (!_channels[channelName])
     {
-        if (channel->name() == channelName)
-        {
-            qDebug() << "Already connected to this channel";
-        }
+        addModelForChannel(channelName);
+        _backend->sendCommand(IrcCommand::createJoin(channelName));
     }
-
-    _backend->sendCommand(IrcCommand::createJoin(channelName));
 }
 
 void ServerModel::partChannel(const QString &channelName)
 {
     qDebug() << "parting channel " << channelName;
-    _backend->sendCommand(IrcCommand::createPart(channelName, _settings->partMessage()));
+
+    if (_channels[channelName])
+    {
+        removeModelForChannel(channelName);
+        _backend->sendCommand(IrcCommand::createPart(channelName, _settings->partMessage()));
+    }
 }
 
 void ServerModel::queryUser(const QString &userName)
 {
     qDebug() << "querying user " << userName;
-    addModelForSender(userName);
+    addModelForChannel(userName);
 }
 
 void ServerModel::closeUser(const QString &userName)
 {
     qDebug() << "closing user " << userName;
-    removeModelForSender(userName);
+    removeModelForChannel(userName);
 }
 
 void ServerModel::changeNick(const QString &nick)

@@ -26,7 +26,6 @@
 
 IrcModel::IrcModel(QObject *parent) :
     QObject(parent),
-    _servers(new QObjectListModel<ServerModel>(this)),
     _currentChannelIndex(-1),
     _networkConfigurationManager(new QNetworkConfigurationManager(this)),
     _networkSession(0)
@@ -64,8 +63,10 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
         //session->setAutoJoinChannels(server->autoJoinChannels());
         //session->setPassword(server->serverPassword());
 
-        _servers->addItem(new ServerModel(this, server->serverUrl(), session));
+        ServerModel *serverModel = new ServerModel(this, server->serverUrl(), session);
+        _servers.append(serverModel);
         connect(session, SIGNAL(connected()), this, SLOT(backendsConnectedToServer()));
+        connect(serverModel, SIGNAL(channelsChanged()), this, SLOT(refreshChannelList()));
     }
     else
     {
@@ -75,13 +76,21 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
     }
 }
 
-QObjectListModel<ChannelModel> *IrcModel::allChannels()
+void IrcModel::refreshChannelList()
 {
-    // TODO: display all channels from all servers (currently only one is able to be displayed)
-    if (_servers->rowCount())
-        return ((ServerModel*)_servers->getItem(0))->channels();
+    QList<ChannelModel*> *allChannelsList = new QList<ChannelModel*>(),
+            *oldChannelsList = &_allChannels.getList();
 
-    return NULL;
+    foreach (ServerModel *server, _servers)
+    {
+        foreach (ChannelModel *channel, server->_channels)
+        {
+            allChannelsList->append(channel);
+        }
+    }
+
+    _allChannels.setList(allChannelsList);
+    delete oldChannelsList;
 }
 
 void IrcModel::backendsConnectedToServer()
@@ -147,9 +156,9 @@ void IrcModel::onlineStateChanged(bool online)
         }
 
         // Already connected but lost
-        if (_servers->rowCount())
+        if (_servers.count())
         {
-            foreach (ServerModel *server, _servers->getList())
+            foreach (ServerModel *server, _servers)
             {
                 qDebug() << "reconnecting to server " << server->url();
                 server->_backend->open();
@@ -160,7 +169,7 @@ void IrcModel::onlineStateChanged(bool online)
     {
         qDebug() << "Network connection lost";
 
-        foreach (ServerModel *server, _servers->getList())
+        foreach (ServerModel *server, _servers)
         {
             qDebug() << "disconnecting from server " << server->url();
             server->_backend->close();
