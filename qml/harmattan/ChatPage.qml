@@ -240,7 +240,7 @@ Page {
         visualParent: pageStack
         MenuLayout {
             MenuItem {
-                text: ircModel.currentChannel.name.charAt(0) === '#' ? "Part" : "Close"
+                text: (ircModel.currentChannel !== null && ircModel.currentChannel.name.charAt(0)) === '#' ? "Part" : "Close"
                 onClicked:  areYouSureToPartDialog.open()
             }
             MenuItem {
@@ -266,7 +266,7 @@ Page {
         acceptButtonText: "Yes"
         rejectButtonText: "No"
         titleText: "Are you sure?"
-        message: ircModel.currentChannel.name.charAt(0) === '#' ? "Do you want to part this channel?" : "Do you want to close this conversation?"
+        message: (ircModel.currentChannel !== null && ircModel.currentChannel.name.charAt(0) === '#') ? "Do you want to part this channel?" : "Do you want to close this conversation?"
         onAccepted: {
             if (ircModel.currentChannel.name.charAt(0) === '#')
                 ircModel.currentServer.partChannel(ircModel.currentChannel.name)
@@ -291,15 +291,16 @@ Page {
         id: userSelectorDialog
         titleText: "User list of " + (ircModel.currentChannel === null ? "?" : ircModel.currentChannel.name)
         model: ircModel.currentChannel === null ? null : ircModel.currentChannel.users
-        onStatusChanged: {
-            if (status == DialogStatus.Closed)
-                if (selectedIndex >= 0) {
-                    ircModel.currentChannel.queryUser(selectedIndex)
-                    console.debug(selectedIndex)
-                    selectedIndex = -1
-                    console.debug(selectedIndex)
-                }
+        onAccepted: {
+            if (selectedIndex >= 0) {
+                ircModel.currentChannel.queryUser(selectedIndex);
+            }
         }
+        onStatusChanged: {
+            if (status == DialogStatus.Closing)
+                selectedIndex = -1;
+        }
+
         searchFieldVisible: true
     }
 }
