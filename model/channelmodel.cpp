@@ -406,7 +406,7 @@ void ChannelModel::parseCommand(const QString &msg)
     else if (commandParts[0] == "/topic")
     {
         if (n == 1)
-            appendEmphasisedInfo("[TOPIC] " + _topic);
+            _backend->sendCommand(IrcCommand::createTopic(_name));
         else
             appendEmphasisedInfo("Changing Topics is not supported yet!");
     }
@@ -430,6 +430,15 @@ void ChannelModel::parseCommand(const QString &msg)
         }
         else
             appendEmphasisedInfo("Invalid command. Correct usage: '/kick &lt;nick&gt; [channel] [reason]'");
+    }
+    else if (commandParts[0] == "/ctcp")
+    {
+        if (n == 2)
+            _backend->sendCommand(IrcCommand::createCtcpRequest(commandParts[1], "VERSION"));
+        else if (n == 3)
+            _backend->sendCommand(IrcCommand::createCtcpRequest(commandParts[1], commandParts[2]));
+        else
+            appendEmphasisedInfo("Invalid command. Correct usage: '/ctcp &lt;user name&gt; [request]'");
     }
     else
         appendEmphasisedInfo("Unknown command, maybe it will be supported later?");
