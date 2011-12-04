@@ -450,8 +450,17 @@ void ChannelModel::parseCommand(const QString &msg)
         appendEmphasisedInfo("Sending raw command '" + rawCommand + "' to the server.");
         _backend->sendRaw(rawCommand);
     }
+    else if (commandParts[0] == "/quote")
+    {
+        QString rawCommand = msg.mid(7);
+        appendEmphasisedInfo("Sending raw command '" + rawCommand + "' to the server.");
+        _backend->sendRaw(rawCommand);
+    }
     else
-        appendEmphasisedInfo("Unknown command, maybe it will be supported later?");
+    {
+        appendEmphasisedInfo("Sending raw command '" + msg + "' to the server.");
+        _backend->sendRaw(msg);
+    }
 }
 
 QString ChannelModel::getUserNameFromIndex(int index) const
