@@ -38,6 +38,7 @@ AppSettings::AppSettings(QObject *parent) :
 {
     // Checking for settings version
 
+    bool containedSettingsVersion = _backend.contains(APPSETTING_SETTINGSVERSION);
     int savedSettingsVersion = _backend.value(APPSETTING_SETTINGSVERSION, 0).toInt();
 
     if (savedSettingsVersion < APPSETTINGS_VERSION)
@@ -46,8 +47,11 @@ AppSettings::AppSettings(QObject *parent) :
         _backend.clear();
         _backend.setValue(APPSETTING_SETTINGSVERSION, APPSETTINGS_VERSION);
 
-        _areSettingsDeleted = true;
-        emit areSettingsDeletedChanged();
+        if (containedSettingsVersion)
+        {
+            _areSettingsDeleted = true;
+            emit areSettingsDeletedChanged();
+        }
     }
     else
     {
