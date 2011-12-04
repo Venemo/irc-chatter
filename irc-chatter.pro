@@ -12,11 +12,11 @@ DEFINES += \
 include(communi.pri)
 
 HEADERS += \
-    model/channelmodel.h \
-    qobjectlistmodel.h \
     util.h \
-    model/ircmodel.h \
+    model/channelmodel.h \
     model/servermodel.h \
+    model/ircmodel.h \
+    qobjectlistmodel.h \
     appsettings.h \
     serversettings.h
 
@@ -56,6 +56,11 @@ unix {
     icon.path = /usr/share/icons/hicolor/80x80/apps
     desktopfile.files = installables/irc-chatter-harmattan.desktop
     desktopfile.path = /usr/share/applications
+
+    contains(DEFINES, PRERELEASE) {
+        icon.files = installables/irc-chatter-harmattan-prerelease-icon.png
+        desktopfile.files = installables/irc-chatter-harmattan-prerelease.desktop
+    }
 }
 
 contains(MEEGO_EDITION, harmattan) {
