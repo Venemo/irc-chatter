@@ -47,6 +47,14 @@ public:
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
+    QString appVersion(APP_VERSION);
+    bool isPreRelease = false;
+
+#if defined(PRERELEASE)
+    appVersion += " (Unstable pre-release)";
+    isPreRelease = true;
+#endif
+
     QApplication::setApplicationName("irc-chatter");
     QApplication::setOrganizationName("irc-chatter");
     QApplication::setApplicationVersion(APP_VERSION);
@@ -68,6 +76,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
     view->rootContext()->setContextProperty("ircModel", model);
     view->rootContext()->setContextProperty("appSettings", settings);
+    view->rootContext()->setContextProperty("appVersion", appVersion);
+    view->rootContext()->setContextProperty("isPreRelease", isPreRelease);
     view->setSource(QUrl("qrc:/qml/harmattan/main.qml"));
     view->showFullScreen();
 
