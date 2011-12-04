@@ -48,8 +48,8 @@ class ServerModel : public QObject
     friend class IrcModel;
     friend class AppSettings;
 
-    void addModelForChannel(const QString &sender);
-    void removeModelForChannel(const QString &sender);
+    void addModelForChannel(const QString &channelName);
+    void removeModelForChannel(const QString &channelName);
     void processNumericMessage(IrcNumericMessage *message);
 
 protected:
@@ -65,7 +65,7 @@ public:
     Q_INVOKABLE void changeNick(const QString &nick);
     Q_INVOKABLE void displayError(const QString &error);
     Q_INVOKABLE void msgUser(const QString &userName, const QString &msg);
-    Q_INVOKABLE void kickUser(const QString &user, const QString &channel, const QString &message = QString(""));
+    Q_INVOKABLE void kickUser(const QString &user, const QString &channel, const QString &message = QString());
 
 signals:
     void channelsChanged();

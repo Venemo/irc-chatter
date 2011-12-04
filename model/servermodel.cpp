@@ -75,35 +75,39 @@ void ServerModel::backendReceivedMessage(IrcMessage *message)
     switch (message->type())
     {
     case IrcMessage::Private:
-        channelName = ((IrcPrivateMessage*)message)->target().startsWith('#')
-                ? ((IrcPrivateMessage*)message)->target() // This is a channel message
-                : ((IrcPrivateMessage*)message)->sender().name(); // This is a private message
+        channelName = static_cast<IrcPrivateMessage*>(message)->target().startsWith('#')
+                ? static_cast<IrcPrivateMessage*>(message)->target() // This is a channel message
+                : message->sender().name(); // This is a private message
 
-        if (((IrcPrivateMessage*)message)->isAction())
+        if (static_cast<IrcPrivateMessage*>(message)->isAction())
         {
             // This is a CTCP action
-            findOrCreateChannel(channelName)->receiveCtcpAction(message->sender().name(), ((IrcPrivateMessage*)message)->message());
+            findOrCreateChannel(channelName)->receiveCtcpAction(message->sender().name(), static_cast<IrcPrivateMessage*>(message)->message());
         }
         else if (((IrcPrivateMessage*)message)->isRequest())
         {
             // This is a CTCP request
-            findOrCreateChannel(channelName)->receiveCtcpRequest(message->sender().name(), ((IrcPrivateMessage*)message)->message());
+            findOrCreateChannel(channelName)->receiveCtcpRequest(message->sender().name(), static_cast<IrcPrivateMessage*>(message)->message());
         }
         else
         {
             // This is a normal message
-            findOrCreateChannel(channelName)->receiveMessage(message->sender().name(), ((IrcPrivateMessage*)message)->message());
+            findOrCreateChannel(channelName)->receiveMessage(message->sender().name(), static_cast<IrcPrivateMessage*>(message)->message());
         }
         break;
     case IrcMessage::Join:
         // This is a join message
-        if (_channels.contains(((IrcJoinMessage*)message)->channel()))
-            _channels[((IrcJoinMessage*)message)->channel()]->receiveJoined(message->sender().name());
+        if (_channels.contains(static_cast<IrcJoinMessage*>(message)->channel()))
+        {
+            _channels[static_cast<IrcJoinMessage*>(message)->channel()]->receiveJoined(message->sender().name());
+        }
         break;
     case IrcMessage::Part:
         // This is a part message
-        if (_channels.contains(((IrcPartMessage*)message)->channel()))
-            _channels[((IrcPartMessage*)message)->channel()]->receiveParted(message->sender().name(), ((IrcPartMessage*)message)->reason());
+        if (_channels.contains(static_cast<IrcPartMessage*>(message)->channel()))
+        {
+            _channels[static_cast<IrcPartMessage*>(message)->channel()]->receiveParted(message->sender().name(), static_cast<IrcPartMessage*>(message)->reason());
+        }
         break;
     case IrcMessage::Nick:
         // This is a nick change message
@@ -131,25 +135,26 @@ void ServerModel::backendReceivedMessage(IrcMessage *message)
         break;
     case IrcMessage::Topic:
         // This is a topic message
-        qDebug() << "received topic";
-        if (_channels.contains(((IrcTopicMessage*)message)->channel()))
-            _channels[((IrcTopicMessage*)message)->channel()]->receiveTopic(((IrcTopicMessage*)message)->topic());
+        if (_channels.contains(static_cast<IrcTopicMessage*>(message)->channel()))
+        {
+            _channels[static_cast<IrcTopicMessage*>(message)->channel()]->receiveTopic(static_cast<IrcTopicMessage*>(message)->topic());
+        }
         break;
     case IrcMessage::Notice:
-        if (((IrcNoticeMessage*)message)->isReply())
+        if (static_cast<IrcNoticeMessage*>(message)->isReply())
         {
             // This is a CTCP reply message
-            static_cast<IrcModel*>(parent())->currentChannel()->receiveCtcpReply(message->sender().name(), ((IrcNoticeMessage*)message)->message());
+            static_cast<IrcModel*>(parent())->currentChannel()->receiveCtcpReply(message->sender().name(), static_cast<IrcNoticeMessage*>(message)->message());
         }
-        else if (((IrcNoticeMessage*)message)->target().startsWith('#'))
+        else if (static_cast<IrcNoticeMessage*>(message)->target().startsWith('#'))
         {
             // This is a channel message ???
-            findOrCreateChannel(((IrcNoticeMessage*)message)->target())->receiveMessage(message->sender().name(), ((IrcNoticeMessage*)message)->message());
+            findOrCreateChannel(static_cast<IrcNoticeMessage*>(message)->target())->receiveMessage(message->sender().name(), static_cast<IrcNoticeMessage*>(message)->message());
         }
         else
         {
             // This is a private message
-            findOrCreateChannel(message->sender().name())->receiveMessage(message->sender().name(), ((IrcNoticeMessage*)message)->message());
+            findOrCreateChannel(message->sender().name())->receiveMessage(message->sender().name(), static_cast<IrcNoticeMessage*>(message)->message());
         }
         break;
     case IrcMessage::Kick:
