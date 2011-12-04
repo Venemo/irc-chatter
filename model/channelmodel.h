@@ -55,7 +55,7 @@ private:
     QList<const QString*> _possibleNickNames;
     int _currentCompletionIndex, _currentCompletionPosition, _displayedLines, _sentMessagesIndex;
 
-    static QString _autoCompletionSuffix;
+    static QString _autoCompletionSuffix, _ownNickColor;
     static QList<QString> *_colors;
     static QRegExp _urlRegexp;
     static int _maxLineNumber, _deletableLines;
@@ -95,8 +95,8 @@ public:
     void setCurrentMessage(const QString &value);
 
     Q_INVOKABLE void autoCompleteNick();
-    Q_INVOKABLE const QString colorForNick(const QString &nick);
-    Q_INVOKABLE void queryUser(const quint16 &index);
+    Q_INVOKABLE const QString &colorForNick(const QString &nick);
+    Q_INVOKABLE QString getUserNameFromIndex(int index) const;
     Q_INVOKABLE void getSentMessagesUp();
     Q_INVOKABLE void getSentMessagesDown();
 

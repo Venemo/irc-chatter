@@ -105,8 +105,10 @@ Page {
                 target: chatArea.children[3]
                 onLinkActivated: {
                     // User queries
-                    if (!link.indexOf("user://"))
-                        ircModel.currentServer.queryUser(link.replace("user://", ""));
+                    if (!link.indexOf("user://")) {
+                        areYouSureToQueryDialog.queryableUserName = link.replace("user://", "");
+                        areYouSureToQueryDialog.open();
+                    }
                     // Normal links
                     else if (link.indexOf("://") || !(link.indexOf("www.")))
                         Qt.openUrlExternally(link);
@@ -119,7 +121,7 @@ Page {
     }
     Rectangle {
         id: channelNameBg
-        color: "#f9a300"
+        color: isPreRelease ? "#73ba0e" : "#f9a300"
         width: 60
         anchors.top: parent.top
         anchors.right: parent.right
@@ -242,6 +244,10 @@ Page {
                 onClicked:  areYouSureToPartDialog.open()
             }
             MenuItem {
+                text: "About"
+                onClicked: aboutDialog.open()
+            }
+            MenuItem {
                 text: "Quit app"
                 onClicked: quitDialog.open()
             }
@@ -273,6 +279,18 @@ Page {
         }
     }
 
+    QueryDialog {
+        property string queryableUserName: ""
+        id: areYouSureToQueryDialog
+        acceptButtonText: "Yes"
+        rejectButtonText: "No"
+        titleText: "Are you sure?"
+        message: "Would you like to query user " + areYouSureToQueryDialog.queryableUserName + " ?"
+        onAccepted: {
+            ircModel.currentServer.queryUser(areYouSureToQueryDialog.queryableUserName);
+        }
+    }
+
     WorkingSelectionDialog {
         id: channelSelectorDialog
         titleText: "Switch channel"
@@ -290,12 +308,13 @@ Page {
         titleText: "User list of " + (ircModel.currentChannel === null ? "?" : ircModel.currentChannel.name)
         model: ircModel.currentChannel === null ? null : ircModel.currentChannel.users
         onAccepted: {
-            if (selectedIndex >= 0) {
-                ircModel.currentChannel.queryUser(selectedIndex);
+            if (userSelectorDialog.selectedIndex >= 0) {
+                areYouSureToQueryDialog.queryableUserName = ircModel.currentChannel.getUserNameFromIndex(userSelectorDialog.selectedIndex);
+                areYouSureToQueryDialog.open();
             }
         }
         onStatusChanged: {
-            if (status == DialogStatus.Closing)
+            if (status == DialogStatus.Opening)
                 selectedIndex = -1;
         }
 

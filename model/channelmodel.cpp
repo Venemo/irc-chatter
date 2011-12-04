@@ -33,6 +33,7 @@
 
 QList<QString> *ChannelModel::_colors = 0;
 QString ChannelModel::_autoCompletionSuffix(", ");
+QString ChannelModel::_ownNickColor("#000000");
 int ChannelModel::_maxLineNumber = 300;
 int ChannelModel::_deletableLines = 100;
 
@@ -230,10 +231,10 @@ void ChannelModel::receiveTopic(const QString &value)
 }
 
 // This code is copypasted from Konversation (and modified by Timur Kristóf) - I hereby thank its authors
-const QString ChannelModel::colorForNick(const QString &nick)
+const QString &ChannelModel::colorForNick(const QString &nick)
 {
     if (nick == _backend->nickName())
-        return "#000000";
+        return _ownNickColor;
 
     int nickvalue = 0;
 
@@ -453,9 +454,10 @@ void ChannelModel::parseCommand(const QString &msg)
         appendEmphasisedInfo("Unknown command, maybe it will be supported later?");
 }
 
-void ChannelModel::queryUser(const quint16 &index)
+QString ChannelModel::getUserNameFromIndex(int index) const
 {
-    static_cast<ServerModel*>(parent())->queryUser(_users->stringList().at(index));
+    qDebug() << "heyheyhey";
+    return _users->stringList().at(index);
 }
 
 void ChannelModel::getSentMessagesUp()
