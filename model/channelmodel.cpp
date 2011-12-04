@@ -381,7 +381,11 @@ void ChannelModel::parseCommand(const QString &msg)
     else if (commandParts[0] == "/me")
     {
         if (n > 1)
-            _backend->sendCommand(IrcCommand::createCtcpAction(_name, msg.mid(4)));
+        {
+            QString action = msg.mid(4);
+            _backend->sendCommand(IrcCommand::createCtcpAction(_name, action));
+            receiveCtcpAction(_backend->nickName(), action);
+        }
         else
             appendEmphasisedInfo("Invalid command. Correct usage: '/me &lt;message&gt;'");
     }
