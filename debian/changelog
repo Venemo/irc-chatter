@@ -1,9 +1,18 @@
-irc-chatter (0.0.0-0) UNRELEASED; urgency=low
+irc-chatter (0.1.90) unreleased; urgency=low
 
-  * TODO: remove on release
-  * WIP: http://rzr.online.fr/q/snapshot#irc-chatter
+  * IRC library updated to newest version
+  * IRC library is now embedded into the app
+  * Support for sending raw commands to the server
+  * Support for sending CTCP requests
+  * Up/Down buttons work in the text entry field
+  * Channel names are now sorted
+  * Clicking on a username will now query the user
+  * Automatic reconnect when the connection is lost
+  * Font size setting now works
+  * TODO: Support for connecting to multiple servers at the same time
+  * TODO: Some adjustments to the user interface
 
- -- Philippe Coval <rzr@gna.org>  Sat, 03 Sep 2011 01:10:03 +0200
+ -- Timur Kristóf <venemo@msn.com>  Sun, 04 Dec 2011 13:48:22 +0200
 
 irc-chatter (0.1.1) unstable; urgency=low
 
@@ -24,10 +33,3 @@ irc-chatter (0.1.0) unstable; urgency=low
   * See https://gitorious.org/colorful-apps/irc-chatter for source
 
  -- Timur Kristóf <venemo@msn.com>  Sun, 14 Aug 2011 22:41:22 +0200
-
-irc-chatter (0.0.0-0) UNRELEASED; urgency=low
-
-  * TODO: remove on release
-  * WIP: http://rzr.online.fr/q/snapshot#irc-chatter
-
- -- Philippe Coval <rzr@gna.org>  Wed, 1 Jan 0000 08:48:08 +0200
