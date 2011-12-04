@@ -129,10 +129,6 @@ void ServerModel::backendReceivedMessage(IrcMessage *message)
             }
         }
         break;
-    case IrcMessage::Invite:
-        // This is an invite message
-        // TODO
-        break;
     case IrcMessage::Topic:
         // This is a topic message
         if (_channels.contains(static_cast<IrcTopicMessage*>(message)->channel()))
@@ -157,11 +153,16 @@ void ServerModel::backendReceivedMessage(IrcMessage *message)
             findOrCreateChannel(message->sender().name())->receiveMessage(message->sender().name(), static_cast<IrcNoticeMessage*>(message)->message());
         }
         break;
+    case IrcMessage::Invite:
+        // TODO
     case IrcMessage::Kick:
+        // TODO
     case IrcMessage::Mode:
+        // TODO
+    case IrcMessage::Error:
+        // TODO? Errors are also appearing as numeric messages
     case IrcMessage::Ping:
     case IrcMessage::Pong:
-    case IrcMessage::Error:
         break;
     case IrcMessage::Numeric:
         processNumericMessage((IrcNumericMessage*)message);
