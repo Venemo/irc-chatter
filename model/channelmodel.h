@@ -49,14 +49,13 @@ private:
     Q_PROPERTY(QString topic READ topic NOTIFY topicChanged)
     GENPROPERTY_R(unsigned, _channelType, channelType)
 
-    static QString _autoCompletionSuffix;
+    IrcSession *_backend;
     QString _completionFragment, _sentMessagesTemp;
+    QStringList _soFarReceivedUserNames, _sentMessages;
     QList<const QString*> _possibleNickNames;
     int _currentCompletionIndex, _currentCompletionPosition, _displayedLines, _sentMessagesIndex;
 
-    IrcSession *_backend;
-    QStringList _soFarReceivedUserNames, _sentMessages;
-
+    static QString _autoCompletionSuffix;
     static QList<QString> *_colors;
     static QRegExp _urlRegexp;
     static int _maxLineNumber, _deletableLines;

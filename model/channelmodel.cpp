@@ -43,8 +43,8 @@ ChannelModel::ChannelModel(ServerModel *parent, const QString &name, IrcSession 
     QObject(parent),
     _name(name),
     _users(new QStringListModel(this)),
-    _displayedLines(0),
     _backend(backend),
+    _displayedLines(0),
     _sentMessagesIndex(-1)
 {
     if (!_colors)
@@ -443,9 +443,9 @@ void ChannelModel::parseCommand(const QString &msg)
         else
             appendEmphasisedInfo("Invalid command. Correct usage: '/ctcp &lt;user name&gt; [request]'");
     }
-    else if (commandParts[0] == '/raw')
+    else if (commandParts[0] == "/raw")
     {
-        QString rawCommand = msg.remove(0, 4);
+        QString rawCommand = msg.mid(5);
         appendEmphasisedInfo("Sending raw command '" + rawCommand + "' to the server.");
         _backend->sendRaw(rawCommand);
     }

@@ -139,7 +139,7 @@ void ServerModel::backendReceivedMessage(IrcMessage *message)
         if (((IrcNoticeMessage*)message)->isReply())
         {
             // This is a CTCP reply message
-            findOrCreateChannel(message->sender().name())->receiveCtcpReply(message->sender().name(), ((IrcNoticeMessage*)message)->message());
+            static_cast<IrcModel*>(parent())->currentChannel()->receiveCtcpReply(message->sender().name(), ((IrcNoticeMessage*)message)->message());
         }
         else if (((IrcNoticeMessage*)message)->target().startsWith('#'))
         {
