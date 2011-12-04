@@ -44,10 +44,10 @@ PageStackWindow {
     // Common components
 
     QueryDialog {
-        id: prereleaseDialog
-        titleText: "This is not working"
-        message: "This part of the GUI is currently 100% NON-functional.\nSorry guys."
-        acceptButtonText: "Ok, no problem"
+        id: aboutDialog
+        titleText: "About IRC Chatter"
+        message: "Brought to you by Timur Kristóf and Hiemanshu Sharma.\nCurrent version: " + appVersion + "\n\nIRC Chatter is the fist IRC client for MeeGo. It uses Qt, QML, and libcommuni."
+        acceptButtonText: "Close"
     }
 
     QueryDialog {
@@ -63,6 +63,10 @@ PageStackWindow {
         id: commonMenu
         visualParent: pageStack
         MenuLayout {
+            MenuItem {
+                text: "About"
+                onClicked: aboutDialog.open()
+            }
             MenuItem {
                 text: "Quit app"
                 onClicked: quitDialog.open()
