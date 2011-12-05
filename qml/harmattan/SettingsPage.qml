@@ -200,6 +200,25 @@ Page {
                     width: 100
                 }
             }
+            Row {
+                spacing: 10
+                width: parent.width
+                Label {
+                    id: monospaceField
+                    text: "Use Monospace Font?"
+                }
+                CheckBox {
+                    id: monospaceCheckbox
+                    checked: false
+                    anchors.right: parent.right
+                    anchors.verticalCenter: monospaceField.verticalCenter
+                }
+            }
+            Binding {
+                target: appSettings
+                property: "fontMonospace"
+                value: monospaceCheckbox.checked
+            }
         }
     }
     ScrollDecorator {

@@ -30,6 +30,7 @@
 #define APPSETTING_KICKMESSAGE "KickMessage"
 #define APPSETTING_QUITMESSAGE "QuitMessage"
 #define APPSETTING_FONTSIZE "FontSize"
+#define APPSETTING_FONTMONOSPACE "FontMonospace"
 
 AppSettings::AppSettings(QObject *parent) :
     QObject(parent),
@@ -139,6 +140,16 @@ quint16 AppSettings::fontSize() const
 void AppSettings::setFontSize(const quint16 &value)
 {
     _backend.setValue(APPSETTING_FONTSIZE, value);
+}
+
+bool AppSettings::fontMonospace() const
+{
+    return _backend.value(APPSETTING_FONTMONOSPACE, false).toBool();
+}
+
+void AppSettings::setFontMonospace(const bool &value)
+{
+    _backend.setValue(APPSETTING_FONTMONOSPACE, value);
 }
 
 QObjectListModel<ServerSettings> *AppSettings::serverSettings()
