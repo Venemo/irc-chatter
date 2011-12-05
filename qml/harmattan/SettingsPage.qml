@@ -22,6 +22,8 @@ import com.nokia.extras 1.0
 import net.venemo.ircchatter 1.0
 
 Page {
+    property string color: "#f9a300"
+
     id: settingsPage
     tools: ToolBarLayout {
         visible: true
@@ -219,10 +221,79 @@ Page {
                 property: "fontMonospace"
                 value: monospaceCheckbox.checked
             }
+            Row {
+                width: parent.width
+                spacing: 10
+                Label {
+                    id: sidebarLabel
+                    text: "Sidebar Color"
+                }
+                Button {
+                    id: colorButton
+                    text: "Orange"
+                    width: parent.width / 2
+                    anchors.right: parent.right
+                    anchors.verticalCenter: sidebarLabel.verticalCenter
+                    onClicked: colorSelectionDialog.open()
+                }
+            }
         }
     }
     ScrollDecorator {
         flickableItem: settingsFlickable
+    }
+
+    WorkingSelectionDialog {
+        id: colorSelectionDialog
+        titleText: "Sidebar Color"
+        searchFieldVisible: false
+        model: ListModel {
+            ListElement {
+                name: "Orange (Default)"
+            }
+            ListElement {
+                name: "Green"
+            }
+            ListElement {
+                name: "Red"
+            }
+            ListElement {
+                name: "Blue"
+            }
+            ListElement {
+                name: "Grey"
+            }
+        }
+        onAccepted: {
+            if (colorSelectionDialog.selectedIndex == 0){
+                color = "#f9a300"
+                colorButton.text = "Orange"
+            }
+            else
+                if (colorSelectionDialog.selectedIndex == 1){
+                    colorButton.text = "Green"
+                    color = "#73ba0e"
+                }
+                else
+                    if (colorSelectionDialog.selectedIndex == 2) {
+                        colorButton.text = "Red"
+                        color = "#ff0000"
+                    }
+                    else
+                        if (colorSelectionDialog.selectedIndex == 3){
+                            colorButton.text = "Blue"
+                            color = "#0000ff"
+                        }
+                        else {
+                            colorButton.text = "Grey"
+                            color = "#999999"
+                        }
+        }
+    }
+    Binding {
+        target: appSettings
+        property: "sidebarColor"
+        value: color
     }
 
     WorkingSelectionDialog {

@@ -29,6 +29,7 @@ Page {
                              chatArea.font.family = "Monospace"
                          else
                              chatArea.font.family = "Nokia Pure"
+                         channelNameBg.color = appSettings.sidebarColor
                      }
 
     property bool shouldUpdateCurrentMessage: true

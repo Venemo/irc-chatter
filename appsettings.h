@@ -45,6 +45,7 @@ class AppSettings : public QObject
     Q_PROPERTY(QString quitMessage READ quitMessage WRITE setQuitMessage NOTIFY quitMessageChanged)
     Q_PROPERTY(quint16 fontSize READ fontSize WRITE setFontSize NOTIFY fontSizeChanged)
     Q_PROPERTY(bool fontMonospace READ fontMonospace WRITE setFontMonospace NOTIFY fontMonospaceChanged)
+    Q_PROPERTY(QString sidebarColor READ sidebarColor WRITE setSidebarColor NOTIFY sidebarColorChanged)
 
     QSettings _backend;
     QObjectListModel<ServerSettings> *_serverSettings;
@@ -68,6 +69,8 @@ public:
     void setFontSize(const quint16 &value);
     bool fontMonospace() const;
     void setFontMonospace(const bool &value);
+    QString sidebarColor() const;
+    void setSidebarColor(const QString &value);
 
     QObjectListModel<ServerSettings> *serverSettings();
     Q_INVOKABLE void saveServerSettings();
@@ -85,6 +88,7 @@ signals:
     void quitMessageChanged();
     void fontSizeChanged();
     void fontMonospaceChanged();
+    void sidebarColorChanged();
 
 };
 
