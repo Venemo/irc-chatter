@@ -22,7 +22,7 @@ import com.nokia.extras 1.0
 import net.venemo.ircchatter 1.0
 
 Page {
-    property string color: "#f9a300"
+    property string color: appSettings.sidebarColor
 
     id: settingsPage
     tools: ToolBarLayout {
