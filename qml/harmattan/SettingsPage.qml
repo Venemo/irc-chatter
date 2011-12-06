@@ -263,6 +263,12 @@ Page {
             ListElement {
                 name: "Grey"
             }
+            ListElement {
+                name: "Purple"
+            }
+            ListElement {
+                name: "Yellow"
+            }
         }
         onAccepted: {
             if (colorSelectionDialog.selectedIndex == 0){
@@ -284,10 +290,20 @@ Page {
                             colorButton.text = "Blue"
                             color = "#0000ff"
                         }
-                        else {
+                        else
+                            if (colorSelectionDialog.selectedIndex == 4){
                             colorButton.text = "Grey"
                             color = "#999999"
                         }
+                            else
+                                if (colorSelectionDialog.selectedIndex == 5) {
+                                    colorButton.text = "Purple"
+                                    color = "#400758"
+                                }
+                                else {
+                                    colorButton.text = "Yellow"
+                                    color = "#cec700"
+                                }
         }
     }
     Binding {
