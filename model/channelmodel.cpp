@@ -132,7 +132,6 @@ QString &ChannelModel::processMessage(QString &msg, bool *hasUserNick)
     msg.replace('<', "&lt;");
     msg.replace('>', "&gt;");
     msg.replace('\n', "<br />");
-    msg.replace(' ', "&nbsp;");
     msg.replace(_urlRegexp, "<a href=\"\\1\">\\1</a>");
 
     if (msg.contains(_backend->nickName()))
