@@ -41,6 +41,7 @@ Page {
             platformIconId: "toolbar-done"
             onClicked: {
                 if (isValid) {
+                    commonMenu.close();
                     appWindow.pageStack.push(progressPage);
                     appSettings.saveServerSettings();
                     ircModel.connectToServer(server, appSettings);

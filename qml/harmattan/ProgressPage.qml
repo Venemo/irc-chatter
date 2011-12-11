@@ -35,7 +35,10 @@ Page {
 
     onCanPushChatPageChanged: {
         if (canPushChatPage)
+        {
+            commonMenu.close();
             appWindow.pageStack.push(chatPage);
+        }
     }
 
     BusyIndicator {
