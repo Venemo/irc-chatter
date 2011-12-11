@@ -23,6 +23,11 @@ PageStackWindow {
     id: appWindow
     initialPage: firstrunPage
 
+    onOrientationChangeFinished: {
+        if (pageStack.currentPage === chatPage)
+            chatPage.adjustForOrientationChange();
+    }
+
     // Pages
 
     FirstrunPage {

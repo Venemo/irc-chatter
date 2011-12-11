@@ -51,6 +51,10 @@ Page {
     function scrollToBottom() {
         chatFlickable.contentY = Math.max(0,  chatArea.height - chatFlickable.height)
     }
+    function adjustForOrientationChange() {
+        scrollToBottom();
+        chatFlickable.lastSupposedContentY = chatFlickable.contentY;
+    }
 
     tools: ToolBarLayout {
         visible: true
