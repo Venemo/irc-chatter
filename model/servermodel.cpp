@@ -154,11 +154,32 @@ void ServerModel::backendReceivedMessage(IrcMessage *message)
         }
         break;
     case IrcMessage::Invite:
-        // TODO
+        if (_channels.contains(static_cast<IrcInviteMessage*>(message)->channel()))
+        {
+            _channels[static_cast<IrcInviteMessage*>(message)->channel()]->receiveInvite(message->sender().name(), static_cast<IrcInviteMessage*>(message)->user());
+        }
+        else if (static_cast<IrcInviteMessage*>(message)->user() == _backend->userName())
+        {
+            emit inviteReceived(static_cast<IrcInviteMessage*>(message)->channel());
+        }
     case IrcMessage::Kick:
-        // TODO
+        if (_channels.contains(static_cast<IrcKickMessage*>(message)->channel()))
+        {
+            if (static_cast<IrcKickMessage*>(message)->user() == _backend->userName())
+            {
+                removeModelForChannel(static_cast<IrcKickMessage*>(message)->channel());
+                emit kickReceived(static_cast<IrcKickMessage*>(message)->channel(), static_cast<IrcKickMessage*>(message)->reason());
+            }
+            else
+            {
+                _channels[static_cast<IrcKickMessage*>(message)->channel()]->receiveKicked(message->sender().name(), static_cast<IrcKickMessage*>(message)->user(), static_cast<IrcKickMessage*>(message)->reason());
+            }
+        }
     case IrcMessage::Mode:
-        // TODO
+        if (_channels.contains(static_cast<IrcModeMessage*>(message)->target()))
+        {
+            _channels[static_cast<IrcModeMessage*>(message)->target()]->receiveModeChange(static_cast<IrcModeMessage*>(message)->mode(), static_cast<IrcModeMessage*>(message)->argument());
+        }
     case IrcMessage::Error:
         // TODO? Errors are also appearing as numeric messages
     case IrcMessage::Ping:

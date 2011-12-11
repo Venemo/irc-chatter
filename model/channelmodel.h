@@ -84,9 +84,10 @@ protected:
     void receiveQuit(const QString &userName, QString reason);
     void receiveNickChange(const QString &oldNick, const QString &newNick);
     void receiveMotd(QString motd);
-    void receiveInvite(const QString &origin, const QString &receiver, const QString &channel);
+    void receiveInvite(const QString &origin, const QString &receiver);
     void receiveKicked(const QString &origin, const QString &nick, QString message);
     void receiveTopic(const QString &value);
+    void receiveModeChange(const QString &mode, const QString &argument);
     void channelNameChanged(const QString &newName);
 
 public:

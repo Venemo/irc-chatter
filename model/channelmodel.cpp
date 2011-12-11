@@ -116,9 +116,9 @@ void ChannelModel::receiveNickChange(const QString &oldNick, const QString &newN
     updateUserList();
 }
 
-void ChannelModel::receiveInvite(const QString &origin, const QString &receiver, const QString &channel)
+void ChannelModel::receiveInvite(const QString &origin, const QString &receiver)
 {
-    appendEmphasisedInfo("*** " + origin + " has invited " + receiver + " to " + channel + ".");
+    appendEmphasisedInfo("*** " + origin + " has invited " + receiver + " to " + _name + ".");
 }
 
 void ChannelModel::receiveKicked(const QString &origin, const QString &nick, QString message)
@@ -228,6 +228,11 @@ void ChannelModel::receiveTopic(const QString &value)
     _topic = value;
     appendEmphasisedInfo("[TOPIC] " + _topic);
     emit topicChanged();
+}
+
+void ChannelModel::receiveModeChange(const QString &mode, const QString &argument)
+{
+    appendEmphasisedInfo(QString("Channel mode is ") + mode + QString(", argument is ") + argument);
 }
 
 // This code is copypasted from Konversation (and modified by Timur Kristóf) - I hereby thank its authors

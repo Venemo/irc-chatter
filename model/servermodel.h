@@ -70,6 +70,8 @@ public:
 signals:
     void channelsChanged();
     void urlChanged();
+    void inviteReceived(const QString &channelName);
+    void kickReceived(const QString &channelName, const QString &reason);
 
 private slots:
     void backendConnectedToServer();
