@@ -65,6 +65,8 @@ public:
     void setQuitMessage(const QString &value);
     quint16 fontSize() const;
     void setFontSize(const quint16 &value);
+    bool autoFocusTextField() const;
+    void setAutoFocusTextField(bool value);
 
     QObjectListModel<ServerSettings> *serverSettings();
     Q_INVOKABLE void saveServerSettings();

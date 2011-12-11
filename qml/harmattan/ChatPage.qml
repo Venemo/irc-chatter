@@ -39,7 +39,9 @@ Page {
         ircModel.currentChannelIndex = index;
         shouldUpdateCurrentMessage = true;
         scrollToBottom();
-        messageField.forceActiveFocus();
+
+        if (appSettings.autoFocusTextField)
+            messageField.forceActiveFocus();
     }
     function scrollToBottom() {
         chatFlickable.contentY = Math.max(0,  chatArea.height - chatFlickable.height)

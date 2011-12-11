@@ -175,6 +175,16 @@ Page {
                 property: "kickMessage"
                 value: kickField.text
             }
+            CheckBox {
+                id: autoFocusCheckBox
+                text: "Auto focus text field after switching"
+                checked: appSettings.autoFocusTextField
+            }
+            Binding {
+                target: appSettings
+                property: "autoFocusTextField"
+                value: autoFocusCheckBox.checked
+            }
             Label {
                 text: "Font Size"
             }
@@ -204,16 +214,5 @@ Page {
     }
     ScrollDecorator {
         flickableItem: settingsFlickable
-    }
-
-    WorkingSelectionDialog {
-        id: fontSizeSelectionDialog
-        model: ListModel { }
-        titleText: "Font size"
-        searchFieldVisible: false
-        Component.onCompleted: {
-            for (var i = 10; i <= 40; i++)
-                model.append({ name: i + " pixels", pixelSize: i });
-        }
     }
 }
