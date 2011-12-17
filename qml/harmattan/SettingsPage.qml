@@ -22,6 +22,8 @@ import com.nokia.extras 1.0
 import net.venemo.ircchatter 1.0
 
 Page {
+    property string color: appSettings.sidebarColor
+
     id: settingsPage
     tools: ToolBarLayout {
         visible: true
@@ -200,10 +202,114 @@ Page {
                     width: 100
                 }
             }
+            Row {
+                spacing: 10
+                width: parent.width
+                Label {
+                    id: monospaceField
+                    text: "Use Monospace Font?"
+                }
+                CheckBox {
+                    id: monospaceCheckbox
+                    checked: false
+                    anchors.right: parent.right
+                    anchors.verticalCenter: monospaceField.verticalCenter
+                }
+            }
+            Binding {
+                target: appSettings
+                property: "fontMonospace"
+                value: monospaceCheckbox.checked
+            }
+            Row {
+                width: parent.width
+                spacing: 10
+                Label {
+                    id: sidebarLabel
+                    text: "Sidebar Color"
+                }
+                Button {
+                    id: colorButton
+                    text: "Orange"
+                    width: parent.width / 2
+                    anchors.right: parent.right
+                    anchors.verticalCenter: sidebarLabel.verticalCenter
+                    onClicked: colorSelectionDialog.open()
+                }
+            }
         }
     }
     ScrollDecorator {
         flickableItem: settingsFlickable
+    }
+
+    WorkingSelectionDialog {
+        id: colorSelectionDialog
+        titleText: "Sidebar Color"
+        searchFieldVisible: false
+        model: ListModel {
+            ListElement {
+                name: "Orange (Default)"
+            }
+            ListElement {
+                name: "Green"
+            }
+            ListElement {
+                name: "Red"
+            }
+            ListElement {
+                name: "Blue"
+            }
+            ListElement {
+                name: "Grey"
+            }
+            ListElement {
+                name: "Purple"
+            }
+            ListElement {
+                name: "Yellow"
+            }
+        }
+        onAccepted: {
+            if (colorSelectionDialog.selectedIndex == 0){
+                color = "#f9a300"
+                colorButton.text = "Orange"
+            }
+            else
+                if (colorSelectionDialog.selectedIndex == 1){
+                    colorButton.text = "Green"
+                    color = "#73ba0e"
+                }
+                else
+                    if (colorSelectionDialog.selectedIndex == 2) {
+                        colorButton.text = "Red"
+                        color = "#ff0000"
+                    }
+                    else
+                        if (colorSelectionDialog.selectedIndex == 3){
+                            colorButton.text = "Blue"
+                            color = "#0000ff"
+                        }
+                        else
+                            if (colorSelectionDialog.selectedIndex == 4){
+                            colorButton.text = "Grey"
+                            color = "#999999"
+                        }
+                            else
+                                if (colorSelectionDialog.selectedIndex == 5) {
+                                    colorButton.text = "Purple"
+                                    color = "#400758"
+                                }
+                                else {
+                                    colorButton.text = "Yellow"
+                                    color = "#cec700"
+                                }
+        }
+    }
+    Binding {
+        target: appSettings
+        property: "sidebarColor"
+        value: color
     }
 
     WorkingSelectionDialog {
