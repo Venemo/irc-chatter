@@ -374,6 +374,9 @@ void ServerModel::changeNick(const QString &nick)
 void ServerModel::msgUser(const QString &userName, const QString &msg)
 {
     qDebug() << "msging user " << userName;
+    if (!_channels.contains(userName))
+        addModelForChannel(userName);
+
     _backend->sendCommand(IrcCommand::createMessage(userName, msg));
 }
 

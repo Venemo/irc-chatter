@@ -21,15 +21,6 @@ import com.nokia.meego 1.0
 import net.venemo.ircchatter 1.0
 
 Page {
-    id: mainPage
-
-    onStatusChanged: {
-        if (mainPage.status == PageStatus.Active) {
-            commonMenu.close();
-            chatArea.font.pixelSize = appSettings.fontSize;
-        }
-    }
-
     property bool shouldUpdateCurrentMessage: true
 
     function sendCurrentMessage() {
@@ -56,6 +47,18 @@ Page {
         chatFlickable.lastSupposedContentY = chatFlickable.contentY;
     }
 
+    id: mainPage
+    onStatusChanged: {
+        if (mainPage.status == PageStatus.Active) {
+            commonMenu.close();
+            chatArea.font.pixelSize = appSettings.fontSize;
+            if(appSettings.fontMonospace)
+                chatArea.font.family = "Monospace";
+            else
+                chatArea.font.family = "Nokia Pure";
+            channelNameBg.color = appSettings.sidebarColor;
+        }
+    }
     tools: ToolBarLayout {
         visible: true
 

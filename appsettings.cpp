@@ -30,6 +30,8 @@
 #define APPSETTING_KICKMESSAGE "KickMessage"
 #define APPSETTING_QUITMESSAGE "QuitMessage"
 #define APPSETTING_FONTSIZE "FontSize"
+#define APPSETTING_FONTMONOSPACE "FontMonospace"
+#define APPSETTING_SIDEBARCOLOR "SidebarColor"
 #define APPSETTING_AUTOFOCUSTEXTFIELD "AutoFocusTextField"
 
 AppSettings::AppSettings(QObject *parent) :
@@ -142,6 +144,25 @@ void AppSettings::setFontSize(const quint16 &value)
     _backend.setValue(APPSETTING_FONTSIZE, value);
 }
 
+bool AppSettings::fontMonospace() const
+{
+    return _backend.value(APPSETTING_FONTMONOSPACE, false).toBool();
+}
+
+void AppSettings::setSidebarColor(const QString &value)
+{
+    _backend.setValue(APPSETTING_SIDEBARCOLOR, value);
+}
+
+QString AppSettings::sidebarColor() const
+{
+    return _backend.value(APPSETTING_SIDEBARCOLOR, "#f9a300").toString();
+}
+
+void AppSettings::setFontMonospace(const bool &value)
+{
+    _backend.setValue(APPSETTING_FONTMONOSPACE, value);
+}
 bool AppSettings::autoFocusTextField() const
 {
     return _backend.value(APPSETTING_AUTOFOCUSTEXTFIELD, false).toBool();

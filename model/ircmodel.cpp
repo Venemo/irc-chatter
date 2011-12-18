@@ -52,9 +52,13 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
 
         if (settings->userIdent().length())
             session->setUserName(settings->userIdent());
+        else
+            session->setUserName("irc-chatter");
 
         if (settings->userRealName().length())
             session->setRealName(settings->userRealName());
+        else
+            session->setRealName(settings->userNickname());
 
         session->setPort(server->serverPort());
 
