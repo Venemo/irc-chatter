@@ -17,30 +17,32 @@
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
 #include <QtCore>
-#include <ircclient-qt/IrcSession>
-#include <ircclient-qt/IrcBuffer>
-#include <ircclient-qt/IrcGlobal>
-#include <ircclient-qt/IrcUtil>
+#include <IrcSession>
+#include <IrcSender>
+#include <IrcUtil>
+#include <IrcGlobal>
+#include <IrcMessage>
+#include <IrcCommand>
+#include <Irc>
 
 #include "servermodel.h"
 #include "ircmodel.h"
 #include "appsettings.h"
 
-ServerModel::ServerModel(IrcModel *parent, const QString &url, Irc::Session *backend) :
+ServerModel::ServerModel(IrcModel *parent, const QString &url, IrcSession *backend) :
     QObject((QObject*)parent),
     _channels(new QObjectListModel<ChannelModel>(this)),
     _url(url),
-    _backend(backend),
-    _isDefaultBufferConnected(false)
+    _backend(backend)
 {
     _settings = new AppSettings(this);
     if (_backend)
     {
         connect(_backend, SIGNAL(connected()), this, SLOT(backendConnectedToServer()));
-        connect(_backend, SIGNAL(bufferAdded(Irc::Buffer*)), this, SLOT(backendAddedBuffer(Irc::Buffer*)));
-        connect(_backend, SIGNAL(bufferRemoved(Irc::Buffer*)), this, SLOT(backendRemovedBuffer(Irc::Buffer*)));
         connect(_backend, SIGNAL(disconnected()), this, SLOT(backendDisconnectedFromServer()));
-        _backend->connectToServer(_url);
+        connect(_backend, SIGNAL(messageReceived(IrcMessage*)), this, SLOT(backendReceivedMessage(IrcMessage*)));
+        _backend->setHost(url);
+        _backend->open();
     }
 }
 
@@ -48,7 +50,7 @@ ServerModel::~ServerModel()
 {
     if (_backend)
     {
-        _backend->quit(_settings->quitMessage());
+        _backend->sendCommand(IrcCommand::createQuit(_settings->quitMessage()));
         _backend->deleteLater();
     }
 }
@@ -56,8 +58,6 @@ ServerModel::~ServerModel()
 void ServerModel::backendConnectedToServer()
 {
     qDebug() << "backend of " << url() << " is now connected to server";
-    if (!_isDefaultBufferConnected)
-        _isDefaultBufferConnected = connect(_backend->defaultBuffer(), SIGNAL(numericMessageReceived(QString,uint,QStringList)), this, SLOT(receiveNumericMessageFromBackend(QString,uint,QStringList)));
 }
 
 void ServerModel::backendDisconnectedFromServer()
@@ -65,23 +65,71 @@ void ServerModel::backendDisconnectedFromServer()
     qDebug() << "backend for " << url() << " has been disconnected from the server";
 }
 
-void ServerModel::backendAddedBuffer(Irc::Buffer *buffer)
+void ServerModel::backendReceivedMessage(IrcMessage *message)
 {
-    qDebug() << "backend added buffer " << buffer->receiver();
-    _channels->addItem(new ChannelModel(this, buffer));
+    switch (message->type())
+    {
+    case IrcMessage::Numeric:
+        processNumericMessage((IrcNumericMessage*)message);
+        break;
+    case IrcMessage::Private:
+        if (((IrcPrivateMessage*)message)->isAction())
+        {
+            // This is a CTCP action
+        }
+        else if (((IrcPrivateMessage*)message)->isRequest())
+        {
+            // This is a CTCP request
+        }
+        else
+        {
+            // This is a normal private message
+        }
+        break;
+    case IrcMessage::Join:
+        // This is a join message
+        break;
+    case IrcMessage::Part:
+        // This is a part message
+        break;
+    case IrcMessage::Nick:
+        // This is a nick change message
+        break;
+    case IrcMessage::Quit:
+        // This is a quit message
+        break;
+    case IrcMessage::Invite:
+        // This is an invite message
+        break;
+    case IrcMessage::Topic:
+    case IrcMessage::Kick:
+    case IrcMessage::Mode:
+    case IrcMessage::Notice:
+    case IrcMessage::Ping:
+    case IrcMessage::Pong:
+    case IrcMessage::Error:
+        break;
+    case IrcMessage::Unknown:
+    default:
+        qDebug() << "Unknown message received from" << _backend->host();
+        break;
+    }
 }
 
-void ServerModel::backendRemovedBuffer(Irc::Buffer *buffer)
+void ServerModel::addModelForSender(const QString &sender)
 {
-    qDebug() << "backend removed buffer " << buffer->receiver();
-    removeModelForBuffer(buffer);
+    foreach (ChannelModel *channel, _channels->getList())
+        if (channel->name() == sender)
+            return;
+
+    _channels->addItem(new ChannelModel(this, sender, _backend));
 }
 
-void ServerModel::removeModelForBuffer(Irc::Buffer *buffer)
+void ServerModel::removeModelForSender(const QString &sender)
 {
     foreach (ChannelModel *channel, _channels->getList())
     {
-        if (channel->name() == buffer->receiver())
+        if (channel->name() == sender)
         {
             if (channel == static_cast<IrcModel*>(parent())->currentChannel())
                 static_cast<IrcModel*>(parent())->setCurrentChannelIndex(static_cast<IrcModel*>(parent())->currentChannelIndex() - 1);
@@ -98,85 +146,72 @@ void ServerModel::displayError(const QString &error)
     static_cast<IrcModel*>(parent())->currentChannel()->appendError(error);
 }
 
-void ServerModel::receiveNumericMessageFromBackend(const QString &name, uint x, const QStringList &message)
+void ServerModel::processNumericMessage(IrcNumericMessage *message)
 {
-    Q_UNUSED(name);
-
-    if (x == Irc::Rfc::RPL_ENDOFNAMES)
+    if (message->code() == Irc::RPL_ENDOFNAMES)
     {
         foreach (ChannelModel *channel, _channels->getList())
         {
-            if (channel->name() == message[1])
+            if (channel->name() == message->parameters()[1])
             {
                 channel->updateUserList();
                 break;
             }
         }
     }
-    else if (x == Irc::Rfc::RPL_TOPIC)
+    else if (message->code() == Irc::ERR_NICKNAMEINUSE)
     {
-        foreach (ChannelModel *channel, _channels->getList())
-        {
-            if (channel->name() == message[1])
-            {
-                channel->setTopic(message[2]);
-                break;
-            }
-        }
-    }
-    else if (x == Irc::Rfc::ERR_NICKNAMEINUSE)
-    {
-        QString newNick = _backend->nick() + "_";
-        displayError("The nickname '" + _backend->nick() + "'' is already in use. Trying '" + newNick + "'.");
+        QString newNick = _backend->nickName() + "_";
+        displayError("The nickname '" + _backend->nickName() + "'' is already in use. Trying '" + newNick + "'.");
         changeNick(newNick);
     }
-    else if (x == Irc::Rfc::ERR_NICKCOLLISION)
+    else if (message->code() == Irc::ERR_NICKCOLLISION)
     {
         displayError("Nick name collision!");
     }
-    else if (x == Irc::Rfc::ERR_BANLISTFULL)
+    else if (message->code() == Irc::ERR_BANLISTFULL)
     {
         displayError("Ban list is full.");
     }
-    else if (x == Irc::Rfc::ERR_BANNEDFROMCHAN)
+    else if (message->code() == Irc::ERR_BANNEDFROMCHAN)
     {
         displayError("You are banned from this channel.");
     }
-    else if (x == Irc::Rfc::ERR_CANNOTSENDTOCHAN)
+    else if (message->code() == Irc::ERR_CANNOTSENDTOCHAN)
     {
         displayError("You can't send messages to this channel.");
     }
-    else if (x == Irc::Rfc::ERR_CHANNELISFULL)
+    else if (message->code() == Irc::ERR_CHANNELISFULL)
     {
         displayError("Channel is full.");
     }
-    else if (x == Irc::Rfc::ERR_CHANOPRIVSNEEDED)
+    else if (message->code() == Irc::ERR_CHANOPRIVSNEEDED)
     {
         displayError("Channel operator privileges are needed.");
     }
-    else if (x == Irc::Rfc::ERR_INVITEONLYCHAN)
+    else if (message->code() == Irc::ERR_INVITEONLYCHAN)
     {
         displayError("You can only join this channel if you're invited.");
     }
-    else if (x == Irc::Rfc::ERR_NOSUCHCHANNEL)
+    else if (message->code() == Irc::ERR_NOSUCHCHANNEL)
     {
         displayError("There is no such channel.");
     }
-    else if (x == Irc::Rfc::ERR_NOSUCHNICK)
+    else if (message->code() == Irc::ERR_NOSUCHNICK)
     {
         displayError("There is no such nickname.");
     }
-    else if (x == Irc::Rfc::ERR_UNKNOWNCOMMAND)
+    else if (message->code() == Irc::ERR_UNKNOWNCOMMAND)
     {
         displayError("Unknown command.");
     }
-    else if (x >= 400)
+    else if (message->code() >= 400)
     {
-        displayError("An error occoured! Error code is: " + QString::number(x));
+        displayError("An error occoured! Error code is: " + QString::number(message->code()));
     }
 }
 
-bool ServerModel::joinChannel(const QString &channelName)
+void ServerModel::joinChannel(const QString &channelName)
 {
     qDebug() << "joining channel " << channelName;
 
@@ -188,53 +223,44 @@ bool ServerModel::joinChannel(const QString &channelName)
         }
     }
 
-    _backend->join(channelName);
-    return true;
+    _backend->sendCommand(IrcCommand::createJoin(channelName));
 }
 
-bool ServerModel::partChannel(const QString &channelName)
+void ServerModel::partChannel(const QString &channelName)
 {
     qDebug() << "parting channel " << channelName;
-    _backend->part(channelName, _settings->partMessage());
-    return true;
+    _backend->sendCommand(IrcCommand::createPart(channelName, _settings->partMessage()));
 }
 
-bool ServerModel::queryUser(const QString &userName)
+void ServerModel::queryUser(const QString &userName)
 {
     qDebug() << "querying user " << userName;
-    _backend->addBuffer(userName);
-    return true;
+    addModelForSender(userName);
 }
 
-bool ServerModel::closeUser(const QString &userName)
+void ServerModel::closeUser(const QString &userName)
 {
     qDebug() << "closing user " << userName;
-    removeModelForBuffer(_backend->buffer(userName));
-    return true;
+    removeModelForSender(userName);
 }
 
-bool ServerModel::changeNick(const QString &nick)
+void ServerModel::changeNick(const QString &nick)
 {
     qDebug() << "changing nick to " << nick;
-    _backend->setNick(nick);
-    return true;
+    _backend->setNickName(nick);
 }
 
-bool ServerModel::msgUser(const QString &userName, const QString &msg)
+void ServerModel::msgUser(const QString &userName, const QString &msg)
 {
     qDebug() << "msging user " << userName;
-    if (!_backend->buffer(userName))
-        _backend->addBuffer(userName);
-    _backend->buffer(userName)->message(msg);
-    return true;
+    _backend->sendCommand(IrcCommand::createMessage(userName, msg));
 }
 
-bool ServerModel::kickUser(const QString &user, const QString &channel, const QString &message)
+void ServerModel::kickUser(const QString &user, const QString &channel, const QString &message)
 {
     qDebug() << "kick user" << user << " from " << channel;
     if (message.length())
-        _backend->kick(user, channel, message);
+        _backend->sendCommand(IrcCommand::createKick(channel, user, message));
     else
-        _backend->kick(user, channel, _settings->kickMessage());
-    return true;
+        _backend->sendCommand(IrcCommand::createKick(channel, user, _settings->kickMessage()));
 }

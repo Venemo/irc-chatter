@@ -2,6 +2,12 @@
 QT += declarative network
 symbian:TARGET.UID3 = 0xE3B586A7
 
+DEFINES += \
+    COMMUNI_STATIC \
+    HAVE_ICU
+
+include(communi.pri)
+
 HEADERS += \
     model/channelmodel.h \
     qobjectlistmodel.h \
@@ -37,10 +43,6 @@ OTHER_FILES += \
     qml/harmattan/WorkingSelectionDialog.qml \
     qml/harmattan/CommonDialog.qml
 
-CONFIG += libircclient-qt
-DEFINES += IRC_NO_DEPRECATED IRC_SHARED
-INCLUDEPATH += /usr/include/ircclient-qt /usr/include/applauncherd
-
 # enable booster
 CONFIG += qdeclarative-boostable
 QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
@@ -55,12 +57,14 @@ unix {
     desktopfile.path = /usr/share/applications
 }
 
-# for harmattan
-INSTALLS += splashportrait splashlandscape
-splashportrait.files = installables/irc-chatter-splash-harmattan-portrait.jpg
-splashportrait.path = /usr/share/irc-chatter
-splashlandscape.files = installables/irc-chatter-splash-harmattan-landscape.jpg
-splashlandscape.path = /usr/share/irc-chatter
-CONFIG += link_pkgconfig
-PKGCONFIG += qdeclarative-boostable
-LIBS += -licui18n
+contains(MEEGO_EDITION, harmattan) {
+    # for harmattan
+    INSTALLS += splashportrait splashlandscape
+    splashportrait.files = installables/irc-chatter-splash-harmattan-portrait.jpg
+    splashportrait.path = /usr/share/irc-chatter
+    splashlandscape.files = installables/irc-chatter-splash-harmattan-landscape.jpg
+    splashlandscape.path = /usr/share/irc-chatter
+    CONFIG += link_pkgconfig
+    PKGCONFIG += qdeclarative-boostable
+    INCLUDEPATH += /usr/include/applauncherd
+}

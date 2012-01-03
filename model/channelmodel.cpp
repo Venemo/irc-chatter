@@ -21,10 +21,12 @@
 // Copyright (C) 2006 Michael Kreitzer <mrgrim@gr1m.org>
 
 #include <QtCore>
-#include <ircclient-qt/IrcSession>
-#include <ircclient-qt/IrcBuffer>
-#include <ircclient-qt/IrcUtil>
-#include <ircclient-qt/IrcGlobal>
+#include <IrcSession>
+#include <IrcSender>
+#include <IrcUtil>
+#include <IrcGlobal>
+#include <IrcMessage>
+#include <IrcCommand>
 
 #include "channelmodel.h"
 #include "servermodel.h"
@@ -37,8 +39,9 @@ int ChannelModel::_deletableLines = 100;
 // This code is copypasted from Konversation - I hereby thank its authors
 QRegExp ChannelModel::_urlRegexp(QString("\\b((?:(?:([a-z][\\w-]+:/{1,3})|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|\\}\\]|[^\\s`!()\\[\\]{};:'\".,<>?%1%2%3%4%5%6])|[a-z0-9.\\-+_]+@[a-z0-9.\\-]+[.][a-z]{1,5}[^\\s/`!()\\[\\]{};:'\".,<>?%1%2%3%4%5%6]))").arg(QChar(0x00AB)).arg(QChar(0x00BB)).arg(QChar(0x201C)).arg(QChar(0x201D)).arg(QChar(0x2018)).arg(QChar(0x2019)));
 
-ChannelModel::ChannelModel(ServerModel *parent, Irc::Buffer *backend) :
+ChannelModel::ChannelModel(ServerModel *parent, const QString &name, IrcSession *backend) :
     QObject(parent),
+    _name(name),
     _users(new QStringListModel(this)),
     _displayedLines(0),
     _backend(backend)
@@ -68,24 +71,6 @@ ChannelModel::ChannelModel(ServerModel *parent, Irc::Buffer *backend) :
 
     if (!_backend)
         qDebug() << "A channel backend is null, this is an error. The app will segfault.";
-
-    connect(_backend, SIGNAL(destroyed()), this, SLOT(backendDeleted()));
-    connect(_backend, SIGNAL(messageReceived(QString,QString)), this, SLOT(receiveMessageFromBackend(QString,QString)));
-    connect(_backend, SIGNAL(unknownMessageReceived(QString,QStringList)), this, SLOT(receiveUnknownMessageFromBackend(QString,QStringList)));
-    connect(_backend, SIGNAL(noticeReceived(QString,QString)), this, SLOT(receiveNoticeFromBackend(QString,QString)));
-    connect(_backend, SIGNAL(motdReceived(QString)), this, SLOT(receiveMotdFromBackend(QString)));
-    connect(_backend, SIGNAL(ctcpActionReceived(QString,QString)), this, SLOT(receiveCtcpActionFromBackend(QString,QString)));
-    connect(_backend, SIGNAL(ctcpRequestReceived(QString,QString)), this, SLOT(receiveCtcpRequestFromBackend(QString,QString)));
-    connect(_backend, SIGNAL(ctcpReplyReceived(QString,QString)), this, SLOT(receiveCtcpReplyFromBackend(QString,QString)));
-    connect(_backend, SIGNAL(joined(QString)), this, SLOT(receiveJoinedFromBackend(QString)));
-    connect(_backend, SIGNAL(parted(QString,QString)), this, SLOT(receivePartedFromBackend(QString,QString)));
-    connect(_backend, SIGNAL(quit(QString,QString)), this, SLOT(receiveQuitFromBackend(QString,QString)));
-    connect(_backend, SIGNAL(nickChanged(QString,QString)), this, SLOT(receiveNickChangeFromBackend(QString,QString)));
-    connect(_backend, SIGNAL(invited(QString,QString,QString)), this, SLOT(receiveInviteFromBackend(QString,QString,QString)));
-    connect(_backend, SIGNAL(kicked(QString,QString,QString)), this, SLOT(receiveKickedFromBackend(QString,QString,QString)));
-    connect(_backend, SIGNAL(receiverChanged(QString)), this, SLOT(channelNameChanged(QString)));
-    connect(_backend, SIGNAL(receiverChanged(QString)), this, SIGNAL(nameChanged()));
-
 }
 
 ChannelModel::~ChannelModel()
@@ -94,9 +79,9 @@ ChannelModel::~ChannelModel()
         _backend->deleteLater();
 }
 
-QString ChannelModel::name() const
+void ChannelModel::backendReceivedMessage(IrcMessage *message)
 {
-    return _backend->receiver();
+
 }
 
 void ChannelModel::channelNameChanged(const QString &newName)
@@ -105,43 +90,43 @@ void ChannelModel::channelNameChanged(const QString &newName)
     emit nameChanged();
 }
 
-void ChannelModel::receiveMotdFromBackend(QString motd)
+void ChannelModel::receiveMotd(QString motd)
 {
     appendDeemphasisedInfo("[MOTD] " + motd);
 }
 
-void ChannelModel::receiveJoinedFromBackend(const QString &userName)
+void ChannelModel::receiveJoined(const QString &userName)
 {
-    if (userName != _backend->session()->nick())
+    if (userName != _backend->nickName())
         appendDeemphasisedInfo("--> " + userName + " has joined this channel.");
 
     updateUserList();
 }
 
-void ChannelModel::receivePartedFromBackend(const QString &userName, QString reason)
+void ChannelModel::receiveParted(const QString &userName, QString reason)
 {
     appendDeemphasisedInfo("<-- " + userName + " has parted this channel." + (reason.length() ? (" (Reason: " + reason + ")") : ""));
     updateUserList();
 }
 
-void ChannelModel::receiveQuitFromBackend(const QString &userName, QString reason)
+void ChannelModel::receiveQuit(const QString &userName, QString reason)
 {
     appendDeemphasisedInfo("<-- " + userName + " has left this server." + (reason.length() ? (" (Reason: " + reason + ")") : ""));
     updateUserList();
 }
 
-void ChannelModel::receiveNickChangeFromBackend(const QString &oldNick, const QString &newNick)
+void ChannelModel::receiveNickChange(const QString &oldNick, const QString &newNick)
 {
     appendDeemphasisedInfo("*** " + oldNick + " has changed nick to " + newNick + ".");
     updateUserList();
 }
 
-void ChannelModel::receiveInviteFromBackend(const QString &origin, const QString &receiver, const QString &channel)
+void ChannelModel::receiveInvite(const QString &origin, const QString &receiver, const QString &channel)
 {
     appendEmphasisedInfo("*** " + origin + " has invited " + receiver + " to " + channel + ".");
 }
 
-void ChannelModel::receiveKickedFromBackend(const QString &origin, const QString &nick, QString message)
+void ChannelModel::receiveKicked(const QString &origin, const QString &nick, QString message)
 {
     appendEmphasisedInfo("*** " + origin + " has kicked " + nick + " with message '" + message + "'.");
 }
@@ -154,7 +139,7 @@ QString &ChannelModel::processMessage(QString &msg, bool *hasUserNick)
     msg.replace('\n', "<br />");
     msg.replace(_urlRegexp, "<a href=\"\\1\">\\1</a>");
 
-    if (msg.contains(_backend->session()->nick()))
+    if (msg.contains(_backend->nickName()))
     {
         msg = "<span style='color:red'>" + msg + "</span>";
         if (hasUserNick)
@@ -200,7 +185,7 @@ void ChannelModel::appendError(QString msg)
     appendLine("<span style='color: red'>[ERROR] " + processMessage(msg) + "</span>");
 }
 
-void ChannelModel::receiveMessageFromBackend(const QString &userName, QString message)
+void ChannelModel::receiveMessage(const QString &userName, QString message)
 {
     bool hasUserNick = false;
     appendLine(QTime::currentTime().toString("HH:mm") + " <a href='user://" + userName +"' style='text-decoration: none; color: " + colorForNick(userName) + "'>" + userName + "</a>: " + processMessage(message, &hasUserNick));
@@ -211,13 +196,13 @@ void ChannelModel::receiveMessageFromBackend(const QString &userName, QString me
         emit newMessageReceived();
 }
 
-void ChannelModel::receiveNoticeFromBackend(const QString &userName, QString message)
+void ChannelModel::receiveNotice(const QString &userName, QString message)
 {
     // Notice is basically a "private message", and that is supposed to be displayed the same way as a normal message
-    receiveMessageFromBackend(userName, message);
+    receiveMessage(userName, message);
 }
 
-void ChannelModel::receiveCtcpActionFromBackend(const QString &userName, QString message)
+void ChannelModel::receiveCtcpAction(const QString &userName, QString message)
 {
     if (_channelText.length())
         _channelText += "<br />";
@@ -225,27 +210,21 @@ void ChannelModel::receiveCtcpActionFromBackend(const QString &userName, QString
     setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " * <span style='color: " + colorForNick(userName) + "'>" + userName + "</span> " + processMessage(message));
 }
 
-void ChannelModel::receiveCtcpRequestFromBackend(const QString &userName, QString message)
+void ChannelModel::receiveCtcpRequest(const QString &userName, QString message)
 {
     qDebug() << "CTCP request received " << userName << message;
-    _backend->session()->ctcpReply(userName, "IRC Chatter, the first MeeGo IRC client");
+    _backend->sendCommand(IrcCommand::createCtcpReply(userName, "IRC Chatter, the first MeeGo IRC client"));
 }
 
-void ChannelModel::receiveCtcpReplyFromBackend(const QString &userName, QString message)
+void ChannelModel::receiveCtcpReply(const QString &userName, QString message)
 {
     qDebug() << "CTCP reply received " << userName << message;
     appendEmphasisedInfo("CTCP Reply from " + userName + ": " + message);
 }
 
-void ChannelModel::receiveUnknownMessageFromBackend(const QString &userName, const QStringList &message)
-{
-    qDebug() << "unknown message received at: " << name() << userName << message;
-    _users->setStringList(_backend->names());
-}
-
 void ChannelModel::updateUserList()
 {
-    QStringList list = _backend->names();
+    QStringList list;
     // workaround for bug: https://bugreports.qt.nokia.com/browse/QTBUG-12892
     // found in http://www.harshj.com/2009/10/24/sorting-entries-in-a-qstringlist-case-insensitively/
     // - Thank you!
@@ -268,7 +247,7 @@ void ChannelModel::setTopic(const QString &value)
 // This code is copypasted from Konversation (and modified by Timur Kristóf) - I hereby thank its authors
 const QString ChannelModel::colorForNick(const QString &nick)
 {
-    if (nick == _backend->session()->nick())
+    if (nick == _backend->nickName())
         return "#000000";
 
     int nickvalue = 0;
@@ -285,10 +264,12 @@ void ChannelModel::sendCurrentMessage()
     {
         _sentMessages.append(_currentMessage);
         _sentMessagesCount = _sentMessages.count();
+
         if (_currentMessage.startsWith("/"))
             parseCommand(_currentMessage);
         else
-            _backend->message(_currentMessage);
+            _backend->sendCommand(IrcCommand::createMessage(_name, _currentMessage));
+
         setCurrentMessage(QString());
     }
 }
@@ -363,12 +344,6 @@ void ChannelModel::fakeMessage()
     setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick("Zvdegor") + "'>" + "Zvdegor" + "</span>: " + QUuid::createUuid().toString());
 }
 
-void ChannelModel::backendDeleted()
-{
-    _backend = 0;
-    deleteLater();
-}
-
 void ChannelModel::parseCommand(const QString &msg)
 {
     QStringList commandParts = msg.split(' ', QString::SkipEmptyParts);
@@ -417,7 +392,7 @@ void ChannelModel::parseCommand(const QString &msg)
     else if (commandParts[0] == "/me")
     {
         if (n > 1)
-            _backend->ctcpAction(msg.mid(4));
+            _backend->sendCommand(IrcCommand::createCtcpAction(_name, msg.mid(4)));
         else
             appendEmphasisedInfo("Invalid command. Correct usage: '/me &lt;message&gt;'");
     }

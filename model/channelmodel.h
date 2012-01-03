@@ -26,13 +26,15 @@
 #include "util.h"
 #include "qobjectlistmodel.h"
 
-namespace Irc { class Buffer; }
+class IrcSession;
+class IrcMessage;
 class ServerModel;
 
 class ChannelModel : public QObject
 {
     Q_OBJECT
 
+    GENPROPERTY_R(QString, _name, name)
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
     GENPROPERTY_R(QString, _currentMessage, currentMessage)
     Q_PROPERTY(QString currentMessage READ currentMessage WRITE setCurrentMessage NOTIFY currentMessageChanged)
@@ -50,7 +52,7 @@ class ChannelModel : public QObject
     QList<const QString*> _possibleNickNames;
     int _currentCompletionIndex, _currentCompletionPosition, _displayedLines;
 
-    Irc::Buffer *_backend;
+    IrcSession *_backend;
 
     static QList<QString> *_colors;
     static QRegExp _urlRegexp;
@@ -62,7 +64,7 @@ class ChannelModel : public QObject
     friend class ServerModel;
 
 protected:
-    explicit ChannelModel(ServerModel *parent, Irc::Buffer *backend);
+    explicit ChannelModel(ServerModel *parent, const QString &name, IrcSession *backend);
     void setTopic(const QString &value);
 
     void parseCommand(const QString &msg);
@@ -72,6 +74,20 @@ protected:
     void appendEmphasisedInfo(QString msg);
     void appendDeemphasisedInfo(QString msg);
     void appendError(QString msg);
+
+    void receiveMessage(const QString &userName, QString message);
+    void receiveNotice(const QString &userName, QString message);
+    void receiveCtcpAction(const QString &userName, QString message);
+    void receiveCtcpRequest(const QString &userName, QString message);
+    void receiveCtcpReply(const QString &userName, QString message);
+    void receiveJoined(const QString &userName);
+    void receiveParted(const QString &userName, QString reason);
+    void receiveQuit(const QString &userName, QString reason);
+    void receiveNickChange(const QString &oldNick, const QString &newNick);
+    void receiveMotd(QString motd);
+    void receiveInvite(const QString &origin, const QString &receiver, const QString &channel);
+    void receiveKicked(const QString &origin, const QString &nick, QString message);
+    void channelNameChanged(const QString &newName);
 
 public:
     ~ChannelModel();
@@ -83,8 +99,6 @@ public:
     Q_INVOKABLE void queryUser(const quint16 &index);
     Q_INVOKABLE QString getSentMessagesUp();
     Q_INVOKABLE QString getSentMessagesDown();
-
-    QString name() const;
 
 signals:
     void nameChanged();
@@ -99,21 +113,7 @@ signals:
 
 private slots:
     void fakeMessage();
-    void backendDeleted();
-    void receiveMessageFromBackend(const QString &userName, QString message);
-    void receiveNoticeFromBackend(const QString &userName, QString message);
-    void receiveCtcpActionFromBackend(const QString &userName, QString message);
-    void receiveCtcpRequestFromBackend(const QString &userName, QString message);
-    void receiveCtcpReplyFromBackend(const QString &userName, QString message);
-    void receiveUnknownMessageFromBackend(const QString &userName, const QStringList &message);
-    void receiveJoinedFromBackend(const QString &userName);
-    void receivePartedFromBackend(const QString &userName, QString reason);
-    void receiveQuitFromBackend(const QString &userName, QString reason);
-    void receiveNickChangeFromBackend(const QString &oldNick, const QString &newNick);
-    void receiveMotdFromBackend(QString motd);
-    void receiveInviteFromBackend(const QString &origin, const QString &receiver, const QString &channel);
-    void receiveKickedFromBackend(const QString &origin, const QString &nick, QString message);
-    void channelNameChanged(const QString &newName);
+    void backendReceivedMessage(IrcMessage *message);
 
 public slots:
     void sendCurrentMessage();

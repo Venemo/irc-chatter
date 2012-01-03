@@ -19,7 +19,7 @@
 #include <QtCore>
 #include <QStringList>
 #include <QSslSocket>
-#include <ircclient-qt/IrcSession>
+#include <IrcSession>
 
 #include "ircmodel.h"
 #include "appsettings.h"
@@ -40,14 +40,12 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
 
     if (_networkConfigurationManager->isOnline())
     {
-        Irc::Session *session = new Irc::Session();
+        IrcSession *session = new IrcSession();
 
-        session->setNick(settings->userNickname());
+        session->setNickName(settings->userNickname());
 
         if (settings->userIdent().length())
-            session->setIdent(settings->userIdent());
-        else
-            session->setIdent("ircchatter");
+            session->setUserName(settings->userIdent());
 
         if (settings->userRealName().length())
             session->setRealName(settings->userRealName());
@@ -62,8 +60,9 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
             session->setSocket(socket);
         }
 
-        session->setAutoJoinChannels(server->autoJoinChannels());
-        session->setPassword(server->serverPassword());
+        // TODO:
+        //session->setAutoJoinChannels(server->autoJoinChannels());
+        //session->setPassword(server->serverPassword());
 
         _servers->addItem(new ServerModel(this, server->serverUrl(), session));
         connect(session, SIGNAL(connected()), this, SLOT(backendsConnectedToServer()));
@@ -153,7 +152,7 @@ void IrcModel::onlineStateChanged(bool online)
             foreach (ServerModel *server, _servers->getList())
             {
                 qDebug() << "reconnecting to server " << server->url();
-                server->_backend->reconnectToServer();
+                server->_backend->open();
             }
         }
     }
@@ -164,7 +163,7 @@ void IrcModel::onlineStateChanged(bool online)
         foreach (ServerModel *server, _servers->getList())
         {
             qDebug() << "disconnecting from server " << server->url();
-            server->_backend->disconnectFromServer();
+            server->_backend->close();
             server->_backend->socket()->disconnectFromHost();
         }
 

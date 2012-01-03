@@ -26,7 +26,9 @@
 #include "channelmodel.h"
 #include "appsettings.h"
 
-namespace Irc { class Session; }
+class IrcSession;
+class IrcMessage;
+class IrcNumericMessage;
 class IrcModel;
 
 class ServerModel : public QObject
@@ -39,29 +41,29 @@ class ServerModel : public QObject
     Q_PROPERTY(QString url READ url NOTIFY urlChanged)
 
     QString _password;
-    Irc::Session *_backend;
+    IrcSession *_backend;
     AppSettings *_settings;
-    bool _isDefaultBufferConnected;
 
     friend class IrcModel;
     friend class AppSettings;
 
-
-    void removeModelForBuffer(Irc::Buffer *buffer);
+    void addModelForSender(const QString &sender);
+    void removeModelForSender(const QString &sender);
+    void processNumericMessage(IrcNumericMessage *message);
 
 protected:
-    explicit ServerModel(IrcModel *parent, const QString &url, Irc::Session *backend);
+    explicit ServerModel(IrcModel *parent, const QString &url, IrcSession *backend);
 
 public:
     ~ServerModel();
-    Q_INVOKABLE bool joinChannel(const QString &channelName);
-    Q_INVOKABLE bool partChannel(const QString &channelName);
-    Q_INVOKABLE bool queryUser(const QString &userName);
-    Q_INVOKABLE bool closeUser(const QString &userName);
-    Q_INVOKABLE bool changeNick(const QString &nick);
+    Q_INVOKABLE void joinChannel(const QString &channelName);
+    Q_INVOKABLE void partChannel(const QString &channelName);
+    Q_INVOKABLE void queryUser(const QString &userName);
+    Q_INVOKABLE void closeUser(const QString &userName);
+    Q_INVOKABLE void changeNick(const QString &nick);
     Q_INVOKABLE void displayError(const QString &error);
-    Q_INVOKABLE bool msgUser(const QString &userName, const QString &msg);
-    Q_INVOKABLE bool kickUser(const QString &user, const QString &channel, const QString &message = QString(""));
+    Q_INVOKABLE void msgUser(const QString &userName, const QString &msg);
+    Q_INVOKABLE void kickUser(const QString &user, const QString &channel, const QString &message = QString(""));
 
 signals:
     void channelsChanged();
@@ -69,11 +71,8 @@ signals:
 
 private slots:
     void backendConnectedToServer();
-    void backendAddedBuffer(Irc::Buffer *buffer);
-    void backendRemovedBuffer(Irc::Buffer *buffer);
-    void receiveNumericMessageFromBackend(const QString &name, uint x, const QStringList &message);
     void backendDisconnectedFromServer();
-
+    void backendReceivedMessage(IrcMessage *message);
 };
 
 #endif // SERVERMODEL_H
