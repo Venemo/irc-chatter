@@ -74,6 +74,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QDeclarativeView *view = MDeclarativeCache::qDeclarativeView();
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
+    view->setWindowTitle("IRC Chatter");
     view->rootContext()->setContextProperty("ircModel", model);
     view->rootContext()->setContextProperty("appSettings", settings);
     view->rootContext()->setContextProperty("appVersion", appVersion);
