@@ -27,9 +27,7 @@
 #include "channelmodel.h"
 #include "appsettings.h"
 
-class IrcSession;
-class IrcMessage;
-class IrcNumericMessage;
+class AbstractIrcClient;
 class IrcModel;
 
 class ServerModel : public QObject
@@ -37,10 +35,10 @@ class ServerModel : public QObject
     Q_OBJECT
 
     GENPROPERTY_R(QString, _url, url)
-    Q_PROPERTY(QString url READ url NOTIFY urlChanged)
+    Q_PROPERTY(QString url READ url)
 
     QHash<QString, ChannelModel*> _channels;
-    IrcSession *_backend;
+    AbstractIrcClient *_ircClient;
     AppSettings *_settings;
     ChannelModel *_defaultChannel;
     QStringList _autoJoinChannels;
@@ -50,33 +48,41 @@ class ServerModel : public QObject
 
     void addModelForChannel(const QString &channelName);
     void removeModelForChannel(const QString &channelName);
-    void processNumericMessage(IrcNumericMessage *message);
 
 protected:
-    explicit ServerModel(IrcModel *parent, const QString &url, IrcSession *backend);
+    explicit ServerModel(IrcModel *parent, const QString &url, AbstractIrcClient *_ircClient);
     ChannelModel *findOrCreateChannel(const QString &channelName);
 
 public:
     ~ServerModel();
     Q_INVOKABLE void joinChannel(const QString &channelName);
     Q_INVOKABLE void partChannel(const QString &channelName);
-    Q_INVOKABLE void queryUser(const QString &userName);
-    Q_INVOKABLE void closeUser(const QString &userName);
-    Q_INVOKABLE void changeNick(const QString &nick);
     Q_INVOKABLE void displayError(const QString &error);
-    Q_INVOKABLE void msgUser(const QString &userName, const QString &msg);
-    Q_INVOKABLE void kickUser(const QString &user, const QString &channel, const QString &message = QString());
 
 signals:
     void channelsChanged();
-    void urlChanged();
-    void inviteReceived(const QString &channelName);
     void kickReceived(const QString &channelName, const QString &reason);
 
 private slots:
-    void backendConnectedToServer();
-    void backendDisconnectedFromServer();
-    void backendReceivedMessage(IrcMessage *message);
+    // Messages corresponding to the server itself.
+    void connectedToServer();
+    void disconnectedFromServer();
+    void receiveQuit(const QString &userName, const QString &message);
+    void receiveNickChange(const QString &oldNick, const QString &newNick);
+    void receiveMotd(const QString &motd);
+    void receiveError(const QString &error);
+
+    // Messages corresponding to a single channel.
+    void receiveUserNames(const QString &channelName, const QStringList &userNames);
+    void receiveMessage(const QString &channelName, const QString &userName, const QString &message);
+    void receiveCtcpRequest(const QString &userName, const QString &message);
+    void receiveCtcpReply(const QString &userName, const QString &message);
+    void receiveCtcpAction(const QString &channelName, const QString &userName, const QString &message);
+    void receivePart(const QString &channelName, const QString &userName, const QString &message);
+    void receiveJoin(const QString &channelName, const QString &userName);
+    void receiveTopic(const QString &channelName, const QString &topic);
+    void receiveKick(const QString &channelName, const QString &userName, const QString &kickedUserName, const QString &message);
+    void receiveModeChange(const QString &channelName, const QString &mode, const QString &arguments);
 };
 
 #endif // SERVERMODEL_H

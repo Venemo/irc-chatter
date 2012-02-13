@@ -18,7 +18,11 @@ HEADERS += \
     model/ircmodel.h \
     qobjectlistmodel.h \
     appsettings.h \
-    serversettings.h
+    serversettings.h \
+    model/clients/abstractircclient.h \
+    model/clients/communiircclient.h \
+    model/helpers/commandparser.h \
+    model/helpers/channelhelper.h
 
 SOURCES += \
     main.cpp \
@@ -26,7 +30,11 @@ SOURCES += \
     model/ircmodel.cpp \
     model/servermodel.cpp \
     appsettings.cpp \
-    serversettings.cpp
+    serversettings.cpp \
+    model/clients/abstractircclient.cpp \
+    model/clients/communiircclient.cpp \
+    model/helpers/commandparser.cpp \
+    model/helpers/channelhelper.cpp
 
 RESOURCES += \
     harmattan-gui.qrc

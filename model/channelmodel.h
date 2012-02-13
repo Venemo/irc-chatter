@@ -24,10 +24,9 @@
 #include <QStringListModel>
 
 #include "util.h"
-#include "qobjectlistmodel.h"
 
-class IrcSession;
-class IrcMessage;
+class CommandParser;
+class AbstractIrcClient;
 class ServerModel;
 
 class ChannelModel : public QObject
@@ -49,14 +48,15 @@ private:
     Q_PROPERTY(QString topic READ topic NOTIFY topicChanged)
     GENPROPERTY_R(unsigned, _channelType, channelType)
 
-    IrcSession *_backend;
+    AbstractIrcClient *_ircClient;
+    CommandParser *_commandParser;
+
     QString _completionFragment, _sentMessagesTemp;
     QStringList _soFarReceivedUserNames, _sentMessages;
     QList<const QString*> _possibleNickNames;
     int _currentCompletionIndex, _currentCompletionPosition, _displayedLines, _sentMessagesIndex;
 
-    static QString _autoCompletionSuffix, _ownNickColor;
-    static QList<QString> *_colors;
+    static QString _autoCompletionSuffix;
     static QRegExp _urlRegexp;
     static int _maxLineNumber, _deletableLines;
 
@@ -64,7 +64,7 @@ private:
     friend class ServerModel;
 
 protected:
-    explicit ChannelModel(ServerModel *parent, const QString &name, IrcSession *backend);
+    explicit ChannelModel(ServerModel *parent, const QString &channelName, AbstractIrcClient *ircClient);
 
     void adjustForSentMessagesIndex();
     void parseCommand(const QString &msg);
@@ -96,7 +96,6 @@ public:
     void setCurrentMessage(const QString &value);
 
     Q_INVOKABLE void autoCompleteNick();
-    Q_INVOKABLE const QString &colorForNick(const QString &nick);
     Q_INVOKABLE QString getUserNameFromIndex(int index) const;
     Q_INVOKABLE void getSentMessagesUp();
     Q_INVOKABLE void getSentMessagesDown();
@@ -118,9 +117,6 @@ signals:
 
     void newMessageReceived();
     void newMessageWithUserNickReceived();
-
-private slots:
-    void fakeMessage();
 
 public slots:
     void sendCurrentMessage();

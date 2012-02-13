@@ -16,58 +16,33 @@
 // Copyright (C) 2011, Timur Kristóf <venemo@fedoraproject.org>
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 //
-// Authors of code borrowed from Konversation (URL regex and colorForNick method):
+// Authors of code borrowed from Konversation (URL regex):
 // Copyright (C) 2010 Eike Hein <hein@kde.org>
-// Copyright (C) 2006 Michael Kreitzer <mrgrim@gr1m.org>
 
 #include <QtCore>
-#include <IrcSession>
-#include <IrcSender>
-#include <IrcUtil>
-#include <IrcGlobal>
-#include <IrcMessage>
-#include <IrcCommand>
 
 #include "channelmodel.h"
 #include "servermodel.h"
+#include "clients/abstractircclient.h"
+#include "helpers/commandparser.h"
+#include "helpers/channelhelper.h"
 
-QList<QString> *ChannelModel::_colors = 0;
 QString ChannelModel::_autoCompletionSuffix(", ");
-QString ChannelModel::_ownNickColor("#000000");
 int ChannelModel::_maxLineNumber = 300;
 int ChannelModel::_deletableLines = 100;
 
 // This code is copypasted from Konversation - I hereby thank its authors
 QRegExp ChannelModel::_urlRegexp(QString("\\b((?:(?:([a-z][\\w-]+:/{1,3})|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|\\}\\]|[^\\s`!()\\[\\]{};:'\".,<>?%1%2%3%4%5%6])|[a-z0-9.\\-+_]+@[a-z0-9.\\-]+[.][a-z]{1,5}[^\\s/`!()\\[\\]{};:'\".,<>?%1%2%3%4%5%6]))").arg(QChar(0x00AB)).arg(QChar(0x00BB)).arg(QChar(0x201C)).arg(QChar(0x201D)).arg(QChar(0x2018)).arg(QChar(0x2019)));
 
-ChannelModel::ChannelModel(ServerModel *parent, const QString &name, IrcSession *backend) :
+ChannelModel::ChannelModel(ServerModel *parent, const QString &channelName, AbstractIrcClient *ircClient) :
     QObject(parent),
-    _name(name),
+    _name(channelName),
     _users(new QStringListModel(this)),
-    _backend(backend),
+    _ircClient(ircClient),
+    _commandParser(new CommandParser(_ircClient, this)),
     _displayedLines(0),
     _sentMessagesIndex(-1)
 {
-    if (!_colors)
-    {
-        _colors = new QList<QString>();
-        // Red
-        _colors->append("#ff0000");
-        // Green
-        _colors->append("#00ff00");
-        // Blue
-        _colors->append("#0000ff");
-        // Dark purple
-        _colors->append("#400758");
-        // Dark green
-        _colors->append("#0c5807");
-        // Dark orange
-        _colors->append("#ba770e");
-        // Yellowish green (my favourite colour)
-        _colors->append("#73ba0e");
-        // Yellow
-        _colors->append("#cec700");
-    }
 }
 
 ChannelModel::~ChannelModel()
@@ -87,7 +62,7 @@ void ChannelModel::receiveMotd(QString motd)
 
 void ChannelModel::receiveJoined(const QString &userName)
 {
-    if (userName != _backend->nickName())
+    if (userName != _ircClient->currentNick())
         appendDeemphasisedInfo("--> " + userName + " has joined this channel.");
 
     _soFarReceivedUserNames.append(userName);
@@ -134,7 +109,7 @@ QString &ChannelModel::processMessage(QString &msg, bool *hasUserNick)
     msg.replace('\n', "<br />");
     msg.replace(_urlRegexp, "<a href=\"\\1\">\\1</a>");
 
-    if (msg.contains(_backend->nickName()))
+    if (msg.contains(_ircClient->currentNick()))
     {
         msg = "<span style='color:red'>" + msg + "</span>";
         if (hasUserNick)
@@ -183,7 +158,7 @@ void ChannelModel::appendError(QString msg)
 void ChannelModel::receiveMessage(const QString &userName, QString message)
 {
     bool hasUserNick = false;
-    appendLine(QTime::currentTime().toString("HH:mm") + " <a href='user://" + userName +"' style='text-decoration: none; color: " + colorForNick(userName) + "'>" + userName + "</a>: " + processMessage(message, &hasUserNick));
+    appendLine(QTime::currentTime().toString("HH:mm") + " <a href='user://" + userName +"' style='text-decoration: none; color: " + ChannelHelper::colorForNick(userName, _ircClient->currentNick()) + "'>" + userName + "</a>: " + processMessage(message, &hasUserNick));
 
     if (hasUserNick || !name().startsWith('#'))
         emit newMessageWithUserNickReceived();
@@ -193,13 +168,14 @@ void ChannelModel::receiveMessage(const QString &userName, QString message)
 
 void ChannelModel::receiveCtcpAction(const QString &userName, QString message)
 {
-    appendLine(QTime::currentTime().toString("HH:mm") + " * <span style='color: " + colorForNick(userName) + "'>" + userName + "</span> " + processMessage(message));
+    appendLine(QTime::currentTime().toString("HH:mm") + " * <span style='color: " + ChannelHelper::colorForNick(userName, _ircClient->currentNick()) + "'>" + userName + "</span> " + processMessage(message));
 }
 
 void ChannelModel::receiveCtcpRequest(const QString &userName, QString message)
 {
     qDebug() << "CTCP request received " << userName << message;
-    _backend->sendCommand(IrcCommand::createCtcpReply(userName, "IRC Chatter, the first MeeGo IRC client"));
+    // TODO
+    // _backend->sendCommand(IrcCommand::createCtcpReply(userName, "IRC Chatter, the first MeeGo IRC client"));
 }
 
 void ChannelModel::receiveCtcpReply(const QString &userName, QString message)
@@ -235,19 +211,6 @@ void ChannelModel::receiveModeChange(const QString &mode, const QString &argumen
     appendEmphasisedInfo(QString("Channel mode is ") + mode + QString(", argument is ") + argument);
 }
 
-// This code is copypasted from Konversation (and modified by Timur Kristóf) - I hereby thank its authors
-const QString &ChannelModel::colorForNick(const QString &nick)
-{
-    if (nick == _backend->nickName())
-        return _ownNickColor;
-
-    int nickvalue = 0;
-
-    for (int index = 0; index < nick.length(); index++)
-        nickvalue += nick[index].unicode();
-
-    return (*_colors)[nickvalue % _colors->count()];
-}
 
 void ChannelModel::sendCurrentMessage()
 {
@@ -255,12 +218,12 @@ void ChannelModel::sendCurrentMessage()
     {
         if (_currentMessage.startsWith("/"))
         {
-            parseCommand(_currentMessage);
+            _commandParser->parseAndSendCommand(_name, _currentMessage);
         }
         else
         {
-            receiveMessage(_backend->nickName(), _currentMessage);
-            _backend->sendCommand(IrcCommand::createMessage(_name, _currentMessage));
+            receiveMessage(_ircClient->currentNick(), _currentMessage);
+            _ircClient->sendMessage(_name, _currentMessage);
         }
 
         _sentMessages.insert(0, _currentMessage);
@@ -329,143 +292,6 @@ void ChannelModel::autoCompleteNick()
     _currentMessage.replace(_currentCompletionPosition, _completionFragment.length(), newFragment);
     emit currentMessageChanged();
     _completionFragment = newFragment;
-}
-
-void ChannelModel::fakeMessage()
-{
-    if (_channelText.length())
-        _channelText += "<br />";
-
-    setChannelText(_channelText += QTime::currentTime().toString("HH:mm") + " <span style='color: " + colorForNick("Zvdegor") + "'>" + "Zvdegor" + "</span>: " + QUuid::createUuid().toString());
-}
-
-void ChannelModel::parseCommand(const QString &msg)
-{
-    QStringList commandParts = msg.split(' ', QString::SkipEmptyParts);
-    int n = commandParts.count();
-
-    if (commandParts[0] == "/join" || commandParts[0] == "/j")
-    {
-        if (n == 2)
-        {
-            // Allow the user to spare the '#' character which is handy for VKB
-            if (!commandParts[1].startsWith('#'))
-                commandParts[1].insert(0, '#');
-
-            static_cast<ServerModel*>(parent())->joinChannel(commandParts[1]);
-        }
-        else
-        {
-            appendEmphasisedInfo("Invalid command. Correct usage: '/join &lt;channelname&gt;'");
-        }
-    }
-    else if (name().startsWith('#') && (commandParts[0] == "/part" || commandParts[0] == "/p"))
-    {
-        if (n == 1)
-            static_cast<ServerModel*>(parent())->partChannel(name());
-        else if (n == 2)
-            static_cast<ServerModel*>(parent())->partChannel(commandParts[1]);
-        else
-            appendEmphasisedInfo("Invalid command. Correct usage: '/part' or '/part &lt;channelname&gt'';");
-    }
-    else if (!name().startsWith('#') && commandParts[0] == "/close")
-    {
-        if (n == 1)
-            static_cast<ServerModel*>(parent())->closeUser(name());
-        else if (n == 2)
-            static_cast<ServerModel*>(parent())->closeUser(commandParts[1]);
-        else
-            appendEmphasisedInfo("Invalid command. Correct usage: '/close' or '/close &lt;username&gt'';");
-    }
-    else if (commandParts[0] == "/quit")
-    {
-        if (n == 1)
-            QCoreApplication::instance()->quit();
-        else
-            appendEmphasisedInfo("Invalid command. Correct usage: '/quit'");
-    }
-    else if (commandParts[0] == "/me")
-    {
-        if (n > 1)
-        {
-            QString action = msg.mid(4);
-            _backend->sendCommand(IrcCommand::createCtcpAction(_name, action));
-            receiveCtcpAction(_backend->nickName(), action);
-        }
-        else
-            appendEmphasisedInfo("Invalid command. Correct usage: '/me &lt;message&gt;'");
-    }
-    else if (commandParts[0] == "/msg" || commandParts[0] == "/m")
-    {
-        if (n > 2)
-        {
-            quint16 length = commandParts[0].length() + commandParts[1].length();
-            static_cast<ServerModel*>(parent())->msgUser(commandParts[1], msg.mid(length+1));
-        }
-        else
-            appendEmphasisedInfo("Invalid command. Correct usage: '/msg &lt;username&gt; &lt;message&gt;'");
-    }
-    else if (commandParts[0] == "/nick" || commandParts[0] == "/n")
-    {
-        if (n == 2)
-            static_cast<ServerModel*>(parent())->changeNick(commandParts[1]);
-        else
-            appendEmphasisedInfo("Invalid command. Correct usage: '/nick &lt;new nick&gt;' ");
-    }
-    else if (commandParts[0] == "/topic")
-    {
-        if (n == 1)
-            _backend->sendCommand(IrcCommand::createTopic(_name));
-        else
-            appendEmphasisedInfo("Changing Topics is not supported yet!");
-    }
-    else if (commandParts[0] == "/query" || commandParts[0] == "/q")
-    {
-        if (n == 2)
-            static_cast<ServerModel*>(parent())->queryUser(commandParts[1]);
-        else
-            appendEmphasisedInfo("Invalid command. Correct usage: '/query &lt;username&gt;' ");
-    }
-    else if (commandParts[0] == "/kick" || commandParts[0] == "/k")
-    {
-        if (n == 2)
-            static_cast<ServerModel*>(parent())->kickUser(commandParts[1], name());
-        else if (n == 3)
-            static_cast<ServerModel*>(parent())->kickUser(commandParts[1], commandParts[2]);
-        else if (n != 1)
-        {
-            QString reason = msg.mid(commandParts[0].length() + commandParts[1].length() + commandParts[2].length() + 3);
-            static_cast<ServerModel*>(parent())->kickUser(commandParts[1], commandParts[2], reason);
-        }
-        else
-            appendEmphasisedInfo("Invalid command. Correct usage: '/kick &lt;nick&gt; [channel] [reason]'");
-    }
-    else if (commandParts[0] == "/ctcp")
-    {
-        if (n == 2)
-            _backend->sendCommand(IrcCommand::createCtcpRequest(commandParts[1], "VERSION"));
-        else if (n == 3)
-            _backend->sendCommand(IrcCommand::createCtcpRequest(commandParts[1], commandParts[2]));
-        else
-            appendEmphasisedInfo("Invalid command. Correct usage: '/ctcp &lt;user name&gt; [request]'");
-    }
-    else if (commandParts[0] == "/raw")
-    {
-        QString rawCommand = msg.mid(5);
-        appendEmphasisedInfo("Sending raw command '" + rawCommand + "' to the server.");
-        _backend->sendRaw(rawCommand);
-    }
-    else if (commandParts[0] == "/quote")
-    {
-        QString rawCommand = msg.mid(7);
-        appendEmphasisedInfo("Sending raw command '" + rawCommand + "' to the server.");
-        _backend->sendRaw(rawCommand);
-    }
-    else
-    {
-        appendEmphasisedInfo("Sending raw command '" + msg + "' to the server.");
-        _backend->sendRaw(msg);
-    }
 }
 
 QString ChannelModel::getUserNameFromIndex(int index) const

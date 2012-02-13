@@ -18,11 +18,10 @@
 
 #include <QtCore>
 #include <QStringList>
-#include <QSslSocket>
-#include <IrcSession>
 
 #include "ircmodel.h"
 #include "appsettings.h"
+#include "clients/communiircclient.h"
 
 static bool channelLessThan(ChannelModel * m1, ChannelModel *m2)
 {
@@ -47,34 +46,11 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
 
     if (_networkConfigurationManager->isOnline())
     {
-        IrcSession *session = new IrcSession();
-        session->setNickName(settings->userNickname());
-
-        if (settings->userIdent().length())
-            session->setUserName(settings->userIdent());
-        else
-            session->setUserName("irc-chatter");
-
-        if (settings->userRealName().length())
-            session->setRealName(settings->userRealName());
-        else
-            session->setRealName(settings->userNickname());
-
-        session->setPort(server->serverPort());
-
-        if (server->serverSSL())
-        {
-            QSslSocket* socket = new QSslSocket(session);
-            socket->ignoreSslErrors();
-            socket->setPeerVerifyMode(QSslSocket::VerifyNone);
-            session->setSocket(socket);
-        }
-
-        ServerModel *serverModel = new ServerModel(this, server->serverUrl(), session);
+        AbstractIrcClient *ircClient = new CommuniIrcClient(server->serverUrl(), this, server, settings);
+        ServerModel *serverModel = new ServerModel(this, server->serverUrl(), ircClient);
         serverModel->_autoJoinChannels = server->autoJoinChannels();
         _servers.append(serverModel);
-        connect(session, SIGNAL(password(QString*)), server, SLOT(backendAsksForPassword(QString*)));
-        connect(session, SIGNAL(connected()), this, SLOT(backendsConnectedToServer()));
+        connect(ircClient, SIGNAL(connectedToServer()), this, SLOT(backendsConnectedToServer()));
         connect(serverModel, SIGNAL(channelsChanged()), this, SLOT(refreshChannelList()));
     }
     else
@@ -168,7 +144,7 @@ void IrcModel::onlineStateChanged(bool online)
             foreach (ServerModel *server, _servers)
             {
                 qDebug() << "reconnecting to server " << server->url();
-                server->_backend->open();
+                server->_ircClient->connectToServer();
             }
         }
     }
@@ -179,8 +155,7 @@ void IrcModel::onlineStateChanged(bool online)
         foreach (ServerModel *server, _servers)
         {
             qDebug() << "disconnecting from server " << server->url();
-            server->_backend->close();
-            server->_backend->socket()->disconnectFromHost();
+            server->_ircClient->disconnectFromServer();
         }
 
         attemptConnectionLater();

@@ -1,0 +1,92 @@
+
+// This file is part of IRC Chatter, the first IRC Client for MeeGo.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program  is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+// Copyright (C) 2012, Timur Kristóf <venemo@fedoraproject.org>
+
+#ifndef ABSTRACTIRCCLIENT_H
+#define ABSTRACTIRCCLIENT_H
+
+#include <QObject>
+
+#include "util.h"
+
+class AppSettings;
+class ServerSettings;
+
+// This class abstracts away the actual IRC client implementations from
+// the model layer of the application. It contains code that is common
+// to all IRC client implementations and handles communication between the model
+// layer and the actual IRC client implementation.
+
+class AbstractIrcClient : public QObject
+{
+    Q_OBJECT
+    GENPROPERTY_R(QString, _serverUrl, serverUrl)
+    Q_PROPERTY(QString serverUrl READ serverUrl)
+    GENPROPERTY_F(QString, _currentNick, currentNick, setCurrentNick, currentNickChanged)
+    Q_PROPERTY(QString currentNick READ currentNick WRITE setCurrentNick NOTIFY currentNickChanged)
+
+public:
+    explicit AbstractIrcClient(const QString &serverUrl, QObject *parent, ServerSettings *serverSettings, AppSettings *appSettings);
+    
+signals:
+    void currentNickChanged();
+
+    // Implementations of this class SHOULD emit these signals when appropriate.
+    void connectedToServer();
+    void disconnectedFromServer();
+
+    // Messages corresponding to a single channel.
+    void receiveUserNames(const QString &channelName, const QStringList &userNames);
+    void receiveMessage(const QString &channelName, const QString &userName, const QString &message);
+    void receiveCtcpRequest(const QString &userName, const QString &message);
+    void receiveCtcpReply(const QString &userName, const QString &message);
+    void receiveCtcpAction(const QString &channelName, const QString &userName, const QString &message);
+    void receivePart(const QString &channelName, const QString &userName, const QString &message);
+    void receiveJoin(const QString &channelName, const QString &userName);
+    void receiveTopic(const QString &channelName, const QString &topic);
+    void receiveKick(const QString &channelName, const QString &userName, const QString &kickedUserName, const QString &message);
+    void receiveModeChange(const QString &channelName, const QString &mode, const QString &arguments);
+
+    // Messages corresponding to the server itself.
+    void receiveQuit(const QString &userName, const QString &message);
+    void receiveNickChange(const QString &oldNick, const QString &newNick);
+    void receiveMotd(const QString &motd);
+    void receiveError(const QString &error);
+    
+public slots:
+    // Implementations of this class SHOULD implement all the methods below.
+
+    virtual void connectToServer() = 0;
+    virtual void disconnectFromServer() = 0;
+
+    virtual void quit(const QString &message) = 0;
+    virtual void joinChannel(const QString &channelName) = 0;
+    virtual void partChannel(const QString &channelName, const QString &reason) = 0;
+    virtual void queryUser(const QString &userName) = 0;
+    virtual void closeUser(const QString &userName) = 0;
+    virtual void sendCtcpAction(const QString &channelName, const QString &action) = 0;
+    virtual void sendCtcpRequest(const QString &userName, const QString &request) = 0;
+    virtual void sendCtcpReply(const QString &userName, const QString &message) = 0;
+    virtual void sendMessage(const QString &channelName, const QString &message) = 0;
+    virtual void requestTopic(const QString &channelName) = 0;
+    virtual void changeNick(const QString &newNick) = 0;
+    virtual void kick(const QString &channelName, const QString &userName, const QString &message) = 0;
+    virtual void sendRaw(const QString &message) = 0;
+
+};
+
+#endif // ABSTRACTIRCCLIENT_H
