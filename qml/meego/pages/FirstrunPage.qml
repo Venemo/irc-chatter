@@ -13,13 +13,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
-// Copyright (C) 2011, Timur Kristóf <venemo@fedoraproject.org>
+// Copyright (C) 2011-2012, Timur Kristóf <venemo@fedoraproject.org>
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
 import QtQuick 1.1
 import com.nokia.meego 1.0
 import com.nokia.extras 1.0
 import net.venemo.ircchatter 1.0
+import "../pages"
+import "../sheets"
+import "../components"
 
 Page {
     id: firstrunPage

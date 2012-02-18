@@ -13,35 +13,49 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
-// Copyright (C) 2011, Timur Kristóf <venemo@fedoraproject.org>
+// Copyright (C) 2011-2012, Timur Kristóf <venemo@fedoraproject.org>
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
 import QtQuick 1.1
 import com.nokia.meego 1.0
+import "../pages"
+import "../sheets"
+import "../components"
 
-Row {
-    id: titleLabel
-    spacing: 10
-    width: parent.width
-    anchors.bottomMargin: 10
+Sheet {
+    id: connectionSheet
+    acceptButtonText: "Connect"
+    rejectButtonText: "Cancel"
 
-    property string text: "Your title here"
+    Column {
+        spacing: 10
 
-    Rectangle {
-        anchors.verticalCenter: parent.verticalCenter
-        height: 1
-        color: "#000000"
-        width: (parent.width - title1.width) / 2 - 10
-    }
-    Label {
-        id: title1
-        text: titleLabel.text
-        font.bold: true
-    }
-    Rectangle {
-        anchors.verticalCenter: parent.verticalCenter
-        height: 1
-        color: "#000000"
-        width: (parent.width - title1.width) / 2 - 10
+        Label {
+            text: "Server address"
+        }
+        TextField {
+        }
+        Label {
+            text: "Port"
+        }
+        TextField {
+        }
+        Label {
+            text: "Use secure channel"
+        }
+        Switch {
+            enabled: true
+        }
+        Label {
+            text: "Nickname"
+        }
+        TextField {
+        }
+        Label {
+            text: "Password"
+        }
+        TextField {
+            echoMode: TextInput.Password
+        }
     }
 }

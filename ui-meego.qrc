@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/meego/main.qml</file>
+        <file>qml/meego/components/CommonDialog.qml</file>
+        <file>qml/meego/components/TitleLabel.qml</file>
+        <file>qml/meego/components/WorkingSelectionDialog.qml</file>
+        <file>qml/meego/pages/ChatPage.qml</file>
+        <file>qml/meego/pages/FirstrunPage.qml</file>
+        <file>qml/meego/pages/ProgressPage.qml</file>
+        <file>qml/meego/pages/SettingsPage.qml</file>
+        <file>qml/meego/sheets/ConnectionSheet.qml</file>
+        <file>qml/meego/sheets/JoinSheet.qml</file>
+    </qresource>
+</RCC>

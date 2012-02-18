@@ -1,4 +1,3 @@
-<!--
 // This file is part of IRC Chatter, the first IRC Client for MeeGo.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,20 +13,35 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
-// Copyright (C) 2011, Timur Kristóf <venemo@fedoraproject.org>
+// Copyright (C) 2011-2012, Timur Kristóf <venemo@fedoraproject.org>
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
--->
-<RCC>
-    <qresource prefix="/">
-        <file>qml/harmattan/main.qml</file>
-        <file>qml/harmattan/ChatPage.qml</file>
-        <file>qml/harmattan/ConnectionSheet.qml</file>
-        <file>qml/harmattan/SettingsPage.qml</file>
-        <file>qml/harmattan/TitleLabel.qml</file>
-        <file>qml/harmattan/JoinSheet.qml</file>
-        <file>qml/harmattan/WorkingSelectionDialog.qml</file>
-        <file>qml/harmattan/CommonDialog.qml</file>
-        <file>qml/harmattan/FirstrunPage.qml</file>
-        <file>qml/harmattan/ProgressPage.qml</file>
-    </qresource>
-</RCC>
+
+import QtQuick 1.1
+import com.nokia.meego 1.0
+
+Row {
+    id: titleLabel
+    spacing: 10
+    width: parent.width
+    anchors.bottomMargin: 10
+
+    property string text: "Your title here"
+
+    Rectangle {
+        anchors.verticalCenter: parent.verticalCenter
+        height: 1
+        color: "#000000"
+        width: (parent.width - title1.width) / 2 - 10
+    }
+    Label {
+        id: title1
+        text: titleLabel.text
+        font.bold: true
+    }
+    Rectangle {
+        anchors.verticalCenter: parent.verticalCenter
+        height: 1
+        color: "#000000"
+        width: (parent.width - title1.width) / 2 - 10
+    }
+}

@@ -79,7 +79,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->rootContext()->setContextProperty("appSettings", settings);
     view->rootContext()->setContextProperty("appVersion", appVersion);
     view->rootContext()->setContextProperty("isPreRelease", isPreRelease);
-    view->setSource(QUrl("qrc:/qml/harmattan/main.qml"));
+    view->setSource(QUrl("qrc:/qml/meego/main.qml"));
     view->showFullScreen();
 
     int result = app->exec();

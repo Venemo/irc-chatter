@@ -37,22 +37,22 @@ SOURCES += \
     model/helpers/channelhelper.cpp
 
 RESOURCES += \
-    harmattan-gui.qrc
+    ui-meego.qrc
 
 OTHER_FILES += \
     LICENSE \
     LICENSE-DOCS \
     AUTHORS \
-    qml/harmattan/main.qml \
-    qml/harmattan/ChatPage.qml \
-    qml/harmattan/ConnectionSheet.qml \
-    qml/harmattan/SettingsPage.qml \
-    qml/harmattan/FirstrunPage.qml \
-    qml/harmattan/JoinSheet.qml \
-    qml/harmattan/ProgressPage.qml \
-    qml/harmattan/TitleLabel.qml \
-    qml/harmattan/WorkingSelectionDialog.qml \
-    qml/harmattan/CommonDialog.qml
+    qml/meego/main.qml \
+    qml/meego/pages/ChatPage.qml \
+    qml/meego/sheets/ConnectionSheet.qml \
+    qml/meego/pages/SettingsPage.qml \
+    qml/meego/pages/FirstrunPage.qml \
+    qml/meego/sheets/JoinSheet.qml \
+    qml/meego/pages/ProgressPage.qml \
+    qml/meego/components/TitleLabel.qml \
+    qml/meego/components/WorkingSelectionDialog.qml \
+    qml/meego/components/CommonDialog.qml
 
 unix {
     QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
