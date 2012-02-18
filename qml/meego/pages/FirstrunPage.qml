@@ -28,12 +28,12 @@ Page {
     id: firstrunPage
 
     property bool isValid: serverUrlField.text.length > 0 && nicknameField.text.length > 0 && serverPortField.acceptableInput
-    property ServerSettings server: appSettings.serverSettings.getItem(0)
+    property ServerSettings serverSettings: appSettings.serverSettings.getItem(0)
 
     onStatusChanged: {
-        if (status == PageStatus.Activating) {
+        if (status === PageStatus.Activating) {
             if (appSettings.areSettingsDeleted)
-                settingsDeletedBanner.show();
+                settingsDeletedBanner.show()
         }
     }
 
@@ -44,20 +44,20 @@ Page {
             platformIconId: "toolbar-done"
             onClicked: {
                 if (isValid) {
-                    commonMenu.close();
-                    appWindow.pageStack.push(progressPage);
-                    appSettings.saveServerSettings();
-                    ircModel.connectToServer(server, appSettings);
+                    commonMenu.close()
+                    appWindow.pageStack.push(progressPage)
+                    appSettings.saveServerSettings()
+                    ircModel.connectToServer(serverSettings, appSettings)
                 }
                 else {
-                    invalidBanner.show();
+                    invalidBanner.show()
                 }
             }
 
         }
         ToolIcon {
             platformIconId: "toolbar-view-menu"
-            onClicked: (commonMenu.status == DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
+            onClicked: (commonMenu.status === DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
         }
     }
 
@@ -79,25 +79,26 @@ Page {
             spacing: 10
 
             TitleLabel {
-                text: "Server settings"
+                text: "Server information"
             }
             Label {
-                text: "Server URL"
+                text: "Server hostname"
             }
             TextField {
                 id: serverUrlField
                 width: parent.width
-                text: server.serverUrl
-                placeholderText: "Enter a server URL"
+                text: serverSettings.serverUrl
+                placeholderText: "Enter a serverSettings URL"
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            }
-            Binding {
-                target: server
-                property: "serverUrl"
-                value: serverUrlField.text
+
+                Binding {
+                    target: serverSettings
+                    property: "serverUrl"
+                    value: serverUrlField.text
+                }
             }
             Label {
-                text: "Server Port"
+                text: "Server port"
             }
             Row {
                 spacing: 10
@@ -106,20 +107,21 @@ Page {
                 TextField {
                     id: serverPortField
                     width: parent.width - sslCheckbox.width - parent.spacing
-                    text: server.serverPort
-                    placeholderText: "Enter the server port"
+                    text: serverSettings.serverPort
+                    placeholderText: "Enter the serverSettings port"
                     inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase | Qt.ImhDigitsOnly
                     validator: IntValidator { }
-                }
-                Binding {
-                    target: server
-                    property: "serverPort"
-                    value: serverPortField.text
+
+                    Binding {
+                        target: serverSettings
+                        property: "serverPort"
+                        value: serverPortField.text
+                    }
                 }
                 CheckBox {
                     id: sslCheckbox
                     text: "SSL"
-                    checked: server.serverSSL
+                    checked: serverSettings.serverSSL
                     anchors.verticalCenter: serverPortField.verticalCenter
                     onClicked: {
                         if (sslCheckbox.checked)
@@ -127,45 +129,30 @@ Page {
                         else
                             serverPortField.text = 6667
                     }
-                }
-                Binding {
-                    target: server
-                    property: "serverSSL"
-                    value: sslCheckbox.checked
+
+                    Binding {
+                        target: serverSettings
+                        property: "serverSSL"
+                        value: sslCheckbox.checked
+                    }
                 }
             }
             Label {
-                text: "Password"
-            }
-            TextField {
-                id: passwordField
-                width: parent.width
-                text: server.serverPassword
-                placeholderText: "If it's needed, enter a password"
-                echoMode: TextInput.Password
-                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            }
-            Binding {
-                target: server
-                property: "serverPassword"
-                value: passwordField.text
-            }
-            Label {
-                text: "Autojoin Channels"
+                text: "Autojoin channels (comma separated)"
             }
             TextField {
                 id:autojoinField
                 width: parent.width
-                text: server.autoJoinChannelsInPlainString
+                text: serverSettings.autoJoinChannelsInPlainString
                 placeholderText: "Enter channels to autojoin"
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            }
-            Binding {
-                target: server
-                property: "autoJoinChannelsInPlainString"
-                value: autojoinField.text
-            }
 
+                Binding {
+                    target: serverSettings
+                    property: "autoJoinChannelsInPlainString"
+                    value: autojoinField.text
+                }
+            }
             TitleLabel {
                 text: "User settings"
             }
@@ -178,29 +165,15 @@ Page {
                 text: appSettings.userNickname
                 placeholderText: "Enter your nickname"
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            }
-            Binding {
-                target: appSettings
-                property: "userNickname"
-                value: nicknameField.text
-            }
-            Label {
-                text: "Your ident"
-            }
-            TextField {
-                id: identField
-                width: parent.width
-                text: appSettings.userIdent
-                placeholderText: "Enter your ident"
-                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            }
-            Binding {
-                target: appSettings
-                property: "userIdent"
-                value: identField.text
+
+                Binding {
+                    target: appSettings
+                    property: "userNickname"
+                    value: nicknameField.text
+                }
             }
             Label {
-                text: "Your Real Name"
+                text: "Your real name"
             }
             TextField {
                 id: realNameField
@@ -208,11 +181,48 @@ Page {
                 text: appSettings.userRealName
                 placeholderText: "If you wish, enter your real name"
                 inputMethodHints: Qt.ImhNoPredictiveText
+
+                Binding {
+                    target: appSettings
+                    property: "userRealName"
+                    value: realNameField.text
+                }
             }
-            Binding {
-                target: appSettings
-                property: "userRealName"
-                value: realNameField.text
+            TitleLabel {
+                text: "Authentication"
+            }
+            Label {
+                text: "Username (aka. ident)"
+            }
+            TextField {
+                id: identField
+                width: parent.width
+                text: appSettings.userIdent
+                placeholderText: "Enter your ident"
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+
+                Binding {
+                    target: appSettings
+                    property: "userIdent"
+                    value: identField.text
+                }
+            }
+            Label {
+                text: "Password"
+            }
+            TextField {
+                id: passwordField
+                width: parent.width
+                text: serverSettings.serverPassword
+                placeholderText: "If it's needed, enter a password"
+                echoMode: TextInput.Password
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+
+                Binding {
+                    target: serverSettings
+                    property: "serverPassword"
+                    value: passwordField.text
+                }
             }
         }
     }
