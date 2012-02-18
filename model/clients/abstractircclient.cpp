@@ -18,9 +18,8 @@
 
 #include "abstractircclient.h"
 
-AbstractIrcClient::AbstractIrcClient(QObject *parent, ServerSettings *serverSettings, AppSettings *appSettings) :
+AbstractIrcClient::AbstractIrcClient(QObject *parent, ServerSettings *serverSettings) :
     QObject(parent)
 {
     Q_UNUSED(serverSettings)
-    Q_UNUSED(appSettings)
 }

@@ -37,7 +37,7 @@ class CommuniIrcClient : public AbstractIrcClient
     void processNumericMessage(IrcNumericMessage *message);
 
 public:
-    explicit CommuniIrcClient(QObject *parent, ServerSettings *serverSettings, AppSettings *appSettings);
+    explicit CommuniIrcClient(QObject *parent, ServerSettings *serverSettings);
 
 private slots:
     void messageReceived(IrcMessage *message);

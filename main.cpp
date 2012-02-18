@@ -61,14 +61,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QApplication *app = MDeclarativeCache::qApplication(argc, argv);
     IrcModel *model = new IrcModel(app);
-    AppSettings *settings = new AppSettings(app);
     app->installEventFilter(new AppFocusFilter(model));
 
-    if (!settings->serverSettingsCount())
-        settings->appendServerSettings(new ServerSettings(settings));
-
     qmlRegisterType<ServerSettings>("net.venemo.ircchatter", 1, 0, "ServerSettings");
-    qmlRegisterUncreatableType<AppSettings>("net.venemo.ircchatter", 1, 0, "AppSettings", "This class is created in C++, and only one instance is needed.");
+    qmlRegisterType<AppSettings>("net.venemo.ircchatter", 1, 0, "AppSettings");
     qmlRegisterUncreatableType<ChannelModel>("net.venemo.ircchatter", 1, 0, "ChannelModel", "This object is created in the model.");
     qmlRegisterUncreatableType<IrcModel>("net.venemo.ircchatter", 1, 0, "IrcModel", "This object is created in the model.");
 
@@ -76,7 +72,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
     view->setWindowTitle("IRC Chatter");
     view->rootContext()->setContextProperty("ircModel", model);
-    view->rootContext()->setContextProperty("appSettings", settings);
     view->rootContext()->setContextProperty("appVersion", appVersion);
     view->rootContext()->setContextProperty("isPreRelease", isPreRelease);
     view->setSource(QUrl("qrc:/qml/meego/main.qml"));

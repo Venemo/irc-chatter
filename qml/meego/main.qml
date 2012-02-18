@@ -18,6 +18,7 @@
 
 import QtQuick 1.1
 import com.nokia.meego 1.0
+import net.venemo.ircchatter 1.0
 import "pages"
 import "sheets"
 import "components"
@@ -25,7 +26,6 @@ import "components"
 PageStackWindow {
     id: appWindow
     initialPage: firstrunPage
-
     onOrientationChangeFinished: {
         showStatusBar = inPortrait
 
@@ -34,6 +34,10 @@ PageStackWindow {
     }
     Component.onCompleted: {
         showStatusBar = inPortrait
+    }
+
+    AppSettings {
+        id: appSettings
     }
 
     // Pages

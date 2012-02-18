@@ -36,7 +36,7 @@ class AbstractIrcClient : public QObject
     Q_OBJECT
 
 public:
-    explicit AbstractIrcClient(QObject *parent, ServerSettings *serverSettings, AppSettings *appSettings);
+    explicit AbstractIrcClient(QObject *parent, ServerSettings *serverSettings);
     
 signals:
     // Implementations of this class SHOULD emit these signals when appropriate.

@@ -28,10 +28,10 @@
 #include <IrcCommand>
 
 #include "communiircclient.h"
-#include "../../appsettings.h"
+#include "../../serversettings.h"
 
-CommuniIrcClient::CommuniIrcClient(QObject *parent, ServerSettings *serverSettings, AppSettings *appSettings) :
-    AbstractIrcClient(parent, serverSettings, appSettings)
+CommuniIrcClient::CommuniIrcClient(QObject *parent, ServerSettings *serverSettings) :
+    AbstractIrcClient(parent, serverSettings)
 {
     _ircSession = new IrcSession(this);
     _ircSession->setNickName(serverSettings->userNickname());
