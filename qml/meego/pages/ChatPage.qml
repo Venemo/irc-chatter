@@ -64,31 +64,6 @@ Page {
             channelNameBg.color = appSettings.sidebarColor
         }
     }
-    tools: ToolBarLayout {
-        visible: true
-
-        ToolIcon {
-            platformIconId: "toolbar-add"
-            onClicked: joinSheet.open()
-        }
-        ToolIcon {
-            platformIconId: "toolbar-send-chat"
-            onClicked: channelSelectorDialog.open()
-        }
-        ToolIcon {
-            platformIconId: "toolbar-addressbook"
-            onClicked: userSelectorDialog.open()
-            visible: ircModel.currentChannel === null ? false : (ircModel.currentChannel.name.charAt(0) === '#')
-        }
-        ToolIcon {
-            platformIconId: "toolbar-settings"
-            onClicked: appWindow.pageStack.push(settingsPage)
-        }
-        ToolIcon {
-            platformIconId: "toolbar-view-menu"
-            onClicked: (chatMenu.status === DialogStatus.Closed) ? chatMenu.open() : chatMenu.close()
-        }
-    }
     onHeightChanged: {
         chatArea.height = Math.max(chatPage.height - messageField.height, chatArea.implicitHeight)
         scrollToBottom()
@@ -97,7 +72,7 @@ Page {
     Flickable {
         id: chatFlickable
         anchors.top: parent.top
-        anchors.bottom: messageField.top
+        anchors.bottom: chatRectangle.top
         anchors.left: parent.left
         anchors.right: channelNameBg.left
 
@@ -147,7 +122,7 @@ Page {
         width: 60
         anchors.top: parent.top
         anchors.right: parent.right
-        anchors.bottom: messageField.top
+        anchors.bottom: chatRectangle.top
 
         Flickable {
             id: channelSwitcherFlickable
@@ -208,55 +183,57 @@ Page {
             flickableItem: channelSwitcherFlickable
         }
     }
-
-    TextField {
-        id: messageField
+    Rectangle {
+        id: chatRectangle
+        color: "#ffffff"
+        height: messageField.implicitHeight * 1.2
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
-        width: parent.width
-        placeholderText: "Type a message"
-        text: ircModel.currentChannel !== null ? ircModel.currentChannel.currentMessage : ""
-        platformStyle: TextFieldStyle {
-            paddingLeft: tabButton.width
-            paddingRight: sendButton.width
-        }
-        onTextChanged: {
-            if (ircModel.currentChannel !== null && ircModel.currentChannel.currentMessage !== messageField.text && shouldUpdateCurrentMessage)
-                ircModel.currentChannel.currentMessage = text
-        }
-        inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-        Keys.onReturnPressed: sendCurrentMessage()
-        Keys.onUpPressed: {
-            if (ircModel.currentChannel !== null)
-                ircModel.currentChannel.getSentMessagesUp()
-        }
-        Keys.onDownPressed: {
-            if (ircModel.currentChannel !== null)
-                ircModel.currentChannel.getSentMessagesDown()
-        }
+        anchors.left: parent.left
+        anchors.right: parent.right
 
         ToolIcon {
             id: tabButton
-            anchors.verticalCenter: messageField.verticalCenter
-            anchors.left: parent.left
             platformIconId: "toolbar-reply"
             onClicked: {
                 messageField.forceActiveFocus()
                 ircModel.currentChannel.autoCompleteNick()
             }
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
         }
-        ToolIcon {
-            id: sendButton
-            anchors.verticalCenter: messageField.verticalCenter
-            anchors.right: parent.right
-            platformIconId: "toolbar-send-sms"
-            onClicked: {
-                messageField.forceActiveFocus()
+        TextField {
+            id: messageField
+            placeholderText: "Type a message"
+            text: ircModel.currentChannel !== null ? ircModel.currentChannel.currentMessage : ""
+            onTextChanged: {
+                if (ircModel.currentChannel !== null && ircModel.currentChannel.currentMessage !== messageField.text && shouldUpdateCurrentMessage)
+                    ircModel.currentChannel.currentMessage = text
+            }
+            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+            //height: implicitHeight * 1.1
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: tabButton.right
+            anchors.right: menuToolIcon.left
+            Keys.onReturnPressed: {
                 sendCurrentMessage()
             }
+            Keys.onUpPressed: {
+                if (ircModel.currentChannel !== null)
+                    ircModel.currentChannel.getSentMessagesUp()
+            }
+            Keys.onDownPressed: {
+                if (ircModel.currentChannel !== null)
+                    ircModel.currentChannel.getSentMessagesDown()
+            }
+        }
+        ToolIcon {
+            id: menuToolIcon
+            platformIconId: "toolbar-view-menu"
+            onClicked: (chatMenu.status === DialogStatus.Closed) ? chatMenu.open() : chatMenu.close()
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
         }
     }
-
     Menu {
         id: chatMenu
         visualParent: pageStack
@@ -266,8 +243,27 @@ Page {
                 onClicked:  areYouSureToPartDialog.open()
             }
             MenuItem {
+                text: "Join/Query"
+                onClicked: {
+                    chatMenu.close()
+                    joinSheet.open()
+                }
+            }
+            MenuItem {
+                text: "User list"
+                visible: ircModel.currentChannel === null ? false : (ircModel.currentChannel.name.charAt(0) === '#')
+                onClicked: {
+                    chatMenu.close()
+                    userSelectorDialog.open()
+                }
+            }
+            MenuItem {
                 text: "About"
                 onClicked: aboutDialog.open()
+            }
+            MenuItem {
+                text: "Settings"
+                onClicked: appWindow.pageStack.push(settingsPage)
             }
             MenuItem {
                 text: "Quit app"
@@ -275,7 +271,6 @@ Page {
             }
         }
     }
-
     JoinSheet {
         id: joinSheet
         visualParent: chatPage
@@ -286,7 +281,6 @@ Page {
                 ircModel.currentServer.queryUser(joinText)
         }
     }
-
     QueryDialog {
         id: areYouSureToPartDialog
         acceptButtonText: "Yes"
@@ -300,7 +294,6 @@ Page {
                 ircModel.currentServer.closeUser(ircModel.currentChannel.name)
         }
     }
-
     QueryDialog {
         property string queryableUserName: ""
         id: areYouSureToQueryDialog
@@ -312,19 +305,6 @@ Page {
             ircModel.currentServer.queryUser(areYouSureToQueryDialog.queryableUserName)
         }
     }
-
-    WorkingSelectionDialog {
-        id: channelSelectorDialog
-        titleText: "Switch channel"
-        model: ircModel.allChannels
-        onSelectedIndexChanged: switchChannel(selectedIndex)
-        onStatusChanged: {
-            if (status === DialogStatus.Opening)
-                selectedIndex = ircModel.currentChannelIndex
-        }
-        searchFieldVisible: true
-    }
-
     WorkingSelectionDialog {
         id: userSelectorDialog
         titleText: "User list of " + (ircModel.currentChannel === null ? "?" : ircModel.currentChannel.name)
