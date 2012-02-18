@@ -34,17 +34,11 @@ class ServerSettings;
 class AbstractIrcClient : public QObject
 {
     Q_OBJECT
-    GENPROPERTY_R(QString, _serverUrl, serverUrl)
-    Q_PROPERTY(QString serverUrl READ serverUrl)
-    GENPROPERTY_F(QString, _currentNick, currentNick, setCurrentNick, currentNickChanged)
-    Q_PROPERTY(QString currentNick READ currentNick WRITE setCurrentNick NOTIFY currentNickChanged)
 
 public:
-    explicit AbstractIrcClient(const QString &serverUrl, QObject *parent, ServerSettings *serverSettings, AppSettings *appSettings);
+    explicit AbstractIrcClient(QObject *parent, ServerSettings *serverSettings, AppSettings *appSettings);
     
 signals:
-    void currentNickChanged();
-
     // Implementations of this class SHOULD emit these signals when appropriate.
     void connectedToServer();
     void disconnectedFromServer();
@@ -67,9 +61,10 @@ signals:
     void receiveMotd(const QString &motd);
     void receiveError(const QString &error);
     
-public slots:
+public:
     // Implementations of this class SHOULD implement all the methods below.
 
+    virtual const QString currentNick() = 0;
     virtual void connectToServer() = 0;
     virtual void disconnectFromServer() = 0;
 

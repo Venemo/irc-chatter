@@ -37,12 +37,13 @@ class CommuniIrcClient : public AbstractIrcClient
     void processNumericMessage(IrcNumericMessage *message);
 
 public:
-    explicit CommuniIrcClient(const QString &serverUrl, QObject *parent, ServerSettings *serverSettings, AppSettings *appSettings);
+    explicit CommuniIrcClient(QObject *parent, ServerSettings *serverSettings, AppSettings *appSettings);
 
 private slots:
     void messageReceived(IrcMessage *message);
     
 public slots:
+    virtual const QString currentNick();
     virtual void connectToServer();
     virtual void disconnectFromServer();
 

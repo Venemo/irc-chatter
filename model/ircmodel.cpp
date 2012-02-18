@@ -46,7 +46,7 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
 
     if (_networkConfigurationManager->isOnline())
     {
-        AbstractIrcClient *ircClient = new CommuniIrcClient(server->serverUrl(), this, server, settings);
+        AbstractIrcClient *ircClient = new CommuniIrcClient(this, server, settings);
         ServerModel *serverModel = new ServerModel(this, server->serverUrl(), ircClient);
 
         serverModel->_autoJoinChannels = server->autoJoinChannels();

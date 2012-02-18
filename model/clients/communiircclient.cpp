@@ -30,8 +30,8 @@
 #include "communiircclient.h"
 #include "../../appsettings.h"
 
-CommuniIrcClient::CommuniIrcClient(const QString &serverUrl, QObject *parent, ServerSettings *serverSettings, AppSettings *appSettings) :
-    AbstractIrcClient(serverUrl, parent, serverSettings, appSettings)
+CommuniIrcClient::CommuniIrcClient(QObject *parent, ServerSettings *serverSettings, AppSettings *appSettings) :
+    AbstractIrcClient(parent, serverSettings, appSettings)
 {
     _ircSession = new IrcSession(this);
     _ircSession->setNickName(appSettings->userNickname());
@@ -74,8 +74,6 @@ void CommuniIrcClient::messageReceived(IrcMessage *message)
         QString channelName = msg->target().startsWith('#')
                 ? msg->target() // This is a channel message
                 : msg->sender().name(); // This is a private message
-
-        qDebug() << channelName;
 
         if (msg->isAction())
         {
@@ -276,6 +274,11 @@ void CommuniIrcClient::processNumericMessage(IrcNumericMessage *message)
     {
         //qDebug() << message->code() << "received from" << url() << "command is" << message->command() << "parameters are" << message->parameters();
     }
+}
+
+const QString CommuniIrcClient::currentNick()
+{
+    return _ircSession->nickName();
 }
 
 void CommuniIrcClient::connectToServer()
