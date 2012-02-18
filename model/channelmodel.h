@@ -46,13 +46,14 @@ private:
     Q_PROPERTY(QString channelText READ channelText NOTIFY channelTextChanged)
     GENPROPERTY_R(QString, _topic, topic)
     Q_PROPERTY(QString topic READ topic NOTIFY topicChanged)
-    GENPROPERTY_R(unsigned, _channelType, channelType)
+    GENPROPERTY_S(unsigned, _channelType, channelType, setChannelType)
+    GENPROPERTY_R(QStringList, _userNames, userNames)
 
     AbstractIrcClient *_ircClient;
     CommandParser *_commandParser;
 
     QString _completionFragment, _sentMessagesTemp;
-    QStringList _soFarReceivedUserNames, _sentMessages;
+    QStringList _sentMessages;
     QList<const QString*> _possibleNickNames;
     int _currentCompletionIndex, _currentCompletionPosition, _displayedLines, _sentMessagesIndex;
 
@@ -60,10 +61,7 @@ private:
     static QRegExp _urlRegexp;
     static int _maxLineNumber, _deletableLines;
 
-    friend class IrcModel;
-    friend class ServerModel;
-
-protected:
+public:
     explicit ChannelModel(ServerModel *parent, const QString &channelName, AbstractIrcClient *ircClient);
 
     void adjustForSentMessagesIndex();
@@ -88,6 +86,7 @@ protected:
     void receiveKicked(const QString &origin, const QString &nick, QString message);
     void receiveTopic(const QString &value);
     void receiveModeChange(const QString &mode, const QString &argument);
+    void receiveUserList(const QStringList &userList);
     void channelNameChanged(const QString &newName);
 
 public:

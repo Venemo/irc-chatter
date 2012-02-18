@@ -182,27 +182,38 @@ void CommuniIrcClient::messageReceived(IrcMessage *message)
 
 void CommuniIrcClient::processNumericMessage(IrcNumericMessage *message)
 {
-    // TODO
-//    if (message->code() == Irc::RPL_ENDOFNAMES)
-//    {
-//        _channels[message->parameters()[1]]->updateUserList();
-//    }
-//    else if (message->code() == Irc::RPL_NAMREPLY || message->code() == Irc::RPL_NAMREPLY_)
-//    {
-//        QStringList receivedNames = message->parameters().at(3).split(' ', QString::SkipEmptyParts),
-//                newNames;
+    if (message->code() == Irc::RPL_ENDOFNAMES)
+    {
+        QString channelName = message->parameters()[1];
+        QStringList receivedUserNames = _receivedUserNames[channelName].toSet().toList();
+        // workaround for bug: https://bugreports.qt.nokia.com/browse/QTBUG-12892
+        // found in http://www.harshj.com/2009/10/24/sorting-entries-in-a-qstringlist-case-insensitively/
+        // - Thank you!
+        QMap<QString, QString> strMap;
+        foreach (const QString &str, receivedUserNames)
+        {
+            strMap.insert(str.toLower(), str);
+        }
+        receivedUserNames = strMap.values();
+        emit receiveUserNames(channelName, receivedUserNames);
+        _receivedUserNames[channelName].clear();
+    }
+    else if (message->code() == Irc::RPL_NAMREPLY || message->code() == Irc::RPL_NAMREPLY_)
+    {
+        QStringList receivedNames = message->parameters().at(3).split(' ', QString::SkipEmptyParts),
+                newNames;
 
-//        foreach (QString str, receivedNames)
-//        {
-//            if (str.startsWith('@') || str.startsWith('+'))
-//                newNames.append(str.remove(0, 1));
-//            else
-//                newNames.append(str);
-//        }
+        foreach (QString str, receivedNames)
+        {
+            if (str.startsWith('@') || str.startsWith('+'))
+                newNames.append(str.remove(0, 1));
+            else
+                newNames.append(str);
+        }
 
-//        _channels[message->parameters()[2]]->_soFarReceivedUserNames += newNames;
-//    }
-    if (message->code() == Irc::RPL_MOTD)
+        _receivedUserNames[message->parameters()[2]] += newNames;
+    }
+    else if (message->code() == Irc::RPL_MOTD)
     {
         emit receiveMotd(message->parameters().at(1));
     }

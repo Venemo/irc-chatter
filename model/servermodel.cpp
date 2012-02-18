@@ -78,9 +78,10 @@ void ServerModel::disconnectedFromServer()
 
 void ServerModel::receiveUserNames(const QString &channelName, const QStringList &userNames)
 {
-    // TODO
-    Q_UNUSED(channelName)
-    Q_UNUSED(userNames)
+    if (_channels.contains(channelName))
+    {
+        _channels[channelName]->receiveUserList(userNames);
+    }
 }
 
 void ServerModel::receiveMessage(const QString &channelName, const QString &userName, const QString &message)
@@ -118,7 +119,7 @@ void ServerModel::receiveQuit(const QString &userName, const QString &message)
 {
     foreach (ChannelModel *channel, _channels.values())
     {
-        if (channel->_soFarReceivedUserNames.contains(userName))
+        if (channel->userNames().contains(userName))
         {
             channel->receiveQuit(userName, message);
         }
@@ -169,7 +170,7 @@ void ServerModel::receiveNickChange(const QString &oldNick, const QString &newNi
 {
     foreach (ChannelModel *channel, _channels.values())
     {
-        if (channel->_soFarReceivedUserNames.contains(oldNick))
+        if (channel->userNames().contains(oldNick))
         {
             channel->receiveNickChange(oldNick, newNick);
         }
@@ -203,15 +204,15 @@ void ServerModel::addModelForChannel(const QString &channelName)
         if (_channels.count() == 0)
         {
             _defaultChannel = channel;
-            channel->_channelType = ChannelModel::Server;
+            channel->setChannelType(ChannelModel::Server);
         }
         else if (channelName.startsWith('#'))
         {
-            channel->_channelType = ChannelModel::Channel;
+            channel->setChannelType(ChannelModel::Channel);
         }
         else
         {
-            channel->_channelType = ChannelModel::Query;
+            channel->setChannelType(ChannelModel::Query);
         }
         _channels[channelName] = channel;
         emit this->channelsChanged();

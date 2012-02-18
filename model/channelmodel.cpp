@@ -65,29 +65,29 @@ void ChannelModel::receiveJoined(const QString &userName)
     if (userName != _ircClient->currentNick())
         appendDeemphasisedInfo("--> " + userName + " has joined this channel.");
 
-    _soFarReceivedUserNames.append(userName);
+    _userNames.append(userName);
     updateUserList();
 }
 
 void ChannelModel::receiveParted(const QString &userName, QString reason)
 {
     appendDeemphasisedInfo("<-- " + userName + " has parted this channel." + (reason.length() ? (" (Reason: " + reason + ")") : ""));
-    _soFarReceivedUserNames.removeAll(userName);
+    _userNames.removeAll(userName);
     updateUserList();
 }
 
 void ChannelModel::receiveQuit(const QString &userName, QString reason)
 {
     appendDeemphasisedInfo("<-- " + userName + " has left this server." + (reason.length() ? (" (Reason: " + reason + ")") : ""));
-    _soFarReceivedUserNames.removeAll(userName);
+    _userNames.removeAll(userName);
     updateUserList();
 }
 
 void ChannelModel::receiveNickChange(const QString &oldNick, const QString &newNick)
 {
     appendDeemphasisedInfo("*** " + oldNick + " has changed nick to " + newNick + ".");
-    _soFarReceivedUserNames.removeAll(oldNick);
-    _soFarReceivedUserNames.append(newNick);
+    _userNames.removeAll(oldNick);
+    _userNames.append(newNick);
     updateUserList();
 }
 
@@ -184,21 +184,6 @@ void ChannelModel::receiveCtcpReply(const QString &userName, QString message)
     appendEmphasisedInfo("CTCP Reply from " + userName + ": " + message);
 }
 
-void ChannelModel::updateUserList()
-{
-    _soFarReceivedUserNames = _soFarReceivedUserNames.toSet().toList();
-    // workaround for bug: https://bugreports.qt.nokia.com/browse/QTBUG-12892
-    // found in http://www.harshj.com/2009/10/24/sorting-entries-in-a-qstringlist-case-insensitively/
-    // - Thank you!
-    QMap<QString, QString> strMap;
-    foreach (const QString &str, _soFarReceivedUserNames)
-    {
-        strMap.insert(str.toLower(), str);
-    }
-    _soFarReceivedUserNames = strMap.values();
-    _users->setStringList(_soFarReceivedUserNames);
-}
-
 void ChannelModel::receiveTopic(const QString &value)
 {
     _topic = value;
@@ -211,6 +196,16 @@ void ChannelModel::receiveModeChange(const QString &mode, const QString &argumen
     appendEmphasisedInfo(QString("Channel mode is ") + mode + QString(", argument is ") + argument);
 }
 
+void ChannelModel::receiveUserList(const QStringList &userList)
+{
+    _userNames = userList;
+    updateUserList();
+}
+
+void ChannelModel::updateUserList()
+{
+    _users->setStringList(_userNames);
+}
 
 void ChannelModel::sendCurrentMessage()
 {

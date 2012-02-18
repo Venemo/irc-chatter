@@ -19,6 +19,9 @@
 #ifndef COMMUNIIRCCLIENT_H
 #define COMMUNIIRCCLIENT_H
 
+#include <QHash>
+#include <QString>
+#include <QStringList>
 #include "abstractircclient.h"
 
 class IrcSession;
@@ -29,6 +32,7 @@ class CommuniIrcClient : public AbstractIrcClient
 {
     Q_OBJECT
     IrcSession *_ircSession;
+    QHash<QString, QStringList> _receivedUserNames;
 
     void processNumericMessage(IrcNumericMessage *message);
 
