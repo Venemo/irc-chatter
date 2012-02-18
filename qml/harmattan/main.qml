@@ -73,6 +73,10 @@ PageStackWindow {
                 onClicked: aboutDialog.open()
             }
             MenuItem {
+                text: "Settings"
+                onClicked: appWindow.pageStack.push(settingsPage)
+            }
+            MenuItem {
                 text: "Quit app"
                 onClicked: quitDialog.open()
             }

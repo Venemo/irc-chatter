@@ -34,7 +34,7 @@ Page {
         }
         ToolIcon {
             platformIconId: "toolbar-view-menu"
-            onClicked: (commonMenu.status == DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
+            onClicked: (commonMenu.status === DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
         }
     }
 
@@ -55,11 +55,11 @@ Page {
             anchors.top: parent.top
             anchors.topMargin: 20
 
-            /*TitleLabel {
-                text: "Display"
+            TitleLabel {
+                text: "Appearance"
             }
             Label {
-                text: "Misc events"
+                text: "Display join/part/quit events"
                 width: parent.width
                 height: miscEventsSwitch.height
                 verticalAlignment: Text.AlignVCenter
@@ -68,10 +68,12 @@ Page {
                     id: miscEventsSwitch
                     anchors.right: parent.right
                     checked: true
+
+                    // TODO: Binding for this
                 }
             }
             Label {
-                text: "Timestamps"
+                text: "Show timestamps"
                 width: parent.width
                 height: timestampsSwitch.height
                 verticalAlignment: Text.AlignVCenter
@@ -80,21 +82,88 @@ Page {
                     id: timestampsSwitch
                     anchors.right: parent.right
                     checked: true
+
+                    // TODO: Binding for this
+                }
+            }
+            Label {
+                text: "Use monospace font"
+                width: parent.width
+                height: timestampsSwitch.height
+                verticalAlignment: Text.AlignVCenter
+
+                Switch {
+                    id: monospaceCheckbox
+                    anchors.right: parent.right
+                    checked: false
+
+                    Binding {
+                        target: appSettings
+                        property: "fontMonospace"
+                        value: monospaceCheckbox.checked
+                    }
+                }
+            }
+            Label {
+                text: "Autofocus text field"
+                width: parent.width
+                height: timestampsSwitch.height
+                verticalAlignment: Text.AlignVCenter
+
+                Switch {
+                    id: autoFocusCheckBox
+                    anchors.right: parent.right
+                    checked: appSettings.autoFocusTextField
+
+                    Binding {
+                        target: appSettings
+                        property: "autoFocusTextField"
+                        value: autoFocusCheckBox.checked
+                    }
+                }
+            }
+            Label {
+                text: "Sidebar color"
+                width: parent.width
+                height: colorButton.height
+                verticalAlignment: Text.AlignVCenter
+
+                TumblerButton {
+                    id: colorButton
+                    text: "Orange"
+                    width: parent.width / 3
+                    anchors.right: parent.right
+                    onClicked: colorSelectionDialog.open()
                 }
             }
             Label {
                 text: "Font size"
                 width: parent.width
-                height: fontSizeTumblerButton.height
+                height: fontSlider.height
                 verticalAlignment: Text.AlignVCenter
 
-                TumblerButton {
-                    id: fontSizeTumblerButton
-                    anchors.right: parent.right
-                    text: "24"
-                    width: 140
+                Slider {
+                    id: fontSlider
+                    minimumValue: 12
+                    maximumValue: 40
+                    stepSize: 1
+                    width: 300
+                    valueIndicatorVisible: true
+                    value: appSettings.fontSize
+                    anchors.right: fontSliderLabel.left
 
-                    onClicked: fontSizeSelectionDialog.open()
+                    Binding {
+                        target: appSettings
+                        property: "fontSize"
+                        value: fontSlider.value
+                    }
+                }
+                Label {
+                    id: fontSliderLabel
+                    text: fontSlider.value
+                    width: 50
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
                 }
             }
             TitleLabel {
@@ -110,6 +179,8 @@ Page {
                     id: messagesInQueriesSwitch
                     anchors.right: parent.right
                     checked: true
+
+                    // TODO: Binding for this
                 }
             }
             Label {
@@ -122,18 +193,22 @@ Page {
                     id: messagesContainingYourNickSwitch
                     anchors.right: parent.right
                     checked: true
+
+                    // TODO: Binding for this
                 }
             }
             TitleLabel {
-                text: "Configuration"
+                text: "Servers"
             }
             Button {
                 width: parent.width - 100
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Configure servers"
-            }*/
+
+                // TODO: implement onClick for this
+            }
             TitleLabel {
-                text: "User Configuration"
+                text: "Customizations"
             }
             Label {
                 text: "Quit Message"
@@ -143,11 +218,12 @@ Page {
                 width: parent.width
                 text: appSettings.quitMessage
                 inputMethodHints: Qt.ImhNoPredictiveText
-            }
-            Binding {
-                target: appSettings
-                property: "quitMessage"
-                value: quitField.text
+
+                Binding {
+                    target: appSettings
+                    property: "quitMessage"
+                    value: quitField.text
+                }
             }
             Label {
                 text: "Part Message"
@@ -157,11 +233,12 @@ Page {
                 width: parent.width
                 text: appSettings.partMessage
                 inputMethodHints: Qt.ImhNoPredictiveText
-            }
-            Binding {
-                target: appSettings
-                property: "partMessage"
-                value: partField.text
+
+                Binding {
+                    target: appSettings
+                    property: "partMessage"
+                    value: partField.text
+                }
             }
             Label {
                 text: "Kick Message"
@@ -171,70 +248,11 @@ Page {
                 width: parent.width
                 text: appSettings.kickMessage
                 inputMethodHints: Qt.ImhNoPredictiveText
-            }
-            Binding {
-                target: appSettings
-                property: "kickMessage"
-                value: kickField.text
-            }
-            Row {
-                spacing: 10
-                width: parent.width
 
-                Label {
-                    text: "Font Size"
-                }
-                Slider {
-                    id: fontSlider
-                    minimumValue: 12
-                    maximumValue: 40
-                    stepSize: 1
-                    width: parent.width - 60
-                    valueIndicatorVisible: true
-                    value: appSettings.fontSize
-                }
                 Binding {
                     target: appSettings
-                    property: "fontSize"
-                    value: fontSlider.value
-                }
-                Label {
-                    text: fontSlider.value
-                    width: 100
-                }
-            }
-            CheckBox {
-                id: monospaceCheckbox
-                text: "Use monospace font"
-                checked: false
-            }
-            Binding {
-                target: appSettings
-                property: "fontMonospace"
-                value: monospaceCheckbox.checked
-            }
-            CheckBox {
-                id: autoFocusCheckBox
-                text: "Autofocus text field"
-                checked: appSettings.autoFocusTextField
-            }
-            Binding {
-                target: appSettings
-                property: "autoFocusTextField"
-                value: autoFocusCheckBox.checked
-            }
-            Row {
-                width: parent.width
-                spacing: 10
-                Label {
-                    id: sidebarLabel
-                    text: "Sidebar Color"
-                }
-                TumblerButton {
-                    id: colorButton
-                    text: "Orange"
-                    width: parent.width / 2
-                    onClicked: colorSelectionDialog.open()
+                    property: "kickMessage"
+                    value: kickField.text
                 }
             }
         }
