@@ -162,12 +162,12 @@ Page {
             TextField {
                 id: nicknameField
                 width: parent.width
-                text: appSettings.userNickname
+                text: serverSettings.userNickname
                 placeholderText: "Enter your nickname"
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
 
                 Binding {
-                    target: appSettings
+                    target: serverSettings
                     property: "userNickname"
                     value: nicknameField.text
                 }
@@ -178,12 +178,12 @@ Page {
             TextField {
                 id: realNameField
                 width: parent.width
-                text: appSettings.userRealName
+                text: serverSettings.userRealName
                 placeholderText: "If you wish, enter your real name"
                 inputMethodHints: Qt.ImhNoPredictiveText
 
                 Binding {
-                    target: appSettings
+                    target: serverSettings
                     property: "userRealName"
                     value: realNameField.text
                 }
@@ -197,12 +197,12 @@ Page {
             TextField {
                 id: identField
                 width: parent.width
-                text: appSettings.userIdent
+                text: serverSettings.userIdent
                 placeholderText: "Enter your ident"
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
 
                 Binding {
-                    target: appSettings
+                    target: serverSettings
                     property: "userIdent"
                     value: identField.text
                 }

@@ -34,18 +34,18 @@ CommuniIrcClient::CommuniIrcClient(QObject *parent, ServerSettings *serverSettin
     AbstractIrcClient(parent, serverSettings, appSettings)
 {
     _ircSession = new IrcSession(this);
-    _ircSession->setNickName(appSettings->userNickname());
+    _ircSession->setNickName(serverSettings->userNickname());
     _ircSession->setHost(serverSettings->serverUrl());
 
-    if (appSettings->userIdent().length())
-        _ircSession->setUserName(appSettings->userIdent());
+    if (serverSettings->userIdent().length())
+        _ircSession->setUserName(serverSettings->userIdent());
     else
-        _ircSession->setUserName(appSettings->userNickname());
+        _ircSession->setUserName(serverSettings->userNickname());
 
-    if (appSettings->userRealName().length())
-        _ircSession->setRealName(appSettings->userRealName());
+    if (serverSettings->userRealName().length())
+        _ircSession->setRealName(serverSettings->userRealName());
     else
-        _ircSession->setRealName(appSettings->userNickname());
+        _ircSession->setRealName(serverSettings->userNickname());
 
     if (serverSettings->serverSSL())
     {

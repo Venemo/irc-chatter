@@ -39,6 +39,12 @@ class ServerSettings : public QObject
     GENPROPERTY_F(QStringList, _autoJoinChannels, autoJoinChannels, setAutoJoinChannels, autoJoinChannelsChanged)
     Q_PROPERTY(QStringList autoJoinChannels READ autoJoinChannels WRITE setAutoJoinChannels NOTIFY autoJoinChannelsChanged)
     Q_PROPERTY(QString autoJoinChannelsInPlainString READ autoJoinChannelsInPlainString WRITE setAutoJoinChannelsInPlainString NOTIFY autoJoinChannelsChanged)
+    GENPROPERTY_F(QString, _userNickname, userNickname, setUserNickname, userNicknameChanged)
+    Q_PROPERTY(QString userNickname READ userNickname WRITE setUserNickname NOTIFY userNicknameChanged)
+    GENPROPERTY_F(QString, _userIdent, userIdent, setUserIdent, userIdentChanged)
+    Q_PROPERTY(QString userIdent READ userIdent WRITE setUserIdent NOTIFY userIdentChanged)
+    GENPROPERTY_F(QString, _userRealName, userRealName, setUserRealName, userRealNameChanged)
+    Q_PROPERTY(QString userRealName READ userRealName WRITE setUserRealName NOTIFY userRealNameChanged)
 
     friend QDataStream &operator>>(QDataStream &stream, ServerSettings &server);
 
@@ -53,6 +59,9 @@ signals:
     void autoJoinChannelsChanged();
     void serverPortChanged();
     void serverSSLChanged();
+    void userNicknameChanged();
+    void userIdentChanged();
+    void userRealNameChanged();
 
 private slots:
     void backendAsksForPassword(QString *password);

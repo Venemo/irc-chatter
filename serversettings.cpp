@@ -52,12 +52,28 @@ void ServerSettings::backendAsksForPassword(QString *password)
     *password = _serverPassword;
 }
 
-QDataStream &operator<<(QDataStream &stream, const ServerSettings &server)
+QDataStream &operator<<(QDataStream &stream, const ServerSettings &serverSettings)
 {
-    return stream << server.serverUrl() << server.serverPassword() << server.autoJoinChannels() << server.serverSSL() << server.serverPort();
+    return stream
+            << serverSettings.serverUrl()
+            << serverSettings.serverPassword()
+            << serverSettings.autoJoinChannels()
+            << serverSettings.serverSSL()
+            << serverSettings.serverPort()
+            << serverSettings.userNickname()
+            << serverSettings.userIdent()
+            << serverSettings.userRealName();
 }
 
-QDataStream &operator>>(QDataStream &stream, ServerSettings &server)
+QDataStream &operator>>(QDataStream &stream, ServerSettings &serverSettings)
 {
-    return stream >> server._serverUrl >> server._serverPassword >> server._autoJoinChannels >> server._serverSSL >> server._serverPort;
+    return stream
+            >> serverSettings._serverUrl
+            >> serverSettings._serverPassword
+            >> serverSettings._autoJoinChannels
+            >> serverSettings._serverSSL
+            >> serverSettings._serverPort
+            >> serverSettings._userNickname
+            >> serverSettings._userIdent
+            >> serverSettings._userRealName;
 }

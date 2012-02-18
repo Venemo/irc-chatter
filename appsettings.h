@@ -27,9 +27,12 @@
 #include "util.h"
 
 // Increase this when anything changes in the settings
-#define APPSETTINGS_VERSION 3
+#define APPSETTINGS_VERSION 4
 
-class QSettings;
+// Setting property
+#define SETTINGPROPERTY(type, name, settername, signalname, settingKey, defaultValue) \
+    inline type name() const { return _backend.value(settingKey, defaultValue).value<type>(); } \
+    inline void settername (const type &value) { _backend.setValue(settingKey, value); emit signalname (); }
 
 class AppSettings : public QObject
 {
@@ -37,16 +40,14 @@ class AppSettings : public QObject
     GENPROPERTY_R(bool, _areSettingsDeleted, areSettingsDeleted)
     Q_PROPERTY(bool areSettingsDeleted READ areSettingsDeleted NOTIFY areSettingsDeletedChanged)
     Q_PROPERTY(QObject* serverSettings READ serverSettings NOTIFY serverSettingsChanged)
-    Q_PROPERTY(QString userNickname READ userNickname WRITE setUserNickname NOTIFY userNicknameChanged)
-    Q_PROPERTY(QString userIdent READ userIdent WRITE setUserIdent NOTIFY userIdentChanged)
-    Q_PROPERTY(QString userRealName READ userRealName WRITE setUserRealName NOTIFY userRealNameChanged)
+
     Q_PROPERTY(QString kickMessage READ kickMessage WRITE setKickMessage NOTIFY kickMessageChanged)
     Q_PROPERTY(QString partMessage READ partMessage WRITE setPartMessage NOTIFY partMessageChanged)
     Q_PROPERTY(QString quitMessage READ quitMessage WRITE setQuitMessage NOTIFY quitMessageChanged)
-    Q_PROPERTY(quint16 fontSize READ fontSize WRITE setFontSize NOTIFY fontSizeChanged)
-    Q_PROPERTY(bool fontMonospace READ fontMonospace WRITE setFontMonospace NOTIFY fontMonospaceChanged)
     Q_PROPERTY(QString sidebarColor READ sidebarColor WRITE setSidebarColor NOTIFY sidebarColorChanged)
+    Q_PROPERTY(bool fontMonospace READ fontMonospace WRITE setFontMonospace NOTIFY fontMonospaceChanged)
     Q_PROPERTY(bool autoFocusTextField READ autoFocusTextField WRITE setAutoFocusTextField NOTIFY autoFocusTextFieldChanged)
+    Q_PROPERTY(int fontSize READ fontSize WRITE setFontSize NOTIFY fontSizeChanged)
 
     QSettings _backend;
     QObjectListModel<ServerSettings> *_serverSettings;
@@ -54,26 +55,13 @@ class AppSettings : public QObject
 public:
     explicit AppSettings(QObject *parent = 0);
 
-    QString userNickname() const;
-    void setUserNickname(const QString &value);
-    QString userIdent() const;
-    void setUserIdent(const QString &value);
-    QString userRealName() const;
-    void setUserRealName(const QString &value);
-    QString partMessage() const;
-    void setPartMessage(const QString &value);
-    QString kickMessage() const;
-    void setKickMessage(const QString &value);
-    QString quitMessage() const;
-    void setQuitMessage(const QString &value);
-    quint16 fontSize() const;
-    void setFontSize(const quint16 &value);
-    bool fontMonospace() const;
-    void setFontMonospace(const bool &value);
-    QString sidebarColor() const;
-    void setSidebarColor(const QString &value);
-    bool autoFocusTextField() const;
-    void setAutoFocusTextField(bool value);
+    SETTINGPROPERTY(QString, partMessage, setPartMessage, partMessageChanged, "partMessage", "Leaving this channel. (with IRC Chatter)")
+    SETTINGPROPERTY(QString, kickMessage, setKickMessage, kickMessageChanged, "kickMessage", "Kindergarten is elsewhere!")
+    SETTINGPROPERTY(QString, quitMessage, setQuitMessage, quitMessageChanged, "quitMessage", "IRC Chatter closed.")
+    SETTINGPROPERTY(QString, sidebarColor, setSidebarColor, sidebarColorChanged, "sidebarColor", "#f9a300")
+    SETTINGPROPERTY(bool, fontMonospace, setFontMonospace, fontMonospaceChanged, "fontMonospace", false)
+    SETTINGPROPERTY(bool, autoFocusTextField, setAutoFocusTextField, autoFocusTextFieldChanged, "autoFocusTextField", false)
+    SETTINGPROPERTY(int, fontSize, setFontSize, fontSizeChanged, "fontSize", 24)
 
     QObjectListModel<ServerSettings> *serverSettings();
     Q_INVOKABLE void saveServerSettings();
@@ -83,9 +71,7 @@ public:
 signals:
     void areSettingsDeletedChanged();
     void serverSettingsChanged();
-    void userNicknameChanged();
-    void userIdentChanged();
-    void userRealNameChanged();
+
     void kickMessageChanged();
     void partMessageChanged();
     void quitMessageChanged();

@@ -23,16 +23,6 @@
 
 #define APPSETTING_SETTINGSVERSION "SettingsVersion"
 #define APPSETTING_SERVERSETTINGS "ServerSettings"
-#define APPSETTING_USERNICKNAME "UserNickname"
-#define APPSETTING_USERIDENT "UserIdent"
-#define APPSETTING_USERREALNAME "UserRealName"
-#define APPSETTING_PARTMESSAGE "PartMessage"
-#define APPSETTING_KICKMESSAGE "KickMessage"
-#define APPSETTING_QUITMESSAGE "QuitMessage"
-#define APPSETTING_FONTSIZE "FontSize"
-#define APPSETTING_FONTMONOSPACE "FontMonospace"
-#define APPSETTING_SIDEBARCOLOR "SidebarColor"
-#define APPSETTING_AUTOFOCUSTEXTFIELD "AutoFocusTextField"
 
 AppSettings::AppSettings(QObject *parent) :
     QObject(parent),
@@ -71,106 +61,6 @@ AppSettings::AppSettings(QObject *parent) :
             _serverSettings->addItem(server);
         }
     }
-}
-
-QString AppSettings::userNickname() const
-{
-    return _backend.value(APPSETTING_USERNICKNAME).toString();
-}
-
-void AppSettings::setUserNickname(const QString &value)
-{
-    _backend.setValue(APPSETTING_USERNICKNAME, value);
-}
-
-QString AppSettings::userIdent() const
-{
-    return _backend.value(APPSETTING_USERIDENT).toString();
-}
-
-void AppSettings::setUserIdent(const QString &value)
-{
-    _backend.setValue(APPSETTING_USERIDENT, value);
-}
-
-QString AppSettings::userRealName() const
-{
-    return _backend.value(APPSETTING_USERREALNAME).toString();
-}
-
-void AppSettings::setUserRealName(const QString &value)
-{
-    _backend.setValue(APPSETTING_USERREALNAME, value);
-}
-
-QString AppSettings::kickMessage() const
-{
-    return _backend.value(APPSETTING_KICKMESSAGE, QVariant("Kindergarten is elsewhere!")).toString();
-}
-
-void AppSettings::setKickMessage(const QString &value)
-{
-    _backend.setValue(APPSETTING_KICKMESSAGE, value);
-}
-
-QString AppSettings::partMessage() const
-{
-    return _backend.value(APPSETTING_PARTMESSAGE, QVariant("Leaving this channel. (with IRC Chatter, the first MeeGo IRC client)")).toString();
-}
-
-void AppSettings::setPartMessage(const QString &value)
-{
-    _backend.setValue(APPSETTING_PARTMESSAGE, value);
-}
-
-QString AppSettings::quitMessage() const
-{
-    return _backend.value(APPSETTING_QUITMESSAGE, QVariant("IRC Chatter (the first MeeGo IRC client) closed.")).toString();
-}
-
-void AppSettings::setQuitMessage(const QString &value)
-{
-    _backend.setValue(APPSETTING_QUITMESSAGE, value);
-}
-
-
-quint16 AppSettings::fontSize() const
-{
-    return _backend.value(APPSETTING_FONTSIZE, QVariant(24)).toUInt();
-}
-
-void AppSettings::setFontSize(const quint16 &value)
-{
-    _backend.setValue(APPSETTING_FONTSIZE, value);
-}
-
-bool AppSettings::fontMonospace() const
-{
-    return _backend.value(APPSETTING_FONTMONOSPACE, false).toBool();
-}
-
-void AppSettings::setSidebarColor(const QString &value)
-{
-    _backend.setValue(APPSETTING_SIDEBARCOLOR, value);
-}
-
-QString AppSettings::sidebarColor() const
-{
-    return _backend.value(APPSETTING_SIDEBARCOLOR, "#f9a300").toString();
-}
-
-void AppSettings::setFontMonospace(const bool &value)
-{
-    _backend.setValue(APPSETTING_FONTMONOSPACE, value);
-}
-bool AppSettings::autoFocusTextField() const
-{
-    return _backend.value(APPSETTING_AUTOFOCUSTEXTFIELD, false).toBool();
-}
-
-void AppSettings::setAutoFocusTextField(bool value)
-{
-    _backend.setValue(APPSETTING_AUTOFOCUSTEXTFIELD, value);
 }
 
 QObjectListModel<ServerSettings> *AppSettings::serverSettings()
