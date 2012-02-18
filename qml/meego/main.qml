@@ -27,8 +27,13 @@ PageStackWindow {
     initialPage: firstrunPage
 
     onOrientationChangeFinished: {
+        showStatusBar = inPortrait
+
         if (pageStack.currentPage === chatPage)
-            chatPage.adjustForOrientationChange();
+            chatPage.adjustForOrientationChange()
+    }
+    Component.onCompleted: {
+        showStatusBar = inPortrait
     }
 
     // Pages
