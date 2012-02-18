@@ -1,7 +1,7 @@
 
 TARGET = irc-chatter
 TEMPLATE = app
-VERSION = 0.2.0
+VERSION = 0.2.90
 QT += core declarative network
 
 DEFINES += \
@@ -64,11 +64,6 @@ unix {
     icon.path = /usr/share/icons/hicolor/80x80/apps
     desktopfile.files = installables/irc-chatter-harmattan.desktop
     desktopfile.path = /usr/share/applications
-
-    contains(DEFINES, PRERELEASE) {
-        icon.files = installables/irc-chatter-harmattan-prerelease-icon.png
-        desktopfile.files = installables/irc-chatter-harmattan-prerelease.desktop
-    }
 }
 
 contains(MEEGO_EDITION, harmattan) {
