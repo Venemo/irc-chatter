@@ -48,10 +48,14 @@ void IrcModel::connectToServer(ServerSettings *server, AppSettings *settings)
     {
         AbstractIrcClient *ircClient = new CommuniIrcClient(server->serverUrl(), this, server, settings);
         ServerModel *serverModel = new ServerModel(this, server->serverUrl(), ircClient);
+
         serverModel->_autoJoinChannels = server->autoJoinChannels();
         _servers.append(serverModel);
+
         connect(ircClient, SIGNAL(connectedToServer()), this, SLOT(backendsConnectedToServer()));
         connect(serverModel, SIGNAL(channelsChanged()), this, SLOT(refreshChannelList()));
+
+        ircClient->connectToServer();
     }
     else
     {

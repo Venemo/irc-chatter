@@ -35,6 +35,7 @@ CommuniIrcClient::CommuniIrcClient(const QString &serverUrl, QObject *parent, Se
 {
     _ircSession = new IrcSession(this);
     _ircSession->setNickName(appSettings->userNickname());
+    _ircSession->setHost(serverSettings->serverUrl());
 
     if (appSettings->userIdent().length())
         _ircSession->setUserName(appSettings->userIdent());
@@ -73,6 +74,8 @@ void CommuniIrcClient::messageReceived(IrcMessage *message)
         QString channelName = msg->target().startsWith('#')
                 ? msg->target() // This is a channel message
                 : msg->sender().name(); // This is a private message
+
+        qDebug() << channelName;
 
         if (msg->isAction())
         {
@@ -135,10 +138,15 @@ void CommuniIrcClient::messageReceived(IrcMessage *message)
             // This is a CTCP reply message
             emit receiveCtcpReply(msg->sender().name(), msg->message());
         }
+        else if (msg->target().startsWith('#'))
+        {
+            // This is a channel notice message
+            emit receiveMessage(msg->target(), msg->sender().name(), msg->message());
+        }
         else
         {
-            // This is a channel/private notice message
-            emit receiveMessage(msg->target(), msg->sender().name(), msg->message());
+            // This is a channel notice message
+            emit receiveMessage(msg->sender().name(), msg->sender().name(), msg->message());
         }
         break;
     }

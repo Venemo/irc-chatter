@@ -30,15 +30,24 @@ ServerModel::ServerModel(IrcModel *parent, const QString &url, AbstractIrcClient
     _defaultChannel(0)
 {
     _settings = new AppSettings(this);
-    // TODO
-    //    if (_backend)
-    //    {
-    //        connect(_backend, SIGNAL(connected()), this, SLOT(backendConnectedToServer()));
-    //        connect(_backend, SIGNAL(disconnected()), this, SLOT(backendDisconnectedFromServer()));
-    //        connect(_backend, SIGNAL(messageReceived(IrcMessage*)), this, SLOT(backendReceivedMessage(IrcMessage*)));
-    //        _backend->setHost(url);
-    //        _backend->open();
-    //    }
+
+    connect(_ircClient, SIGNAL(connectedToServer()), this, SLOT(connectedToServer()));
+    connect(_ircClient, SIGNAL(disconnectedFromServer()), this, SLOT(disconnectedFromServer()));
+
+    connect(_ircClient, SIGNAL(receiveCtcpAction(QString,QString,QString)), this, SLOT(receiveCtcpAction(QString,QString,QString)));
+    connect(_ircClient, SIGNAL(receiveCtcpReply(QString,QString)), this, SLOT(receiveCtcpReply(QString,QString)));
+    connect(_ircClient, SIGNAL(receiveCtcpRequest(QString,QString)), this, SLOT(receiveCtcpRequest(QString,QString)));
+    connect(_ircClient, SIGNAL(receiveError(QString)), this, SLOT(receiveError(QString)));
+    connect(_ircClient, SIGNAL(receiveJoin(QString,QString)), this, SLOT(receiveJoin(QString,QString)));
+    connect(_ircClient, SIGNAL(receiveKick(QString,QString,QString,QString)), this, SLOT(receiveKick(QString,QString,QString,QString)));
+    connect(_ircClient, SIGNAL(receiveMessage(QString,QString,QString)), this, SLOT(receiveMessage(QString,QString,QString)));
+    connect(_ircClient, SIGNAL(receiveModeChange(QString,QString,QString)), this, SLOT(receiveModeChange(QString,QString,QString)));
+    connect(_ircClient, SIGNAL(receiveMotd(QString)), this, SLOT(receiveMotd(QString)));
+    connect(_ircClient, SIGNAL(receiveNickChange(QString,QString)), this, SLOT(receiveMotd(QString)));
+    connect(_ircClient, SIGNAL(receivePart(QString,QString,QString)), this, SLOT(receivePart(QString,QString,QString)));
+    connect(_ircClient, SIGNAL(receiveQuit(QString,QString)), this, SLOT(receiveQuit(QString,QString)));
+    connect(_ircClient, SIGNAL(receiveTopic(QString,QString)), this, SLOT(receiveTopic(QString,QString)));
+    connect(_ircClient, SIGNAL(receiveUserNames(QString,QStringList)), this, SLOT(receiveUserNames(QString,QStringList)));
 }
 
 ServerModel::~ServerModel()
@@ -55,7 +64,10 @@ void ServerModel::connectedToServer()
     qDebug() << "backend of " << url() << " is now connected to server";
 
     foreach (QString channelName, _autoJoinChannels)
+    {
+        addModelForChannel(channelName);
         _ircClient->joinChannel(channelName);
+    }
 }
 
 void ServerModel::disconnectedFromServer()
