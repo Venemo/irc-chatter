@@ -28,62 +28,64 @@ Page {
 
     function sendCurrentMessage() {
         if (ircModel.currentChannel !== null) {
-            shouldUpdateCurrentMessage = false;
-            ircModel.currentChannel.sendCurrentMessage();
-            shouldUpdateCurrentMessage = true;
+            shouldUpdateCurrentMessage = false
+            ircModel.currentChannel.sendCurrentMessage()
+            shouldUpdateCurrentMessage = true
         }
     }
     function switchChannel(index) {
-        shouldUpdateCurrentMessage = false;
-        ircModel.currentChannelIndex = index;
-        shouldUpdateCurrentMessage = true;
-        scrollToBottom();
+        shouldUpdateCurrentMessage = false
+        ircModel.currentChannelIndex = index
+        shouldUpdateCurrentMessage = true
+        scrollToBottom()
 
         if (appSettings.autoFocusTextField)
-            messageField.forceActiveFocus();
+            messageField.forceActiveFocus()
     }
     function scrollToBottom() {
         chatFlickable.contentY = Math.max(0,  chatArea.height - chatFlickable.height)
     }
     function adjustForOrientationChange() {
-        scrollToBottom();
-        chatFlickable.lastSupposedContentY = chatFlickable.contentY;
+        scrollToBottom()
+        chatFlickable.lastSupposedContentY = chatFlickable.contentY
     }
 
     id: mainPage
     onStatusChanged: {
         if (mainPage.status === PageStatus.Active) {
-            commonMenu.close();
-            chatArea.font.pixelSize = appSettings.fontSize;
+            commonMenu.close()
+            chatArea.font.pixelSize = appSettings.fontSize
+
             if(appSettings.fontMonospace)
-                chatArea.font.family = "Monospace";
+                chatArea.font.family = "Monospace"
             else
-                chatArea.font.family = "Nokia Pure";
-            channelNameBg.color = appSettings.sidebarColor;
+                chatArea.font.family = "Nokia Pure"
+
+            channelNameBg.color = appSettings.sidebarColor
         }
     }
     tools: ToolBarLayout {
         visible: true
 
         ToolIcon {
-            platformIconId: "toolbar-add";
+            platformIconId: "toolbar-add"
             onClicked: joinSheet.open()
         }
         ToolIcon {
-            platformIconId: "toolbar-send-chat";
-            onClicked: channelSelectorDialog.open();
+            platformIconId: "toolbar-send-chat"
+            onClicked: channelSelectorDialog.open()
         }
         ToolIcon {
-            platformIconId: "toolbar-addressbook";
-            onClicked: userSelectorDialog.open();
+            platformIconId: "toolbar-addressbook"
+            onClicked: userSelectorDialog.open()
             visible: ircModel.currentChannel === null ? false : (ircModel.currentChannel.name.charAt(0) === '#')
         }
         ToolIcon {
-            platformIconId: "toolbar-settings";
+            platformIconId: "toolbar-settings"
             onClicked: appWindow.pageStack.push(settingsPage)
         }
         ToolIcon {
-            platformIconId: "toolbar-view-menu";
+            platformIconId: "toolbar-view-menu"
             onClicked: (chatMenu.status === DialogStatus.Closed) ? chatMenu.open() : chatMenu.close()
         }
     }
@@ -115,9 +117,9 @@ Page {
             font.pixelSize: appSettings.fontSize
 
             onTextChanged: {
-                var should = Math.max(0,  chatArea.height - chatFlickable.height);
+                var should = Math.max(0,  chatArea.height - chatFlickable.height)
                 if (chatFlickable.contentY >= chatFlickable.lastSupposedContentY - 72)
-                    chatFlickable.lastSupposedContentY = chatFlickable.contentY = should;
+                    chatFlickable.lastSupposedContentY = chatFlickable.contentY = should
             }
 
             Connections {
@@ -126,12 +128,12 @@ Page {
                 onLinkActivated: {
                     // User queries
                     if (!link.indexOf("user://")) {
-                        areYouSureToQueryDialog.queryableUserName = link.replace("user://", "");
-                        areYouSureToQueryDialog.open();
+                        areYouSureToQueryDialog.queryableUserName = link.replace("user://", "")
+                        areYouSureToQueryDialog.open()
                     }
                     // Normal links
                     else if (link.indexOf("://") || !(link.indexOf("www.")))
-                        Qt.openUrlExternally(link);
+                        Qt.openUrlExternally(link)
                 }
             }
         }
@@ -182,20 +184,20 @@ Page {
                             target: ircModel.allChannels.getItem(index)
                             onNewMessageReceived: {
                                 if (!isCurrent)
-                                    hasNewMessage = true;
+                                    hasNewMessage = true
                             }
                             onNewMessageWithUserNickReceived: {
                                 if (!isCurrent)
-                                    hasNewMessageWithUserNick = true;
+                                    hasNewMessageWithUserNick = true
                             }
                         }
 
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                hasNewMessage = false;
-                                hasNewMessageWithUserNick = false;
-                                switchChannel(index);
+                                hasNewMessage = false
+                                hasNewMessageWithUserNick = false
+                                switchChannel(index)
                             }
                         }
                     }
@@ -220,17 +222,17 @@ Page {
         }
         onTextChanged: {
             if (ircModel.currentChannel !== null && ircModel.currentChannel.currentMessage !== messageField.text && shouldUpdateCurrentMessage)
-                ircModel.currentChannel.currentMessage = text;
+                ircModel.currentChannel.currentMessage = text
         }
         inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
         Keys.onReturnPressed: sendCurrentMessage()
         Keys.onUpPressed: {
             if (ircModel.currentChannel !== null)
-                ircModel.currentChannel.getSentMessagesUp();
+                ircModel.currentChannel.getSentMessagesUp()
         }
         Keys.onDownPressed: {
             if (ircModel.currentChannel !== null)
-                ircModel.currentChannel.getSentMessagesDown();
+                ircModel.currentChannel.getSentMessagesDown()
         }
 
         ToolIcon {
@@ -239,8 +241,8 @@ Page {
             anchors.left: parent.left
             platformIconId: "toolbar-reply"
             onClicked: {
-                messageField.forceActiveFocus();
-                ircModel.currentChannel.autoCompleteNick();
+                messageField.forceActiveFocus()
+                ircModel.currentChannel.autoCompleteNick()
             }
         }
         ToolIcon {
@@ -249,7 +251,7 @@ Page {
             anchors.right: parent.right
             platformIconId: "toolbar-send-sms"
             onClicked: {
-                messageField.forceActiveFocus();
+                messageField.forceActiveFocus()
                 sendCurrentMessage()
             }
         }
@@ -279,9 +281,9 @@ Page {
         visualParent: chatPage
         onAccepted: {
             if (isChannel)
-                ircModel.currentServer.joinChannel(joinText);
+                ircModel.currentServer.joinChannel(joinText)
             else if (isQuery)
-                ircModel.currentServer.queryUser(joinText);
+                ircModel.currentServer.queryUser(joinText)
         }
     }
 
@@ -307,7 +309,7 @@ Page {
         titleText: "Are you sure?"
         message: "Would you like to query user " + areYouSureToQueryDialog.queryableUserName + " ?"
         onAccepted: {
-            ircModel.currentServer.queryUser(areYouSureToQueryDialog.queryableUserName);
+            ircModel.currentServer.queryUser(areYouSureToQueryDialog.queryableUserName)
         }
     }
 
@@ -315,10 +317,10 @@ Page {
         id: channelSelectorDialog
         titleText: "Switch channel"
         model: ircModel.allChannels
-        onSelectedIndexChanged: switchChannel(selectedIndex);
+        onSelectedIndexChanged: switchChannel(selectedIndex)
         onStatusChanged: {
-            if (status == DialogStatus.Opening)
-                selectedIndex = ircModel.currentChannelIndex;
+            if (status === DialogStatus.Opening)
+                selectedIndex = ircModel.currentChannelIndex
         }
         searchFieldVisible: true
     }
@@ -329,13 +331,13 @@ Page {
         model: ircModel.currentChannel === null ? null : ircModel.currentChannel.users
         onAccepted: {
             if (userSelectorDialog.selectedIndex >= 0) {
-                areYouSureToQueryDialog.queryableUserName = ircModel.currentChannel.getUserNameFromIndex(userSelectorDialog.selectedIndex);
-                areYouSureToQueryDialog.open();
+                areYouSureToQueryDialog.queryableUserName = ircModel.currentChannel.getUserNameFromIndex(userSelectorDialog.selectedIndex)
+                areYouSureToQueryDialog.open()
             }
         }
         onStatusChanged: {
-            if (status == DialogStatus.Opening)
-                selectedIndex = -1;
+            if (status === DialogStatus.Opening)
+                selectedIndex = -1
         }
 
         searchFieldVisible: true
