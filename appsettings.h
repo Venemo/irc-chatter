@@ -46,6 +46,7 @@ class AppSettings : public QObject
     Q_PROPERTY(quint16 fontSize READ fontSize WRITE setFontSize NOTIFY fontSizeChanged)
     Q_PROPERTY(bool fontMonospace READ fontMonospace WRITE setFontMonospace NOTIFY fontMonospaceChanged)
     Q_PROPERTY(QString sidebarColor READ sidebarColor WRITE setSidebarColor NOTIFY sidebarColorChanged)
+    Q_PROPERTY(bool autoFocusTextField READ autoFocusTextField WRITE setAutoFocusTextField NOTIFY autoFocusTextFieldChanged)
 
     QSettings _backend;
     QObjectListModel<ServerSettings> *_serverSettings;
@@ -91,6 +92,7 @@ signals:
     void fontSizeChanged();
     void fontMonospaceChanged();
     void sidebarColorChanged();
+    void autoFocusTextFieldChanged();
 
 };
 

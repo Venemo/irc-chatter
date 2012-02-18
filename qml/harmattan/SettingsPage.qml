@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
-// Copyright (C) 2011, Timur Kristóf <venemo@fedoraproject.org>
+// Copyright (C) 2011-2012, Timur Kristóf <venemo@fedoraproject.org>
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
 import QtQuick 1.1
@@ -177,22 +177,13 @@ Page {
                 property: "kickMessage"
                 value: kickField.text
             }
-            CheckBox {
-                id: autoFocusCheckBox
-                text: "Auto focus text field after switching"
-                checked: appSettings.autoFocusTextField
-            }
-            Binding {
-                target: appSettings
-                property: "autoFocusTextField"
-                value: autoFocusCheckBox.checked
-            }
-            Label {
-                text: "Font Size"
-            }
             Row {
                 spacing: 10
                 width: parent.width
+
+                Label {
+                    text: "Font Size"
+                }
                 Slider {
                     id: fontSlider
                     minimumValue: 12
@@ -212,24 +203,25 @@ Page {
                     width: 100
                 }
             }
-            Row {
-                spacing: 10
-                width: parent.width
-                Label {
-                    id: monospaceField
-                    text: "Use Monospace Font?"
-                }
-                CheckBox {
-                    id: monospaceCheckbox
-                    checked: false
-                    anchors.right: parent.right
-                    anchors.verticalCenter: monospaceField.verticalCenter
-                }
+            CheckBox {
+                id: monospaceCheckbox
+                text: "Use monospace font"
+                checked: false
             }
             Binding {
                 target: appSettings
                 property: "fontMonospace"
                 value: monospaceCheckbox.checked
+            }
+            CheckBox {
+                id: autoFocusCheckBox
+                text: "Autofocus text field"
+                checked: appSettings.autoFocusTextField
+            }
+            Binding {
+                target: appSettings
+                property: "autoFocusTextField"
+                value: autoFocusCheckBox.checked
             }
             Row {
                 width: parent.width
@@ -238,12 +230,10 @@ Page {
                     id: sidebarLabel
                     text: "Sidebar Color"
                 }
-                Button {
+                TumblerButton {
                     id: colorButton
                     text: "Orange"
                     width: parent.width / 2
-                    anchors.right: parent.right
-                    anchors.verticalCenter: sidebarLabel.verticalCenter
                     onClicked: colorSelectionDialog.open()
                 }
             }
@@ -314,15 +304,5 @@ Page {
         target: appSettings
         property: "sidebarColor"
         value: color
-    }
-    WorkingSelectionDialog {
-        id: fontSizeSelectionDialog
-        model: ListModel { }
-        titleText: "Font size"
-        searchFieldVisible: false
-        Component.onCompleted: {
-            for (var i = 10; i <= 40; i++)
-                model.append({ name: i + " pixels", pixelSize: i });
-        }
     }
 }

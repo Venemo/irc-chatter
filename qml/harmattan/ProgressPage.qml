@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
-// Copyright (C) 2011, Timur Kristóf <venemo@fedoraproject.org>
+// Copyright (C) 2011-2012, Timur Kristóf <venemo@fedoraproject.org>
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
 import QtQuick 1.1
@@ -21,24 +21,25 @@ import com.nokia.meego 1.0
 import com.nokia.extras 1.0
 
 Page {
-    id: progressPage
-    tools: ToolBarLayout {
-        ToolIcon {
-            platformIconId: "toolbar-view-menu"
-            onClicked: (commonMenu.status == DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
-            anchors.right: parent.right
+    function switchToChatPageIfPossible() {
+        if (status === PageStatus.Active && isModelReady) {
+            commonMenu.close();
+            appWindow.pageStack.push(chatPage);
         }
     }
 
     property bool isModelReady: false
-    property bool canPushChatPage: status == PageStatus.Active && isModelReady
 
-    onCanPushChatPageChanged: {
-        if (canPushChatPage)
-        {
-            commonMenu.close();
-            appWindow.pageStack.push(chatPage);
+    id: progressPage
+    tools: ToolBarLayout {
+        ToolIcon {
+            platformIconId: "toolbar-view-menu"
+            onClicked: (commonMenu.status === DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
+            anchors.right: parent.right
         }
+    }
+    onStatusChanged: {
+        switchToChatPageIfPossible();
     }
 
     BusyIndicator {
@@ -57,6 +58,7 @@ Page {
         target: ircModel
         onReadyToDisplay: {
             isModelReady = true;
+            switchToChatPageIfPossible();
         }
     }
 }
