@@ -52,7 +52,7 @@ Page {
 
     id: mainPage
     onStatusChanged: {
-        if (mainPage.status == PageStatus.Active) {
+        if (mainPage.status === PageStatus.Active) {
             commonMenu.close();
             chatArea.font.pixelSize = appSettings.fontSize;
             if(appSettings.fontMonospace)
@@ -84,8 +84,12 @@ Page {
         }
         ToolIcon {
             platformIconId: "toolbar-view-menu";
-            onClicked: (chatMenu.status == DialogStatus.Closed) ? chatMenu.open() : chatMenu.close()
+            onClicked: (chatMenu.status === DialogStatus.Closed) ? chatMenu.open() : chatMenu.close()
         }
+    }
+    onHeightChanged: {
+        chatArea.height = Math.max(chatPage.height - messageField.height, chatArea.implicitHeight)
+        scrollToBottom()
     }
 
     Flickable {
@@ -98,14 +102,12 @@ Page {
         interactive: true
         contentHeight: chatArea.height
         clip: true
-        onHeightChanged: scrollToBottom()
 
         property int lastSupposedContentY: 0
 
         TextArea {
             id: chatArea
             width: parent.width
-            height: Math.max(chatFlickable.height, implicitHeight)
             readOnly: true
             wrapMode: TextEdit.WordWrap
             textFormat: TextEdit.RichText
@@ -119,6 +121,7 @@ Page {
             }
 
             Connections {
+                // chatArea.children[3] is the TextEdit inside the TextArea
                 target: chatArea.children[3]
                 onLinkActivated: {
                     // User queries
