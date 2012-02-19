@@ -30,6 +30,7 @@ public:
     Q_INVOKABLE virtual QObject *getItem(int index) = 0;
     Q_INVOKABLE virtual int rowCount(const QModelIndex &parent = QModelIndex()) const = 0;
     Q_INVOKABLE virtual int indexOf(QObject *obj) const = 0;
+    Q_INVOKABLE void reset() { QAbstractListModel::reset(); }
 
 protected slots:
     virtual void removeDestroyedItem() = 0;

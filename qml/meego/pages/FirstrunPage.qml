@@ -158,6 +158,9 @@ Page {
                 if (isNewServer) {
                     appSettings.appendServerSettings(serverSettings)
                 }
+                else {
+                    appSettings.serverSettings.reset()
+                }
                 appSettings.saveServerSettings()
             }
             else {
