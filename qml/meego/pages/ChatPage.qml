@@ -65,7 +65,7 @@ Page {
         }
     }
     onHeightChanged: {
-        chatArea.height = Math.max(chatPage.height - messageField.height, chatArea.implicitHeight)
+        chatArea.height = Math.max(chatPage.height, chatArea.implicitHeight)
         scrollToBottom()
     }
 
@@ -185,7 +185,16 @@ Page {
     }
     Rectangle {
         id: chatRectangle
-        color: "#ffffff"
+        gradient: Gradient {
+            GradientStop {
+                color: "#777777"
+                position: 0
+            }
+            GradientStop {
+                color: "#bbbbbb"
+                position: 0.5
+            }
+        }
         height: messageField.implicitHeight * 1.2
         anchors.bottom: parent.bottom
         anchors.left: parent.left
