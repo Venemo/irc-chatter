@@ -36,10 +36,6 @@ PageStackWindow {
         showStatusBar = inPortrait
     }
 
-    AppSettings {
-        id: appSettings
-    }
-
     // Pages
 
     FirstrunPage {

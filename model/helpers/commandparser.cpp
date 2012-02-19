@@ -20,11 +20,13 @@
 #include <QStringList>
 
 #include "../clients/abstractircclient.h"
+#include "../../appsettings.h"
 #include "commandparser.h"
 
-CommandParser::CommandParser(AbstractIrcClient *ircClient, QObject *parent) :
+CommandParser::CommandParser(QObject *parent, AbstractIrcClient *ircClient, AppSettings *appSettings) :
     QObject(parent),
-    _ircClient(ircClient)
+    _ircClient(ircClient),
+    _appSettings(appSettings)
 {
 }
 
@@ -51,7 +53,7 @@ void CommandParser::parseAndSendCommand(const QString &channelName, const QStrin
     else if (channelName.startsWith('#') && (commandParts[0] == "/part" || commandParts[0] == "/p"))
     {
         if (n == 1)
-            _ircClient->partChannel(channelName, "Parting (with IRC Chatter)");
+            _ircClient->partChannel(channelName, _appSettings->partMessage());
         else if (n == 2)
             _ircClient->partChannel(commandParts[1], commandParts[2]);
         else
@@ -70,7 +72,7 @@ void CommandParser::parseAndSendCommand(const QString &channelName, const QStrin
     {
         if (n == 1)
         {
-            _ircClient->quit("Quitting. (with IRC Chatter)");
+            _ircClient->quit(_appSettings->quitMessage());
             _ircClient->disconnectFromServer();
             QCoreApplication::instance()->processEvents();
             QCoreApplication::instance()->quit();
@@ -125,9 +127,9 @@ void CommandParser::parseAndSendCommand(const QString &channelName, const QStrin
     else if (commandParts[0] == "/kick" || commandParts[0] == "/k")
     {
         if (n == 2)
-            _ircClient->kick(channelName, commandParts[1], QString());
+            _ircClient->kick(channelName, commandParts[1], _appSettings->kickMessage());
         else if (n == 3)
-            _ircClient->kick(commandParts[2], commandParts[1], QString());
+            _ircClient->kick(commandParts[2], commandParts[1], _appSettings->kickMessage());
         else if (n != 1)
         {
             QString reason = msg.mid(commandParts[0].length() + commandParts[1].length() + commandParts[2].length() + 3);

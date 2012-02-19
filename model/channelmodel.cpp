@@ -23,6 +23,7 @@
 
 #include "channelmodel.h"
 #include "servermodel.h"
+#include "ircmodel.h"
 #include "clients/abstractircclient.h"
 #include "helpers/commandparser.h"
 #include "helpers/channelhelper.h"
@@ -39,7 +40,7 @@ ChannelModel::ChannelModel(ServerModel *parent, const QString &channelName, Abst
     _name(channelName),
     _users(new QStringListModel(this)),
     _ircClient(ircClient),
-    _commandParser(new CommandParser(_ircClient, this)),
+    _commandParser(new CommandParser(this, _ircClient, static_cast<IrcModel*>(this->parent()->parent())->appSettings())),
     _displayedLines(0),
     _sentMessagesIndex(-1)
 {

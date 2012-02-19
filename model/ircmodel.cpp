@@ -31,16 +31,17 @@ static bool channelLessThan(ChannelModel * m1, ChannelModel *m2)
     return m1->channelType() < m2->channelType();
 }
 
-IrcModel::IrcModel(QObject *parent) :
+IrcModel::IrcModel(QObject *parent, AppSettings *appSettings) :
     QObject(parent),
     _currentChannelIndex(-1),
+    _appSettings(appSettings),
     _networkConfigurationManager(new QNetworkConfigurationManager(this)),
     _networkSession(0)
 {
     connect(_networkConfigurationManager, SIGNAL(onlineStateChanged(bool)), this, SLOT(onlineStateChanged(bool)));
 }
 
-void IrcModel::connectToServer(ServerSettings *serverSettings, AppSettings *settings)
+void IrcModel::connectToServer(ServerSettings *serverSettings)
 {
     attemptConnection();
 
@@ -60,7 +61,7 @@ void IrcModel::connectToServer(ServerSettings *serverSettings, AppSettings *sett
     else
     {
         // Putting this IRC connection to the waiting queue
-        _queue.append(IrcSettingPair(serverSettings, settings));
+        _queue.append(serverSettings);
         setIsWaitingForConnection(true);
     }
 }
@@ -135,10 +136,10 @@ void IrcModel::onlineStateChanged(bool online)
         {
             setIsWaitingForConnection(false);
 
-            foreach (const IrcSettingPair &pair, _queue)
+            foreach (ServerSettings *serverSettings, _queue)
             {
-                _queue.removeAll(pair);
-                connectToServer(pair.first, pair.second);
+                _queue.removeAll(serverSettings);
+                connectToServer(serverSettings);
             }
         }
 

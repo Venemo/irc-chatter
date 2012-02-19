@@ -60,7 +60,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QApplication::setApplicationVersion(APP_VERSION);
 
     QApplication *app = MDeclarativeCache::qApplication(argc, argv);
-    IrcModel *model = new IrcModel(app);
+    AppSettings *appSettings = new AppSettings(app);
+    IrcModel *model = new IrcModel(app, appSettings);
     app->installEventFilter(new AppFocusFilter(model));
 
     qmlRegisterType<ServerSettings>("net.venemo.ircchatter", 1, 0, "ServerSettings");
@@ -73,6 +74,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->setWindowTitle("IRC Chatter");
     view->rootContext()->setContextProperty("ircModel", model);
     view->rootContext()->setContextProperty("appVersion", appVersion);
+    view->rootContext()->setContextProperty("appSettings", appSettings);
     view->rootContext()->setContextProperty("isPreRelease", isPreRelease);
     view->setSource(QUrl("qrc:/qml/meego/main.qml"));
     view->showFullScreen();
