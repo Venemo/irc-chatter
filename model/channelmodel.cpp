@@ -159,7 +159,16 @@ void ChannelModel::appendError(QString msg)
 void ChannelModel::receiveMessage(const QString &userName, QString message)
 {
     bool hasUserNick = false;
-    appendLine(QTime::currentTime().toString("HH:mm") + " <a href='user://" + userName +"' style='text-decoration: none; color: " + ChannelHelper::colorForNick(userName, _ircClient->currentNick()) + "'>" + userName + "</a>: " + processMessage(message, &hasUserNick));
+    QString line;
+
+    if (appSettings()->displayTimestamps())
+        line += QTime::currentTime().toString("HH:mm") + " ";
+
+    line += "<a href='user://" + userName +"' style='text-decoration: none; color: " + ChannelHelper::colorForNick(userName, _ircClient->currentNick()) + "'>" + userName + "</a>: " + processMessage(message, &hasUserNick);
+
+    appendLine(line);
+
+    // TODO: take care of notifications here
 
     if (hasUserNick || !name().startsWith('#'))
         emit newMessageWithUserNickReceived();
@@ -169,7 +178,22 @@ void ChannelModel::receiveMessage(const QString &userName, QString message)
 
 void ChannelModel::receiveCtcpAction(const QString &userName, QString message)
 {
-    appendLine(QTime::currentTime().toString("HH:mm") + " * <span style='color: " + ChannelHelper::colorForNick(userName, _ircClient->currentNick()) + "'>" + userName + "</span> " + processMessage(message));
+    bool hasUserNick = false;
+    QString line;
+
+    if (appSettings()->displayTimestamps())
+        line += QTime::currentTime().toString("HH:mm") + " ";
+
+    line += "* <span style='color: " + ChannelHelper::colorForNick(userName, _ircClient->currentNick()) + "'>" + userName + "</span> " + processMessage(message, &hasUserNick);
+
+    appendLine(line);
+
+    // TODO: take care of notifications here
+
+    if (hasUserNick || !name().startsWith('#'))
+        emit newMessageWithUserNickReceived();
+    else
+        emit newMessageReceived();
 }
 
 void ChannelModel::receiveCtcpRequest(const QString &userName, QString message)
