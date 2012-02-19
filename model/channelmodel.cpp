@@ -63,8 +63,11 @@ void ChannelModel::receiveMotd(QString motd)
 
 void ChannelModel::receiveJoined(const QString &userName)
 {
-    if (userName != _ircClient->currentNick())
-        appendDeemphasisedInfo("--> " + userName + " has joined this channel.");
+    if (appSettings()->displayMiscEvents())
+    {
+        if (userName != _ircClient->currentNick())
+            appendDeemphasisedInfo("--> " + userName + " has joined this channel.");
+    }
 
     _userNames.append(userName);
     updateUserList();
@@ -72,21 +75,33 @@ void ChannelModel::receiveJoined(const QString &userName)
 
 void ChannelModel::receiveParted(const QString &userName, QString reason)
 {
-    appendDeemphasisedInfo("<-- " + userName + " has parted this channel." + (reason.length() ? (" (Reason: " + reason + ")") : ""));
+    if (appSettings()->displayMiscEvents())
+    {
+        appendDeemphasisedInfo("<-- " + userName + " has parted this channel." + (reason.length() ? (" (Reason: " + reason + ")") : ""));
+    }
+
     _userNames.removeAll(userName);
     updateUserList();
 }
 
 void ChannelModel::receiveQuit(const QString &userName, QString reason)
 {
-    appendDeemphasisedInfo("<-- " + userName + " has left this server." + (reason.length() ? (" (Reason: " + reason + ")") : ""));
+    if (appSettings()->displayMiscEvents())
+    {
+        appendDeemphasisedInfo("<-- " + userName + " has left this server." + (reason.length() ? (" (Reason: " + reason + ")") : ""));
+    }
+
     _userNames.removeAll(userName);
     updateUserList();
 }
 
 void ChannelModel::receiveNickChange(const QString &oldNick, const QString &newNick)
 {
-    appendDeemphasisedInfo("*** " + oldNick + " has changed nick to " + newNick + ".");
+    if (appSettings()->displayMiscEvents())
+    {
+        appendDeemphasisedInfo("*** " + oldNick + " has changed nick to " + newNick + ".");
+    }
+
     _userNames.removeAll(oldNick);
     _userNames.append(newNick);
     updateUserList();

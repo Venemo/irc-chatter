@@ -62,7 +62,7 @@ Page {
                 text: "Appearance"
             }
             Label {
-                text: "Display join/part/quit events"
+                text: "Show join/part/quit/nick events"
                 width: parent.width
                 height: miscEventsSwitch.height
                 verticalAlignment: Text.AlignVCenter
