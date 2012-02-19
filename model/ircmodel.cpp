@@ -55,6 +55,19 @@ void IrcModel::connectToServers()
     }
 }
 
+void IrcModel::disconnectFromServers()
+{
+    foreach (ServerModel *serverModel, _servers)
+    {
+        qDebug() << "disconnecting from server " << serverSettings->url();
+        serverModel->_ircClient->disconnectFromServer();
+        serverModel->deleteLater();
+    }
+
+    _queue.clear();
+    _servers.clear();
+}
+
 bool IrcModel::anyServersToConnect()
 {
     int i = 0;
@@ -96,9 +109,9 @@ void IrcModel::refreshChannelList()
     QList<ChannelModel*> *allChannelsList = new QList<ChannelModel*>(),
             *oldChannelsList = &_allChannels.getList();
 
-    foreach (ServerModel *serverSettings, _servers)
+    foreach (ServerModel *serverModel, _servers)
     {
-        QList<ChannelModel*> serverChannels = serverSettings->_channels.values();
+        QList<ChannelModel*> serverChannels = serverModel->_channels.values();
         qSort(serverChannels.begin(), serverChannels.end(), channelLessThan);
         *allChannelsList += serverChannels;
     }
@@ -161,20 +174,20 @@ void IrcModel::onlineStateChanged(bool online)
         {
             setIsWaitingForConnection(false);
 
-            foreach (ServerSettings *serverSettings, _queue)
+            foreach (ServerSettings *serverModel, _queue)
             {
-                _queue.removeAll(serverSettings);
-                connectToServer(serverSettings);
+                _queue.removeAll(serverModel);
+                connectToServer(serverModel);
             }
         }
 
         // Already connected but lost
         if (_servers.count())
         {
-            foreach (ServerModel *serverSettings, _servers)
+            foreach (ServerModel *serverModel, _servers)
             {
-                qDebug() << "reconnecting to serverSettings " << serverSettings->url();
-                serverSettings->_ircClient->connectToServer();
+                qDebug() << "reconnecting to server " << serverModel->url();
+                serverModel->_ircClient->connectToServer();
             }
         }
     }
@@ -182,10 +195,10 @@ void IrcModel::onlineStateChanged(bool online)
     {
         qDebug() << "Network connection lost";
 
-        foreach (ServerModel *serverSettings, _servers)
+        foreach (ServerModel *serverModel, _servers)
         {
-            qDebug() << "disconnecting from serverSettings " << serverSettings->url();
-            serverSettings->_ircClient->disconnectFromServer();
+            qDebug() << "disconnecting from server " << serverModel->url();
+            serverModel->_ircClient->disconnectFromServer();
         }
 
         attemptConnectionLater();

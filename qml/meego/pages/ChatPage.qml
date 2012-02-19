@@ -65,7 +65,7 @@ Page {
         }
     }
     onHeightChanged: {
-        chatArea.height = Math.max(chatPage.height, chatArea.implicitHeight)
+        chatArea.height = Math.max(chatPage.height - chatRectangle.height, chatArea.implicitHeight)
         scrollToBottom()
     }
 
@@ -273,6 +273,14 @@ Page {
             MenuItem {
                 text: "Settings"
                 onClicked: appWindow.pageStack.push(settingsPage)
+            }
+            MenuItem {
+                text: "Disconnect all"
+                onClicked: {
+                    chatMenu.close()
+                    ircModel.disconnectFromServers()
+                    appWindow.pageStack.pop(chatPage);
+                }
             }
             MenuItem {
                 text: "Quit app"

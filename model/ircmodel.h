@@ -60,6 +60,7 @@ public:
     inline ServerModel *currentServer() { return currentChannel() ? static_cast<ServerModel*>(currentChannel()->parent()) : 0; }
 
     Q_INVOKABLE void connectToServers();
+    Q_INVOKABLE void disconnectFromServers();
     Q_INVOKABLE bool anyServersToConnect();
     Q_INVOKABLE bool isOnline() const;
 
