@@ -54,6 +54,9 @@ Page {
     onStatusChanged: {
         if (mainPage.status === PageStatus.Active) {
             commonMenu.close()
+            chatArea.height = Math.max(chatPage.height - chatRectangle.height, chatArea.implicitHeight)
+            scrollToBottom()
+
             chatArea.font.pixelSize = appSettings.fontSize
 
             if(appSettings.fontMonospace)

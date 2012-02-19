@@ -74,11 +74,9 @@ Page {
                 text: "Welcome to IRC Chatter!"
             }
             Label {
-                text: "Please select which servers to connect to at startup."
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-            Label {
-                text: "Press the add button to add a new server."
+                text: "Please select which servers to connect to at startup.\nPress the add button to add a new server."
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
             }
             Repeater {
@@ -88,7 +86,7 @@ Page {
                 delegate: Item {
                     id: serverSettingItem
                     width: serverSettingsRepeater.width
-                    height: 150
+                    height: appWindow.inPortrait ? 220 : 150
                     anchors.margins: 10
 
                     TitleLabel {
@@ -102,17 +100,18 @@ Page {
                         text: "Server: " + serverUrl + ":" + serverPort + "\nNick: " + userNickname
                         anchors.margins: 10
                         anchors.left: parent.left
-                        anchors.top: serverTitleLabel.bottom
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.top: appWindow.inPortrait ? serverTitleLabel.bottom : undefined
+                        anchors.verticalCenter: appWindow.inPortrait ? undefined : parent.verticalCenter
                     }
                     Button {
                         id: serverEditButton
-                        text: "Edit server"
+                        text: "Edit"
                         onClicked: {
                             serverSettingsSheet.isNewServer = false
                             serverSettingsSheet.serverSettings = appSettings.serverSettings.getItem(index)
                             serverSettingsSheet.open()
                         }
+                        width: 200
                         anchors.top: connectSwitch.bottom
                         anchors.right: parent.right
                         anchors.topMargin: 10
@@ -127,7 +126,7 @@ Page {
                     Switch {
                         id: connectSwitch
                         checked: shouldConnect
-                        anchors.top: serverTitleLabel.bottom
+                        anchors.top: appWindow.inPortrait ? serverInfoLabel.bottom : serverTitleLabel.bottom
                         anchors.right: parent.right
 
                         Binding {

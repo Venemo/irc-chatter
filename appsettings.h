@@ -64,10 +64,12 @@ public:
     SETTINGPROPERTY(int, fontSize, setFontSize, fontSizeChanged, "fontSize", 24)
 
     QObjectListModel<ServerSettings> *serverSettings();
-    Q_INVOKABLE void saveServerSettings();
     Q_INVOKABLE void appendServerSettings(ServerSettings *server);
     Q_INVOKABLE int serverSettingsCount() const;
     Q_INVOKABLE ServerSettings *newServerSettings() { return new ServerSettings(this); }
+
+public slots:
+    Q_INVOKABLE void saveServerSettings();
 
 signals:
     void areSettingsDeletedChanged();
