@@ -62,7 +62,8 @@ QDataStream &operator<<(QDataStream &stream, const ServerSettings &serverSetting
             << serverSettings.serverPort()
             << serverSettings.userNickname()
             << serverSettings.userIdent()
-            << serverSettings.userRealName();
+            << serverSettings.userRealName()
+            << serverSettings.shouldConnect();
 }
 
 QDataStream &operator>>(QDataStream &stream, ServerSettings &serverSettings)
@@ -75,5 +76,6 @@ QDataStream &operator>>(QDataStream &stream, ServerSettings &serverSettings)
             >> serverSettings._serverPort
             >> serverSettings._userNickname
             >> serverSettings._userIdent
-            >> serverSettings._userRealName;
+            >> serverSettings._userRealName
+            >> serverSettings._shouldConnect;
 }

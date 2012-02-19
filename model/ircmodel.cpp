@@ -44,10 +44,32 @@ IrcModel::IrcModel(QObject *parent, AppSettings *appSettings) :
     connect(_networkConfigurationManager, SIGNAL(onlineStateChanged(bool)), this, SLOT(onlineStateChanged(bool)));
 }
 
-void IrcModel::connectToServer(ServerSettings *serverSettings)
+void IrcModel::connectToServers()
 {
     attemptConnection();
 
+    foreach (ServerSettings *serverSettings, _appSettings->serverSettings()->getList())
+    {
+        if (serverSettings->shouldConnect())
+            connectToServer(serverSettings);
+    }
+}
+
+bool IrcModel::anyServersToConnect()
+{
+    int i = 0;
+
+    foreach (ServerSettings *serverSettings, _appSettings->serverSettings()->getList())
+    {
+        if (serverSettings->shouldConnect())
+            i++;
+    }
+
+    return i > 0;
+}
+
+void IrcModel::connectToServer(ServerSettings *serverSettings)
+{
     if (_networkConfigurationManager->isOnline())
     {
         AbstractIrcClient *ircClient = new CommuniIrcClient(this, serverSettings);

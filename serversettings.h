@@ -45,6 +45,8 @@ class ServerSettings : public QObject
     Q_PROPERTY(QString userIdent READ userIdent WRITE setUserIdent NOTIFY userIdentChanged)
     GENPROPERTY_F(QString, _userRealName, userRealName, setUserRealName, userRealNameChanged)
     Q_PROPERTY(QString userRealName READ userRealName WRITE setUserRealName NOTIFY userRealNameChanged)
+    GENPROPERTY_F(bool, _shouldConnect, shouldConnect, setShouldConnect, shouldConnectChanged)
+    Q_PROPERTY(bool shouldConnect READ shouldConnect WRITE setShouldConnect NOTIFY shouldConnectChanged)
 
     friend QDataStream &operator>>(QDataStream &stream, ServerSettings &server);
 
@@ -62,6 +64,7 @@ signals:
     void userNicknameChanged();
     void userIdentChanged();
     void userRealNameChanged();
+    void shouldConnectChanged();
 
 private slots:
     void backendAsksForPassword(QString *password);

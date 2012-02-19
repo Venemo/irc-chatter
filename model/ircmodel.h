@@ -51,13 +51,16 @@ class IrcModel : public QObject
     QList<ServerModel*> _servers;
     QObjectListModel<ChannelModel> _allChannels;
 
+    void connectToServer(ServerSettings *serverSettings);
+
 public:
     explicit IrcModel(QObject *parent, AppSettings *appSettings);
     inline QObjectListModel<ChannelModel> *allChannels() { return &_allChannels; }
     inline ChannelModel *currentChannel() { return _servers.count() ? static_cast<ChannelModel*>(allChannels()->getItem(_currentChannelIndex)) : 0; }
     inline ServerModel *currentServer() { return currentChannel() ? static_cast<ServerModel*>(currentChannel()->parent()) : 0; }
 
-    Q_INVOKABLE void connectToServer(ServerSettings *serverSettings);
+    Q_INVOKABLE void connectToServers();
+    Q_INVOKABLE bool anyServersToConnect();
     Q_INVOKABLE bool isOnline() const;
 
 public slots:

@@ -38,14 +38,13 @@ Page {
         ToolIcon {
             platformIconId: "toolbar-done"
             onClicked: {
-                if (isValid) {
-                    commonMenu.close()
+                commonMenu.close()
+                if (ircModel.anyServersToConnect()) {
                     appWindow.pageStack.push(progressPage)
-                    appSettings.saveServerSettings()
-                    ircModel.connectToServer(serverSettings, appSettings)
+                    ircModel.connectToServers()
                 }
                 else {
-                    invalidBanner.show()
+                    noServersToConnectBanner.show()
                 }
             }
 
@@ -125,9 +124,15 @@ Page {
                     }
                     Switch {
                         id: connectSwitch
-                        checked: true
+                        checked: shouldConnect
                         anchors.top: serverTitleLabel.bottom
                         anchors.right: parent.right
+
+                        Binding {
+                            target: appSettings.serverSettings.getItem(index)
+                            property: "shouldConnect"
+                            value: connectSwitch.checked
+                        }
                     }
                 }
             }
@@ -169,5 +174,9 @@ Page {
         id: settingsDeletedBanner
         text: "The new version of the app is incompatible with the old, so your settings have been deleted. Click on this banner to dismiss."
         timerEnabled: false
+    }
+    InfoBanner {
+        id: noServersToConnectBanner
+        text: "You didn't select any servers to connect to."
     }
 }
