@@ -25,6 +25,9 @@
 
 static bool channelLessThan(ChannelModel * m1, ChannelModel *m2)
 {
+    if (static_cast<ServerModel*>(m1->parent())->url() != static_cast<ServerModel*>(m2->parent())->url())
+        return static_cast<ServerModel*>(m1->parent())->url() < static_cast<ServerModel*>(m2->parent())->url();
+
     if (m1->channelType() == m2->channelType())
         return m1->name() < m2->name();
 
