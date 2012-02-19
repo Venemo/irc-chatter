@@ -46,9 +46,6 @@ class ServerModel : public QObject
     friend class IrcModel;
     friend class AppSettings;
 
-    void addModelForChannel(const QString &channelName);
-    void removeModelForChannel(const QString &channelName);
-
 protected:
     explicit ServerModel(IrcModel *parent, const QString &url, AbstractIrcClient *_ircClient);
     ChannelModel *findOrCreateChannel(const QString &channelName);
@@ -64,6 +61,9 @@ signals:
     void kickReceived(const QString &channelName, const QString &reason);
 
 private slots:
+    void addModelForChannel(const QString &channelName);
+    void removeModelForChannel(const QString &channelName);
+
     // Messages corresponding to the server itself.
     void connectedToServer();
     void disconnectedFromServer();

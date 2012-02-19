@@ -48,6 +48,11 @@ ServerModel::ServerModel(IrcModel *parent, const QString &url, AbstractIrcClient
     connect(_ircClient, SIGNAL(receiveQuit(QString,QString)), this, SLOT(receiveQuit(QString,QString)));
     connect(_ircClient, SIGNAL(receiveTopic(QString,QString)), this, SLOT(receiveTopic(QString,QString)));
     connect(_ircClient, SIGNAL(receiveUserNames(QString,QStringList)), this, SLOT(receiveUserNames(QString,QStringList)));
+
+    connect(_ircClient, SIGNAL(joinedChannel(QString)), this, SLOT(addModelForChannel(QString)));
+    connect(_ircClient, SIGNAL(queriedUser(QString)), this, SLOT(addModelForChannel(QString)));
+    connect(_ircClient, SIGNAL(partedChannel(QString)), this, SLOT(removeModelForChannel(QString)));
+    connect(_ircClient, SIGNAL(closedUser(QString)), this, SLOT(removeModelForChannel(QString)));
 }
 
 ServerModel::~ServerModel()

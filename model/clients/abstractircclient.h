@@ -60,6 +60,10 @@ signals:
     void receiveNickChange(const QString &oldNick, const QString &newNick);
     void receiveMotd(const QString &motd);
     void receiveError(const QString &error);
+    void joinedChannel(const QString &channelName);
+    void queriedUser(const QString &channelName);
+    void partedChannel(const QString &channelName);
+    void closedUser(const QString &channelName);
     
 public:
     // Implementations of this class SHOULD implement all the methods below.

@@ -300,21 +300,25 @@ void CommuniIrcClient::quit(const QString &message)
 void CommuniIrcClient::joinChannel(const QString &channelName)
 {
     _ircSession->sendCommand(IrcCommand::createJoin(channelName));
+    emit joinedChannel(channelName);
 }
 
 void CommuniIrcClient::partChannel(const QString &channelName, const QString &message)
 {
     _ircSession->sendCommand(IrcCommand::createPart(channelName, message));
+    emit partChannel(channelName);
 }
 
 void CommuniIrcClient::queryUser(const QString &userName)
 {
     Q_UNUSED(userName);
+    emit queryUser(userName);
 }
 
 void CommuniIrcClient::closeUser(const QString &userName)
 {
     Q_UNUSED(userName);
+    emit closedUser(userName);
 }
 
 void CommuniIrcClient::sendCtcpAction(const QString &channelName, const QString &action)
