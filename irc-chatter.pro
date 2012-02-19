@@ -22,7 +22,8 @@ HEADERS += \
     model/clients/abstractircclient.h \
     model/clients/communiircclient.h \
     model/helpers/commandparser.h \
-    model/helpers/channelhelper.h
+    model/helpers/channelhelper.h \
+    model/helpers/notifier.h
 
 SOURCES += \
     main.cpp \
@@ -34,7 +35,8 @@ SOURCES += \
     model/clients/abstractircclient.cpp \
     model/clients/communiircclient.cpp \
     model/helpers/commandparser.cpp \
-    model/helpers/channelhelper.cpp
+    model/helpers/channelhelper.cpp \
+    model/helpers/notifier.cpp
 
 RESOURCES += \
     ui-meego.qrc

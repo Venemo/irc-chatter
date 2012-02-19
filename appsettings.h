@@ -47,6 +47,10 @@ class AppSettings : public QObject
     Q_PROPERTY(QString sidebarColor READ sidebarColor WRITE setSidebarColor NOTIFY sidebarColorChanged)
     Q_PROPERTY(bool fontMonospace READ fontMonospace WRITE setFontMonospace NOTIFY fontMonospaceChanged)
     Q_PROPERTY(bool autoFocusTextField READ autoFocusTextField WRITE setAutoFocusTextField NOTIFY autoFocusTextFieldChanged)
+    Q_PROPERTY(bool displayMiscEvents READ displayMiscEvents WRITE setDisplayMiscEvents NOTIFY displayMiscEventsChanged)
+    Q_PROPERTY(bool displayTimestamps READ displayTimestamps WRITE setDisplayTimestamps NOTIFY displayTimestampsChanged)
+    Q_PROPERTY(bool notifyOnNick READ notifyOnNick WRITE setNotifyOnNick NOTIFY notifyOnNickChanged)
+    Q_PROPERTY(bool notifyOnPrivmsg READ notifyOnPrivmsg WRITE setNotifyOnPrivmsg NOTIFY notifyOnPrivmsgChanged)
     Q_PROPERTY(int fontSize READ fontSize WRITE setFontSize NOTIFY fontSizeChanged)
 
     QSettings _backend;
@@ -61,6 +65,10 @@ public:
     SETTINGPROPERTY(QString, sidebarColor, setSidebarColor, sidebarColorChanged, "sidebarColor", "#f9a300")
     SETTINGPROPERTY(bool, fontMonospace, setFontMonospace, fontMonospaceChanged, "fontMonospace", false)
     SETTINGPROPERTY(bool, autoFocusTextField, setAutoFocusTextField, autoFocusTextFieldChanged, "autoFocusTextField", false)
+    SETTINGPROPERTY(bool, displayMiscEvents, setDisplayMiscEvents, displayMiscEventsChanged, "displayMiscEvents", true)
+    SETTINGPROPERTY(bool, displayTimestamps, setDisplayTimestamps, displayTimestampsChanged, "displayTimestamps", true)
+    SETTINGPROPERTY(bool, notifyOnNick, setNotifyOnNick, notifyOnNickChanged, "notifyOnNick", true)
+    SETTINGPROPERTY(bool, notifyOnPrivmsg, setNotifyOnPrivmsg, notifyOnPrivmsgChanged, "notifyOnPrivmsg", true)
     SETTINGPROPERTY(int, fontSize, setFontSize, fontSizeChanged, "fontSize", 24)
 
     QObjectListModel<ServerSettings> *serverSettings();
@@ -82,7 +90,10 @@ signals:
     void fontMonospaceChanged();
     void sidebarColorChanged();
     void autoFocusTextFieldChanged();
-
+    void displayMiscEventsChanged();
+    void displayTimestampsChanged();
+    void notifyOnNickChanged();
+    void notifyOnPrivmsgChanged();
 };
 
 #endif // APPSETTINGS_H

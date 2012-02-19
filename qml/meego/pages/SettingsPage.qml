@@ -70,9 +70,13 @@ Page {
                 Switch {
                     id: miscEventsSwitch
                     anchors.right: parent.right
-                    checked: true
+                    checked: appSettings.displayMiscEvents
 
-                    // TODO: Binding for this
+                    Binding {
+                        target: appSettings
+                        property: "displayMiscEvents"
+                        value: miscEventsSwitch.checked
+                    }
                 }
             }
             Label {
@@ -84,9 +88,13 @@ Page {
                 Switch {
                     id: timestampsSwitch
                     anchors.right: parent.right
-                    checked: true
+                    checked: appSettings.displayTimestamps
 
-                    // TODO: Binding for this
+                    Binding {
+                        target: appSettings
+                        property: "displayTimestamps"
+                        value: timestampsSwitch.checked
+                    }
                 }
             }
             Label {
@@ -181,23 +189,31 @@ Page {
                 Switch {
                     id: messagesInQueriesSwitch
                     anchors.right: parent.right
-                    checked: true
+                    checked: appSettings.notifyOnPrivmsg
 
-                    // TODO: Binding for this
+                    Binding {
+                        target: appSettings
+                        property: "notifyOnPrivmsg"
+                        value: messagesInQueriesSwitch.checked
+                    }
                 }
             }
             Label {
                 text: "Messages containing your nick"
                 width: parent.width
-                height: messagesInQueriesSwitch.height
+                height: messagesContainingYourNickSwitch.height
                 verticalAlignment: Text.AlignVCenter
 
                 Switch {
                     id: messagesContainingYourNickSwitch
                     anchors.right: parent.right
-                    checked: true
+                    checked: appSettings.notifyOnNick
 
-                    // TODO: Binding for this
+                    Binding {
+                        target: appSettings
+                        property: "notifyOnNick"
+                        value: messagesContainingYourNickSwitch.checked
+                    }
                 }
             }
             TitleLabel {
