@@ -59,7 +59,7 @@ void IrcModel::disconnectFromServers()
 {
     foreach (ServerModel *serverModel, _servers)
     {
-        qDebug() << "disconnecting from server " << serverSettings->url();
+        qDebug() << "disconnecting from server " << serverModel->url();
         serverModel->_ircClient->disconnectFromServer();
         serverModel->deleteLater();
     }
