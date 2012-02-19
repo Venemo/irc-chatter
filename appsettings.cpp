@@ -79,11 +79,16 @@ void AppSettings::saveServerSettings()
         stream << (*server);
     buffer.close();
     _backend.setValue(APPSETTING_SERVERSETTINGS, array);
+    emit serverSettingsChanged();
 }
 
-void AppSettings::appendServerSettings(ServerSettings *server)
+void AppSettings::appendServerSettings(ServerSettings *serverSettings)
 {
-    _serverSettings->addItem(server);
+    if (!_serverSettings->getList().contains(serverSettings))
+    {
+        _serverSettings->addItem(serverSettings);
+        emit serverSettingsChanged();
+    }
 }
 
 int AppSettings::serverSettingsCount() const

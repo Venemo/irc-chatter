@@ -67,6 +67,7 @@ public:
     Q_INVOKABLE void saveServerSettings();
     Q_INVOKABLE void appendServerSettings(ServerSettings *server);
     Q_INVOKABLE int serverSettingsCount() const;
+    Q_INVOKABLE ServerSettings *newServerSettings() { return new ServerSettings(this); }
 
 signals:
     void areSettingsDeletedChanged();

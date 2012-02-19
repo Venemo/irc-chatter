@@ -26,17 +26,12 @@ import "../components"
 
 Page {
     id: firstrunPage
-
-    property bool isValid: serverUrlField.text.length > 0 && nicknameField.text.length > 0 && serverPortField.acceptableInput
-    property ServerSettings serverSettings: appSettings.serverSettings.getItem(0)
-
     onStatusChanged: {
         if (status === PageStatus.Activating) {
             if (appSettings.areSettingsDeleted)
                 settingsDeletedBanner.show()
         }
     }
-
     tools: ToolBarLayout {
         id: commonToolbar
 
@@ -62,176 +57,114 @@ Page {
     }
 
     Flickable {
-        id: configFlickable
-        anchors.fill: parent
-
+        id: startPageFlickable
         interactive: true
         contentWidth: parent.width
-        contentHeight: configColumn.height + 30
+        contentHeight: serverSettingsColumn.height
         clip: true
+        anchors.fill: parent
 
         Column {
-            id: configColumn
+            id: serverSettingsColumn
+            width: parent.width - 40
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.topMargin: 20
             anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.margins: 10
-            spacing: 10
 
             TitleLabel {
-                text: "Server information"
+                text: "Welcome to IRC Chatter!"
             }
             Label {
-                text: "Server hostname"
-            }
-            TextField {
-                id: serverUrlField
-                width: parent.width
-                text: serverSettings.serverUrl
-                placeholderText: "Enter a serverSettings URL"
-                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-
-                Binding {
-                    target: serverSettings
-                    property: "serverUrl"
-                    value: serverUrlField.text
-                }
+                text: "Please select which servers to connect to at startup."
             }
             Label {
-                text: "Server port"
+                text: "Press the add button to add a new server."
             }
-            Row {
-                spacing: 10
+            Repeater {
+                id: serverSettingsRepeater
+                model: appSettings.serverSettings
                 width: parent.width
+                delegate: Item {
+                    id: serverSettingItem
+                    width: serverSettingsRepeater.width
+                    height: 200
+                    anchors.margins: 10
 
-                TextField {
-                    id: serverPortField
-                    width: parent.width - sslCheckbox.width - parent.spacing
-                    text: serverSettings.serverPort
-                    placeholderText: "Enter the serverSettings port"
-                    inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase | Qt.ImhDigitsOnly
-                    validator: IntValidator { }
-
-                    Binding {
-                        target: serverSettings
-                        property: "serverPort"
-                        value: serverPortField.text
+                    TitleLabel {
+                        id: serverTitleLabel
+                        text: serverUrl
+                        anchors.top: serverSettingItem.top
+                        anchors.margins: 10
                     }
-                }
-                CheckBox {
-                    id: sslCheckbox
-                    text: "SSL"
-                    checked: serverSettings.serverSSL
-                    anchors.verticalCenter: serverPortField.verticalCenter
-                    onClicked: {
-                        if (sslCheckbox.checked)
-                            serverPortField.text = 7000
-                        else
-                            serverPortField.text = 6667
+                    Label {
+                        id: serverInfoLabel
+                        text: "Server: " + serverUrl + ":" + serverPort + "\nNick: " + userNickname
+                        anchors.margins: 10
+                        anchors.left: parent.left
+                        anchors.top: serverTitleLabel.bottom
+                        anchors.verticalCenter: parent.verticalCenter
                     }
-
-                    Binding {
-                        target: serverSettings
-                        property: "serverSSL"
-                        value: sslCheckbox.checked
+                    Button {
+                        id: serverEditButton
+                        text: "Edit server"
+                        onClicked: {
+                            connectionSheet.isNewServer = false
+                            connectionSheet.serverSettings = appSettings.serverSettings.getItem(index)
+                            connectionSheet.open()
+                        }
+                        anchors.top: connectSwitch.bottom
+                        anchors.right: parent.right
+                        anchors.topMargin: 10
+                    }
+                    Label {
+                        id: connectLabel
+                        text: "Connect"
+                        anchors.verticalCenter: connectSwitch.verticalCenter
+                        anchors.right: connectSwitch.left
+                        anchors.rightMargin: 10
+                    }
+                    Switch {
+                        id: connectSwitch
+                        checked: true
+                        anchors.top: serverTitleLabel.bottom
+                        anchors.right: parent.right
                     }
                 }
             }
-            Label {
-                text: "Autojoin channels (comma separated)"
-            }
-            TextField {
-                id:autojoinField
-                width: parent.width
-                text: serverSettings.autoJoinChannelsInPlainString
-                placeholderText: "Enter channels to autojoin"
-                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-
-                Binding {
-                    target: serverSettings
-                    property: "autoJoinChannelsInPlainString"
-                    value: autojoinField.text
-                }
-            }
             TitleLabel {
-                text: "User settings"
+                text: "Other"
             }
-            Label {
-                text: "Your nickname"
-            }
-            TextField {
-                id: nicknameField
-                width: parent.width
-                text: serverSettings.userNickname
-                placeholderText: "Enter your nickname"
-                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-
-                Binding {
-                    target: serverSettings
-                    property: "userNickname"
-                    value: nicknameField.text
+            Button {
+                id: newServerButton
+                text: "Add a new server"
+                onClicked: {
+                    connectionSheet.isNewServer = true
+                    connectionSheet.serverSettings = appSettings.newServerSettings()
+                    connectionSheet.open()
                 }
-            }
-            Label {
-                text: "Your real name"
-            }
-            TextField {
-                id: realNameField
-                width: parent.width
-                text: serverSettings.userRealName
-                placeholderText: "If you wish, enter your real name"
-                inputMethodHints: Qt.ImhNoPredictiveText
-
-                Binding {
-                    target: serverSettings
-                    property: "userRealName"
-                    value: realNameField.text
-                }
-            }
-            TitleLabel {
-                text: "Authentication"
-            }
-            Label {
-                text: "Username (aka. ident)"
-            }
-            TextField {
-                id: identField
-                width: parent.width
-                text: serverSettings.userIdent
-                placeholderText: "Enter your ident"
-                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-
-                Binding {
-                    target: serverSettings
-                    property: "userIdent"
-                    value: identField.text
-                }
-            }
-            Label {
-                text: "Password"
-            }
-            TextField {
-                id: passwordField
-                width: parent.width
-                text: serverSettings.serverPassword
-                placeholderText: "If it's needed, enter a password"
-                echoMode: TextInput.Password
-                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-
-                Binding {
-                    target: serverSettings
-                    property: "serverPassword"
-                    value: passwordField.text
-                }
+                anchors.horizontalCenter: parent.horizontalCenter
             }
         }
     }
-
-    InfoBanner {
-        id: invalidBanner
-        text: "The data you entered is invalid. Please fix it and press the Done button again."
+    ConnectionSheet {
+        id: connectionSheet
+        onAccepted: {
+            if (isValid) {
+                if (isNewServer) {
+                    appSettings.appendServerSettings(serverSettings)
+                }
+                appSettings.saveServerSettings()
+            }
+            else {
+                open()
+                invalidBanner.show()
+            }
+        }
+        InfoBanner {
+            id: invalidBanner
+            text: "The data you entered is invalid. Please fix it and press the save button again."
+        }
     }
-
     InfoBanner {
         id: settingsDeletedBanner
         text: "The new version of the app is incompatible with the old, so your settings have been deleted. Click on this banner to dismiss."

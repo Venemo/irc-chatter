@@ -18,44 +18,191 @@
 
 import QtQuick 1.1
 import com.nokia.meego 1.0
+import com.nokia.extras 1.0
+import net.venemo.ircchatter 1.0
 import "../pages"
 import "../sheets"
 import "../components"
 
 Sheet {
+    property bool isValid: serverUrlField.text.length > 0 && nicknameField.text.length > 0 && serverPortField.acceptableInput
+    property bool canSave: status === DialogStatus.Open && isValid
+    property bool isNewServer: true
+    property ServerSettings serverSettings: null
+
     id: connectionSheet
-    acceptButtonText: "Connect"
-    rejectButtonText: "Cancel"
+    acceptButtonText: "Save"
+    rejectButtonText: isNewServer ? "Cancel" : ""
+    content: Flickable {
+        id: configFlickable
+        interactive: true
+        contentWidth: parent.width
+        contentHeight: configColumn.height + 30
+        clip: true
+        anchors.fill: parent
 
-    Column {
-        spacing: 10
+        Column {
+            id: configColumn
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: 10
+            spacing: 10
 
-        Label {
-            text: "Server address"
-        }
-        TextField {
-        }
-        Label {
-            text: "Port"
-        }
-        TextField {
-        }
-        Label {
-            text: "Use secure channel"
-        }
-        Switch {
-            enabled: true
-        }
-        Label {
-            text: "Nickname"
-        }
-        TextField {
-        }
-        Label {
-            text: "Password"
-        }
-        TextField {
-            echoMode: TextInput.Password
+            TitleLabel {
+                text: "Server information"
+            }
+            Label {
+                text: "Server hostname"
+            }
+            TextField {
+                id: serverUrlField
+                width: parent.width
+                text: serverSettings === null ? "" : serverSettings.serverUrl
+                placeholderText: "Enter a hostname"
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+
+                Binding {
+                    target: serverSettings
+                    property: "serverUrl"
+                    value: serverUrlField.text
+                    when: canSave
+                }
+            }
+            Label {
+                text: "Server port"
+            }
+            Row {
+                spacing: 10
+                width: parent.width
+
+                TextField {
+                    id: serverPortField
+                    width: parent.width - sslCheckbox.width - parent.spacing
+                    text: serverSettings === null ? "" : serverSettings.serverPort
+                    placeholderText: "Enter the serverSettings port"
+                    inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase | Qt.ImhDigitsOnly
+                    validator: IntValidator { }
+
+                    Binding {
+                        target: serverSettings
+                        property: "serverPort"
+                        value: serverPortField.text
+                        when: canSave
+                    }
+                }
+                CheckBox {
+                    id: sslCheckbox
+                    text: "SSL"
+                    checked: serverSettings === null ? false : serverSettings.serverSSL
+                    anchors.verticalCenter: serverPortField.verticalCenter
+                    onClicked: {
+                        if (sslCheckbox.checked)
+                            serverPortField.text = 7000
+                        else
+                            serverPortField.text = 6667
+                    }
+
+                    Binding {
+                        target: serverSettings
+                        property: "serverSSL"
+                        value: sslCheckbox.checked
+                        when: canSave
+                    }
+                }
+            }
+            Label {
+                text: "Autojoin channels (comma separated)"
+            }
+            TextField {
+                id:autojoinField
+                width: parent.width
+                text: serverSettings === null ? "" : serverSettings.autoJoinChannelsInPlainString
+                placeholderText: "Enter channels to autojoin"
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+
+                Binding {
+                    target: serverSettings
+                    property: "autoJoinChannelsInPlainString"
+                    value: autojoinField.text
+                    when: canSave
+                }
+            }
+            TitleLabel {
+                text: "User settings"
+            }
+            Label {
+                text: "Your nickname"
+            }
+            TextField {
+                id: nicknameField
+                width: parent.width
+                text: serverSettings === null ? "" : serverSettings.userNickname
+                placeholderText: "Enter your nickname"
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+
+                Binding {
+                    target: serverSettings
+                    property: "userNickname"
+                    value: nicknameField.text
+                    when: canSave
+                }
+            }
+            Label {
+                text: "Your real name"
+            }
+            TextField {
+                id: realNameField
+                width: parent.width
+                text: serverSettings === null ? "" : serverSettings.userRealName
+                placeholderText: "If you wish, enter your real name"
+                inputMethodHints: Qt.ImhNoPredictiveText
+
+                Binding {
+                    target: serverSettings
+                    property: "userRealName"
+                    value: realNameField.text
+                    when: canSave
+                }
+            }
+            TitleLabel {
+                text: "Authentication"
+            }
+            Label {
+                text: "Username (aka. ident)"
+            }
+            TextField {
+                id: identField
+                width: parent.width
+                text: serverSettings === null ? "" : serverSettings.userIdent
+                placeholderText: "Enter your ident"
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+
+                Binding {
+                    target: serverSettings
+                    property: "userIdent"
+                    value: identField.text
+                    when: canSave
+                }
+            }
+            Label {
+                text: "Password"
+            }
+            TextField {
+                id: passwordField
+                width: parent.width
+                text: serverSettings === null ? "" : serverSettings.serverPassword
+                placeholderText: "If it's needed, enter a password"
+                echoMode: TextInput.Password
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+
+                Binding {
+                    target: serverSettings
+                    property: "serverPassword"
+                    value: passwordField.text
+                    when: canSave
+                }
+            }
         }
     }
 }
