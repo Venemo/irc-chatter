@@ -25,7 +25,7 @@ import "../sheets"
 import "../components"
 
 Page {
-    id: firstrunPage
+    id: startPage
     onStatusChanged: {
         if (status === PageStatus.Activating) {
             if (appSettings.areSettingsDeleted)
@@ -33,7 +33,7 @@ Page {
         }
     }
     tools: ToolBarLayout {
-        id: commonToolbar
+        id: startPageToolbar
 
         ToolIcon {
             platformIconId: "toolbar-done"
@@ -59,7 +59,7 @@ Page {
         id: startPageFlickable
         interactive: true
         contentWidth: parent.width
-        contentHeight: serverSettingsColumn.height
+        contentHeight: serverSettingsColumn.height + 50
         clip: true
         anchors.fill: parent
 
@@ -75,9 +75,11 @@ Page {
             }
             Label {
                 text: "Please select which servers to connect to at startup."
+                anchors.horizontalCenter: parent.horizontalCenter
             }
             Label {
                 text: "Press the add button to add a new server."
+                anchors.horizontalCenter: parent.horizontalCenter
             }
             Repeater {
                 id: serverSettingsRepeater
@@ -86,7 +88,7 @@ Page {
                 delegate: Item {
                     id: serverSettingItem
                     width: serverSettingsRepeater.width
-                    height: 200
+                    height: 150
                     anchors.margins: 10
 
                     TitleLabel {
@@ -107,9 +109,9 @@ Page {
                         id: serverEditButton
                         text: "Edit server"
                         onClicked: {
-                            connectionSheet.isNewServer = false
-                            connectionSheet.serverSettings = appSettings.serverSettings.getItem(index)
-                            connectionSheet.open()
+                            serverSettingsSheet.isNewServer = false
+                            serverSettingsSheet.serverSettings = appSettings.serverSettings.getItem(index)
+                            serverSettingsSheet.open()
                         }
                         anchors.top: connectSwitch.bottom
                         anchors.right: parent.right
@@ -143,16 +145,16 @@ Page {
                 id: newServerButton
                 text: "Add a new server"
                 onClicked: {
-                    connectionSheet.isNewServer = true
-                    connectionSheet.serverSettings = appSettings.newServerSettings()
-                    connectionSheet.open()
+                    serverSettingsSheet.isNewServer = true
+                    serverSettingsSheet.serverSettings = appSettings.newServerSettings()
+                    serverSettingsSheet.open()
                 }
                 anchors.horizontalCenter: parent.horizontalCenter
             }
         }
     }
-    ConnectionSheet {
-        id: connectionSheet
+    ServerSettingsSheet {
+        id: serverSettingsSheet
         onAccepted: {
             if (isValid) {
                 if (isNewServer) {

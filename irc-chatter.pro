@@ -43,13 +43,13 @@ OTHER_FILES += \
     LICENSE \
     LICENSE-DOCS \
     AUTHORS \
-    qml/meego/main.qml \
-    qml/meego/pages/ChatPage.qml \
-    qml/meego/sheets/ConnectionSheet.qml \
-    qml/meego/pages/SettingsPage.qml \
-    qml/meego/pages/FirstrunPage.qml \
-    qml/meego/sheets/JoinSheet.qml \
+    qml/meego/AppWindow.qml \
+    qml/meego/pages/StartPage.qml \
     qml/meego/pages/ProgressPage.qml \
+    qml/meego/pages/ChatPage.qml \
+    qml/meego/pages/SettingsPage.qml \
+    qml/meego/sheets/JoinSheet.qml \
+    qml/meego/sheets/ServerSettingsSheet.qml \
     qml/meego/components/TitleLabel.qml \
     qml/meego/components/WorkingSelectionDialog.qml \
     qml/meego/components/CommonDialog.qml

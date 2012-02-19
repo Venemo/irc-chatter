@@ -30,7 +30,7 @@ Sheet {
     property bool isNewServer: true
     property ServerSettings serverSettings: null
 
-    id: connectionSheet
+    id: serverSettingsSheet
     acceptButtonText: "Save"
     rejectButtonText: isNewServer ? "Cancel" : ""
     content: Flickable {

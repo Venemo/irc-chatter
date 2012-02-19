@@ -25,7 +25,7 @@ import "components"
 
 PageStackWindow {
     id: appWindow
-    initialPage: firstrunPage
+    initialPage: startPage
     onOrientationChangeFinished: {
         showStatusBar = inPortrait
 
@@ -38,8 +38,8 @@ PageStackWindow {
 
     // Pages
 
-    FirstrunPage {
-        id: firstrunPage
+    StartPage {
+        id: startPage
     }
 
     ProgressPage {
