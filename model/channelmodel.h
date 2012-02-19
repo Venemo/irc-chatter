@@ -28,6 +28,7 @@
 class CommandParser;
 class AbstractIrcClient;
 class ServerModel;
+class AppSettings;
 
 class ChannelModel : public QObject
 {
@@ -63,6 +64,12 @@ private:
 
 public:
     explicit ChannelModel(ServerModel *parent, const QString &channelName, AbstractIrcClient *ircClient);
+    ~ChannelModel();
+
+    int userCount() { return _users->rowCount(); }
+    AppSettings *appSettings();
+
+    void setCurrentMessage(const QString &value);
 
     void adjustForSentMessagesIndex();
     void parseCommand(const QString &msg);
@@ -88,11 +95,6 @@ public:
     void receiveModeChange(const QString &mode, const QString &argument);
     void receiveUserList(const QStringList &userList);
     void channelNameChanged(const QString &newName);
-
-public:
-    ~ChannelModel();
-    int userCount() { return _users->rowCount(); }
-    void setCurrentMessage(const QString &value);
 
     Q_INVOKABLE void autoCompleteNick();
     Q_INVOKABLE QString getUserNameFromIndex(int index) const;

@@ -40,7 +40,7 @@ ChannelModel::ChannelModel(ServerModel *parent, const QString &channelName, Abst
     _name(channelName),
     _users(new QStringListModel(this)),
     _ircClient(ircClient),
-    _commandParser(new CommandParser(this, _ircClient, static_cast<IrcModel*>(this->parent()->parent())->appSettings())),
+    _commandParser(new CommandParser(this, _ircClient, this->appSettings())),
     _displayedLines(0),
     _sentMessagesIndex(-1)
 {
@@ -327,4 +327,9 @@ void ChannelModel::adjustForSentMessagesIndex()
     {
         setCurrentMessage(_sentMessages[_sentMessagesIndex]);
     }
+}
+
+AppSettings *ChannelModel::appSettings()
+{
+    return static_cast<IrcModel*>(parent()->parent())->appSettings();
 }
