@@ -95,7 +95,7 @@ Page {
 
             onTextChanged: {
                 var should = Math.max(0,  chatArea.height - chatFlickable.height)
-                if (chatFlickable.contentY >= chatFlickable.lastSupposedContentY - 72)
+                if (chatFlickable.contentY >= chatFlickable.lastSupposedContentY - 220)
                     chatFlickable.lastSupposedContentY = chatFlickable.contentY = should
             }
 
@@ -158,7 +158,7 @@ Page {
 
                         property bool hasNewMessage: false
                         property bool hasNewMessageWithUserNick: false
-                        property bool isCurrent: ircModel.currentChannelIndex == index
+                        property bool isCurrent: ircModel.currentChannelIndex === index
 
                         Connections {
                             target: ircModel.allChannels.getItem(index)
