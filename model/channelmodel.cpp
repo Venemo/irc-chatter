@@ -257,7 +257,6 @@ void ChannelModel::sendCurrentMessage()
         }
         else
         {
-            receiveMessage(_ircClient->currentNick(), _currentMessage);
             _ircClient->sendMessage(_name, _currentMessage);
         }
 

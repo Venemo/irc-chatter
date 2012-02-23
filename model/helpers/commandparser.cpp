@@ -86,8 +86,6 @@ void CommandParser::parseAndSendCommand(const QString &channelName, const QStrin
         {
             QString action = msg.mid(4);
             _ircClient->sendCtcpAction(channelName, action);
-            // TODO
-            // emit _ircClient->receiveCtcpAction(channelName, _ircClient->currentNick(), action);
         }
         else
             emit commandParseError("Invalid command. Correct usage: '/me &lt;message&gt;'");
@@ -97,7 +95,7 @@ void CommandParser::parseAndSendCommand(const QString &channelName, const QStrin
         if (n > 2)
         {
             int length = commandParts[0].length() + commandParts[1].length();
-            QString message = msg.mid(length + 1);
+            QString message = msg.mid(length + 2);
             _ircClient->queryUser(commandParts[1]);
             _ircClient->sendMessage(commandParts[1], message);
         }

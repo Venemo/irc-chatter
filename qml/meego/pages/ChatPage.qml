@@ -37,7 +37,7 @@ Page {
         shouldUpdateCurrentMessage = false
         ircModel.currentChannelIndex = index
         shouldUpdateCurrentMessage = true
-        scrollToBottom()
+        adjustChatAreaHeight()
 
         if (appSettings.autoFocusTextField)
             messageField.forceActiveFocus()
@@ -49,13 +49,16 @@ Page {
         scrollToBottom()
         chatFlickable.lastSupposedContentY = chatFlickable.contentY
     }
+    function adjustChatAreaHeight() {
+        chatArea.height = Math.max(channelNameBg.height, chatArea.implicitHeight)
+        scrollToBottom()
+    }
 
     id: mainPage
     onStatusChanged: {
         if (mainPage.status === PageStatus.Active) {
             commonMenu.close()
-            chatArea.height = Math.max(chatPage.height - chatRectangle.height, chatArea.implicitHeight)
-            scrollToBottom()
+            adjustChatAreaHeight()
 
             chatArea.font.pixelSize = appSettings.fontSize
 
@@ -66,10 +69,6 @@ Page {
 
             channelNameBg.color = appSettings.sidebarColor
         }
-    }
-    onHeightChanged: {
-        chatArea.height = Math.max(chatPage.height - chatRectangle.height, chatArea.implicitHeight)
-        scrollToBottom()
     }
 
     Flickable {
@@ -126,6 +125,9 @@ Page {
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.bottom: chatRectangle.top
+        onHeightChanged: {
+            adjustChatAreaHeight()
+        }
 
         Flickable {
             id: channelSwitcherFlickable
@@ -303,9 +305,16 @@ Page {
         acceptButtonText: "Yes"
         rejectButtonText: "No"
         titleText: "Are you sure?"
-        message: (ircModel.currentChannel !== null && ircModel.currentChannel.name.charAt(0) === '#') ? "Do you want to part this channel?" : "Do you want to close this conversation?"
         onAccepted: {
             ircModel.currentServer.partChannel(ircModel.currentChannel.name)
+        }
+        onStatusChanged: {
+            if (ircModel.currentChannel !== null) {
+                if (ircModel.currentChannel.name.charAt(0) === '#')
+                    message = "Do you want to part this channel?"
+                else
+                    message = "Do you want to close this conversation?"
+            }
         }
     }
     QueryDialog {
@@ -316,7 +325,7 @@ Page {
         titleText: "Are you sure?"
         message: "Would you like to query user " + areYouSureToQueryDialog.queryableUserName + " ?"
         onAccepted: {
-            ircModel.currentServer.queryUser(areYouSureToQueryDialog.queryableUserName)
+            ircModel.currentServer.joinChannel(areYouSureToQueryDialog.queryableUserName)
         }
     }
     WorkingSelectionDialog {
