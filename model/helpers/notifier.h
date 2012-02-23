@@ -21,15 +21,10 @@
 
 #include <QObject>
 
-class Notifier : public QObject
+class Notifier
 {
-    Q_OBJECT
-
 public:
-    explicit Notifier(QObject *parent = 0);
-    
-public slots:
-    void notify(const QString &text);
+    static void notify(const QString &message);
     
 };
 

@@ -27,6 +27,7 @@
 #include "clients/abstractircclient.h"
 #include "helpers/commandparser.h"
 #include "helpers/channelhelper.h"
+#include "helpers/notifier.h"
 
 QString ChannelModel::_autoCompletionSuffix(", ");
 int ChannelModel::_maxLineNumber = 300;
@@ -183,7 +184,13 @@ void ChannelModel::receiveMessage(const QString &userName, QString message)
 
     appendLine(line);
 
-    // TODO: take care of notifications here
+    if (!static_cast<IrcModel*>(parent()->parent())->isAppInFocus()
+            && ((hasUserNick && appSettings()->notifyOnNick())
+            || (!_name.startsWith('#') && appSettings()->notifyOnPrivmsg())))
+    {
+
+        Notifier::notify(message);
+    }
 
     if (hasUserNick || !name().startsWith('#'))
         emit newMessageWithUserNickReceived();
@@ -203,7 +210,13 @@ void ChannelModel::receiveCtcpAction(const QString &userName, QString message)
 
     appendLine(line);
 
-    // TODO: take care of notifications here
+    if (!static_cast<IrcModel*>(parent()->parent())->isAppInFocus()
+            && ((hasUserNick && appSettings()->notifyOnNick())
+            || (!_name.startsWith('#') && appSettings()->notifyOnPrivmsg())))
+    {
+
+        Notifier::notify(message);
+    }
 
     if (hasUserNick || !name().startsWith('#'))
         emit newMessageWithUserNickReceived();

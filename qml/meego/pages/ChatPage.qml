@@ -18,6 +18,7 @@
 
 import QtQuick 1.1
 import com.nokia.meego 1.0
+import com.nokia.extras 1.0
 import net.venemo.ircchatter 1.0
 import "../pages"
 import "../sheets"
@@ -224,7 +225,7 @@ Page {
                     ircModel.currentChannel.currentMessage = text
             }
             inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            //height: implicitHeight * 1.1
+            platformSipAttributes: mySipAttributes
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: tabButton.right
             anchors.right: menuToolIcon.left
@@ -238,6 +239,12 @@ Page {
             Keys.onDownPressed: {
                 if (ircModel.currentChannel !== null)
                     ircModel.currentChannel.getSentMessagesDown()
+            }
+            SipAttributes {
+                id: mySipAttributes
+                actionKeyEnabled: true
+                actionKeyHighlighted: true
+                actionKeyLabel: "Send!"
             }
         }
         ToolIcon {
@@ -283,8 +290,7 @@ Page {
                 text: "Disconnect all"
                 onClicked: {
                     chatMenu.close()
-                    ircModel.disconnectFromServers()
-                    appWindow.pageStack.pop(chatPage);
+                    areYouSureToDisconnectAllDialog.open()
                 }
             }
             MenuItem {
@@ -326,6 +332,17 @@ Page {
         message: "Would you like to query user " + areYouSureToQueryDialog.queryableUserName + " ?"
         onAccepted: {
             ircModel.currentServer.joinChannel(areYouSureToQueryDialog.queryableUserName)
+        }
+    }
+    QueryDialog {
+        id: areYouSureToDisconnectAllDialog
+        acceptButtonText: "Yes"
+        rejectButtonText: "No"
+        titleText: "Are you sure?"
+        message: "Would you like to disconnect from all servers?"
+        onAccepted: {
+            ircModel.disconnectFromServers()
+            appWindow.pageStack.pop(chatPage);
         }
     }
     WorkingSelectionDialog {

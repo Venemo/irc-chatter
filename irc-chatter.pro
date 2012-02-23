@@ -56,6 +56,8 @@ OTHER_FILES += \
     qml/meego/components/WorkingSelectionDialog.qml \
     qml/meego/components/CommonDialog.qml
 
+CONFIG += meegotouch
+
 unix {
     QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
     QMAKE_LFLAGS += -pie -rdynamic

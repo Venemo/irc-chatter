@@ -16,15 +16,26 @@
 //
 // Copyright (C) 2012, Timur Kristóf <venemo@fedoraproject.org>
 
+#include <MNotificationGroup>
+#include <MNotification>
 #include "notifier.h"
 
-Notifier::Notifier(QObject *parent) :
-    QObject(parent)
-{
-}
+static MNotificationGroup *notificationGroup = 0;
 
-void Notifier::notify(const QString &text)
+void Notifier::notify(const QString &message)
 {
-    // TODO: implement this
-    Q_UNUSED(text)
+    if (!notificationGroup)
+    {
+        notificationGroup = new MNotificationGroup(MNotification::ImReceivedEvent, "New IRC messages");
+        notificationGroup->setImage("/usr/share/icons/hicolor/80x80/apps/irc-chatter-harmattan-icon.png");
+        notificationGroup->publish();
+    }
+
+    MNotification *notification = new MNotification(MNotification::ImReceivedEvent, "New IRC message", message);
+    notification->setImage("/usr/share/icons/hicolor/80x80/apps/irc-chatter-harmattan-icon.png");
+    notification->setGroup(*notificationGroup);
+    notification->publish();
+
+    // TODO: why doesn't the image work?
+    // TODO: perhaps add an action so that the app is focused when the user clicks on the notifications
 }
