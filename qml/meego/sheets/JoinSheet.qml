@@ -35,7 +35,7 @@ Sheet {
     property bool isChannel: joinField.text.length > 1 && joinField.text.charAt(0) === '#'
 
     onStatusChanged: {
-        if (status == DialogStatus.Opening)
+        if (status === DialogStatus.Opening)
             joinField.forceActiveFocus();
     }
 
@@ -51,15 +51,37 @@ Sheet {
             text: "(Begin channel names with #)"
         }
         TextField {
-            width: parent.width
             id: joinField
+            width: parent.width
             placeholderText: "Channel or user name..."
-            onTextChanged: joinText = text
+            text: "#"
+            onTextChanged: {
+                joinText = text
+                channelCheckBox.checked = text.charAt(0) === '#'
+            }
             inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
             Keys.onReturnPressed: {
                 if (isChannel || isQuery)
                     accept();
             }
+        }
+        CheckBox {
+            id: channelCheckBox
+            text: "Channel"
+            checked: true
+            onCheckedChanged: {
+                if (checked) {
+                    if (joinField.text.charAt(0) !== '#') {
+                        joinField.text = "#" + joinField.text
+                    }
+                }
+                else {
+                    if (joinField.text.charAt(0) === '#') {
+                        joinField.text = joinField.text.substring(1)
+                    }
+                }
+            }
+            anchors.horizontalCenter: parent.horizontalCenter
         }
         CheckBox {
             anchors.horizontalCenter: parent.horizontalCenter
