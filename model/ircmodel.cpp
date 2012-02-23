@@ -108,7 +108,6 @@ void IrcModel::refreshChannelList()
 {
     QString currentChannelName;
     QString currentServerName;
-    int newChannelIndex = -1;
 
     if (_currentChannelIndex != -1)
     {
@@ -126,24 +125,25 @@ void IrcModel::refreshChannelList()
         *allChannelsList += serverChannels;
     }
 
-    if (_currentChannelIndex != -1)
-    {
-        int i = 0;
-        foreach (ChannelModel *channelModel, *allChannelsList)
-        {
-            if (static_cast<ServerModel*>(channelModel->parent())->url() == currentServerName && channelModel->name() == currentChannelName)
-            {
-                newChannelIndex = i;
-                break;
-            }
-            i++;
-        }
-    }
-
     setCurrentChannelIndex(-1);
     _allChannels.setList(allChannelsList);
-    setCurrentChannelIndex(newChannelIndex);
+    if (currentServerName.length() && currentChannelName.length())
+        setCurrentChannelIndex(getChannelIndex(currentChannelName, currentServerName));
     delete oldChannelsList;
+}
+
+int IrcModel::getChannelIndex(const QString &currentChannelName, const QString &currentServerName)
+{
+    int i = 0;
+    foreach (ChannelModel *channelModel, _allChannels.getList())
+    {
+        if (static_cast<ServerModel*>(channelModel->parent())->url() == currentServerName && channelModel->name() == currentChannelName)
+        {
+            return i;
+        }
+        i++;
+    }
+    return -1;
 }
 
 void IrcModel::backendsConnectedToServer()
