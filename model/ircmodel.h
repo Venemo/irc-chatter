@@ -59,6 +59,7 @@ public:
     inline ChannelModel *currentChannel() { return _servers.count() ? static_cast<ChannelModel*>(allChannels()->getItem(_currentChannelIndex)) : 0; }
     inline ServerModel *currentServer() { return currentChannel() ? static_cast<ServerModel*>(currentChannel()->parent()) : 0; }
     int getChannelIndex(const QString &currentChannelName, const QString &currentServerName);
+    void setCurrentChannel(const QString &currentChannelName, const QString &currentServerName);
 
     Q_INVOKABLE void connectToServers();
     Q_INVOKABLE void disconnectFromServers();

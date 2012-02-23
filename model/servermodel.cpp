@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
-// Copyright (C) 2011, Timur Kristóf <venemo@fedoraproject.org>
+// Copyright (C) 2011-2012, Timur Kristóf <venemo@fedoraproject.org>
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
 #include <QtCore>
@@ -237,7 +237,7 @@ void ServerModel::removeModelForChannel(const QString &channelName)
 
 void ServerModel::joinChannel(const QString &channelName)
 {
-    qDebug() << "joining channel " << channelName;
+    qDebug() << "joining channel or querying user " << channelName;
 
     if (!_channels.contains(channelName))
     {
@@ -252,7 +252,7 @@ void ServerModel::joinChannel(const QString &channelName)
 
 void ServerModel::partChannel(const QString &channelName)
 {
-    qDebug() << "parting channel " << channelName;
+    qDebug() << "parting channel or closing user " << channelName;
 
     if (_channels.contains(channelName))
     {

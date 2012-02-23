@@ -128,7 +128,7 @@ void IrcModel::refreshChannelList()
     setCurrentChannelIndex(-1);
     _allChannels.setList(allChannelsList);
     if (currentServerName.length() && currentChannelName.length())
-        setCurrentChannelIndex(getChannelIndex(currentChannelName, currentServerName));
+        setCurrentChannel(currentChannelName, currentServerName);
     delete oldChannelsList;
 }
 
@@ -144,6 +144,11 @@ int IrcModel::getChannelIndex(const QString &currentChannelName, const QString &
         i++;
     }
     return -1;
+}
+
+void IrcModel::setCurrentChannel(const QString &currentChannelName, const QString &currentServerName)
+{
+    setCurrentChannelIndex(getChannelIndex(currentChannelName, currentServerName));
 }
 
 void IrcModel::backendsConnectedToServer()
