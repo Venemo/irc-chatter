@@ -217,16 +217,6 @@ Page {
                 }
             }
             TitleLabel {
-                text: "Servers"
-            }
-            Button {
-                width: parent.width - 100
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "Configure servers"
-
-                // TODO: implement onClick for this
-            }
-            TitleLabel {
                 text: "Customizations"
             }
             Label {
