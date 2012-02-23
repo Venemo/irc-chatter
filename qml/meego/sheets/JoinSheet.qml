@@ -83,12 +83,13 @@ Sheet {
             }
             anchors.horizontalCenter: parent.horizontalCenter
         }
-        CheckBox {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "Join on connect"
-            visible: isChannel
-            onCheckedChanged: autoJoin = checked
-        }
+// TODO
+//        CheckBox {
+//            anchors.horizontalCenter: parent.horizontalCenter
+//            text: "Join on connect"
+//            visible: isChannel
+//            onCheckedChanged: autoJoin = checked
+//        }
 
     }
 }
