@@ -96,9 +96,10 @@ void CommandParser::parseAndSendCommand(const QString &channelName, const QStrin
     {
         if (n > 2)
         {
-            quint16 length = commandParts[0].length() + commandParts[1].length();
+            int length = commandParts[0].length() + commandParts[1].length();
+            QString message = msg.mid(length + 1);
             _ircClient->queryUser(commandParts[1]);
-            _ircClient->sendMessage(commandParts[1], msg.mid(length + 1));
+            _ircClient->sendMessage(commandParts[1], message);
         }
         else
             emit commandParseError("Invalid command. Correct usage: '/msg &lt;username&gt; &lt;message&gt;'");

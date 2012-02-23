@@ -306,7 +306,7 @@ void CommuniIrcClient::joinChannel(const QString &channelName)
 void CommuniIrcClient::partChannel(const QString &channelName, const QString &message)
 {
     _ircSession->sendCommand(IrcCommand::createPart(channelName, message));
-    emit partedChannel(channelName, message);
+    emit partedChannel(channelName);
 }
 
 void CommuniIrcClient::queryUser(const QString &userName)
@@ -324,6 +324,7 @@ void CommuniIrcClient::closeUser(const QString &userName)
 void CommuniIrcClient::sendCtcpAction(const QString &channelName, const QString &action)
 {
     _ircSession->sendCommand(IrcCommand::createCtcpAction(channelName, action));
+    emit receiveCtcpAction(channelName, action);
 }
 
 void CommuniIrcClient::sendCtcpRequest(const QString &userName, const QString &request)
@@ -339,6 +340,7 @@ void CommuniIrcClient::sendCtcpReply(const QString &userName, const QString &mes
 void CommuniIrcClient::sendMessage(const QString &channelName, const QString &message)
 {
     _ircSession->sendCommand(IrcCommand::createMessage(channelName, message));
+    emit receiveMessage(channelName, message);
 }
 
 void CommuniIrcClient::requestTopic(const QString &channelName)
