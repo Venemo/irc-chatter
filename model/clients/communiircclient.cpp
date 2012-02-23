@@ -306,13 +306,13 @@ void CommuniIrcClient::joinChannel(const QString &channelName)
 void CommuniIrcClient::partChannel(const QString &channelName, const QString &message)
 {
     _ircSession->sendCommand(IrcCommand::createPart(channelName, message));
-    emit partChannel(channelName);
+    emit partedChannel(channelName, message);
 }
 
 void CommuniIrcClient::queryUser(const QString &userName)
 {
     Q_UNUSED(userName);
-    emit queryUser(userName);
+    emit queriedUser(userName);
 }
 
 void CommuniIrcClient::closeUser(const QString &userName)
