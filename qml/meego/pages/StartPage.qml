@@ -74,7 +74,7 @@ Page {
     }
     Flickable {
         id: startPageFlickable
-        interactive: true
+        interactive: contentHeight > height
         contentWidth: parent.width
         contentHeight: serverSettingsColumn.height + 50
         clip: true
