@@ -30,9 +30,14 @@ Page {
         ToolIcon {
             platformIconId: "toolbar-back"
             onClicked: {
-                // TODO: connect/disconnect
                 appWindow.pageStack.pop()
             }
+        }
+    }
+    onStatusChanged: {
+        if (status === PageStatus.Activating) {
+            serverSettingsList.bindConnectionBack = true
+            serverSettingsList.bindConnectionBack = false
         }
     }
 
@@ -53,12 +58,61 @@ Page {
 
             ServerSettingsList {
                 id: serverSettingsList
+                bindConnectionBack: false
                 onServerChosen: {
                     serverSettingsSheet.isNewServer = isNewServer
                     serverSettingsSheet.serverSettings = server
                     serverSettingsSheet.open()
                 }
+                onServerConnectionChanged: {
+                    if (manageServersPage.status === PageStatus.Active) {
+                        if (connectToServer) {
+                            areYouSureToConnectDialog.currentServer = server
+                            areYouSureToConnectDialog.open()
+                        }
+                        else {
+                            areYouSureToDisconnectDialog.currentServer = server
+                            areYouSureToDisconnectDialog.open()
+                        }
+                    }
+                }
             }
+        }
+    }
+    QueryDialog {
+        property ServerSettings currentServer: null
+
+        id: areYouSureToConnectDialog
+        titleText: "Are you sure?"
+        message: "Do you want to connect to this server?"
+        acceptButtonText: "Yes"
+        rejectButtonText: "No"
+        onAccepted: {
+            currentServer.shouldConnect = true
+            ircModel.connectToServer(currentServer)
+        }
+        onRejected: {
+            serverSettingsList.bindConnectionBack = true;
+            currentServer.shouldConnect = false
+            serverSettingsList.bindConnectionBack = false;
+        }
+    }
+    QueryDialog {
+        property ServerSettings currentServer: null
+
+        id: areYouSureToDisconnectDialog
+        titleText: "Are you sure?"
+        message: "Do you want to disconnect from this server?"
+        acceptButtonText: "Yes"
+        rejectButtonText: "No"
+        onAccepted: {
+            currentServer.shouldConnect = false
+            ircModel.disconnectFromServer(currentServer)
+        }
+        onRejected: {
+            serverSettingsList.bindConnectionBack = true;
+            currentServer.shouldConnect = true
+            serverSettingsList.bindConnectionBack = false;
         }
     }
 }

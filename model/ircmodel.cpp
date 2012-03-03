@@ -37,6 +37,7 @@ static bool channelLessThan(ChannelModel * m1, ChannelModel *m2)
 IrcModel::IrcModel(QObject *parent, AppSettings *appSettings) :
     QObject(parent),
     _currentChannelIndex(-1),
+    _isAppInFocus(true),
     _appSettings(appSettings),
     _networkConfigurationManager(new QNetworkConfigurationManager(this)),
     _networkSession(0)
@@ -66,6 +67,8 @@ void IrcModel::disconnectFromServers()
 
     _queue.clear();
     _servers.clear();
+
+    refreshChannelList();
 }
 
 bool IrcModel::anyServersToConnect()
@@ -101,6 +104,34 @@ void IrcModel::connectToServer(ServerSettings *serverSettings)
         // Putting this IRC connection to the waiting queue
         _queue.append(serverSettings);
         setIsWaitingForConnection(true);
+    }
+}
+
+void IrcModel::disconnectFromServer(ServerSettings *serverSettings)
+{
+    ServerModel *serverModel = 0;
+
+    foreach (ServerModel *sm, _servers)
+    {
+        if (sm->url() == serverSettings->serverUrl())
+        {
+            serverModel = sm;
+            break;
+        }
+    }
+
+    if (serverModel)
+    {
+        qDebug() << "disconnecting from server " << serverModel->url();
+        serverModel->_ircClient->disconnectFromServer();
+
+        _queue.removeAll(serverSettings);
+        _servers.removeAll(serverModel);
+
+        _currentChannelIndex = -1;
+        refreshChannelList();
+
+        serverModel->deleteLater();
     }
 }
 

@@ -51,8 +51,6 @@ class IrcModel : public QObject
     QList<ServerModel*> _servers;
     QObjectListModel<ChannelModel> _allChannels;
 
-    void connectToServer(ServerSettings *serverSettings);
-
 public:
     explicit IrcModel(QObject *parent, AppSettings *appSettings);
     inline QObjectListModel<ChannelModel> *allChannels() { return &_allChannels; }
@@ -61,6 +59,8 @@ public:
     int getChannelIndex(const QString &currentChannelName, const QString &currentServerName);
     void setCurrentChannel(const QString &currentChannelName, const QString &currentServerName);
 
+    Q_INVOKABLE void connectToServer(ServerSettings *serverSettings);
+    Q_INVOKABLE void disconnectFromServer(ServerSettings *serverSettings);
     Q_INVOKABLE void connectToServers();
     Q_INVOKABLE void disconnectFromServers();
     Q_INVOKABLE bool anyServersToConnect();
