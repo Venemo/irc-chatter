@@ -1,3 +1,10 @@
+irc-chatter (0.2.91) unreleased; urgency=low
+
+  * User interface feels more native on Harmattan
+  * Eliminated a bunch of bugs
+
+ -- Timur Kristóf <venemo@msn.com>  Sat, 03 Mar 2012 23:31:22 +0200
+
 irc-chatter (0.2.90) unreleased; urgency=low
 
   * Added support for connecting to multiple servers
@@ -10,7 +17,7 @@ irc-chatter (0.2.90) unreleased; urgency=low
   * Huge refactoring of the code
   * Lots of bug fixes
 
- -- Timur Kristóf <venemo@msn.com>  Sun, 04 Dec 2011 13:48:22 +0200
+ -- Timur Kristóf <venemo@msn.com>  Sat, 03 Mar 2012 18:48:22 +0200
 
 irc-chatter (0.1.90) unreleased; urgency=low
 
