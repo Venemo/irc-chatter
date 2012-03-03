@@ -121,7 +121,7 @@ Page {
     }
     Rectangle {
         id: channelNameBg
-        color: isPreRelease ? "#73ba0e" : "#f9a300"
+        color: "#f9a300"
         width: 60
         anchors.top: parent.top
         anchors.right: parent.right
@@ -289,10 +289,6 @@ Page {
             MenuItem {
                 text: "About"
                 onClicked: aboutDialog.open()
-            }
-            MenuItem {
-                text: "Quit"
-                onClicked: quitDialog.open()
             }
         }
     }
