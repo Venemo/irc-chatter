@@ -287,18 +287,11 @@ Page {
                 onClicked: appWindow.pageStack.push(manageServersPage)
             }
             MenuItem {
-                text: "Disconnect all"
-                onClicked: {
-                    chatMenu.close()
-                    areYouSureToDisconnectAllDialog.open()
-                }
-            }
-            MenuItem {
                 text: "About"
                 onClicked: aboutDialog.open()
             }
             MenuItem {
-                text: "Quit app"
+                text: "Quit"
                 onClicked: quitDialog.open()
             }
         }
@@ -336,17 +329,6 @@ Page {
         message: "Would you like to query user " + areYouSureToQueryDialog.queryableUserName + " ?"
         onAccepted: {
             ircModel.currentServer.joinChannel(areYouSureToQueryDialog.queryableUserName)
-        }
-    }
-    QueryDialog {
-        id: areYouSureToDisconnectAllDialog
-        acceptButtonText: "Yes"
-        rejectButtonText: "No"
-        titleText: "Are you sure?"
-        message: "Would you like to disconnect from all servers?"
-        onAccepted: {
-            ircModel.disconnectFromServers()
-            appWindow.pageStack.pop(chatPage);
         }
     }
     WorkingSelectionDialog {
