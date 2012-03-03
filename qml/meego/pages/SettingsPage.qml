@@ -142,7 +142,6 @@ Page {
                 TumblerButton {
                     id: colorButton
                     text: "Orange"
-                    width: parent.width / 3
                     anchors.right: parent.right
                     onClicked: colorSelectionDialog.open()
                 }

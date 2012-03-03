@@ -41,15 +41,12 @@ PageStackWindow {
     StartPage {
         id: startPage
     }
-
     ProgressPage {
         id: progressPage
     }
-
     ChatPage {
         id: chatPage
     }
-
     SettingsPage {
         id: settingsPage
     }
@@ -62,7 +59,6 @@ PageStackWindow {
         message: "Brought to you by Timur Kristóf and Hiemanshu Sharma.\nCurrent version: " + appVersion + "\n\nIRC Chatter is the fist IRC client for MeeGo. It uses Qt, QML, and libcommuni."
         acceptButtonText: "Close"
     }
-
     QueryDialog {
         id: quitDialog
         titleText: "Are you sure?"
@@ -71,7 +67,36 @@ PageStackWindow {
         rejectButtonText: "No"
         onAccepted: Qt.quit()
     }
-
+    ServerSettingsSheet {
+        id: serverSettingsSheet
+        onAccepted: {
+            if (isValid) {
+                if (isNewServer) {
+                    appSettings.appendServerSettings(serverSettings)
+                }
+                else {
+                    appSettings.serverSettings.reset()
+                }
+                appSettings.saveServerSettings()
+            }
+        }
+        onRejected: {
+            if (!isNewServer) {
+                areYouSureToDeleteServerDialog.open()
+            }
+        }
+    }
+    QueryDialog {
+        id: areYouSureToDeleteServerDialog
+        titleText: "Are you sure?"
+        message: "Do you want to delete this server?"
+        acceptButtonText: "Yes"
+        rejectButtonText: "No"
+        onAccepted: {
+            appSettings.deleteServerSettings(serverSettingsSheet.serverSettings)
+            serverSettingsSheet.serverSettings = null
+        }
+    }
     Menu {
         id: commonMenu
         visualParent: pageStack

@@ -89,36 +89,6 @@ Page {
             }
         }
     }
-    ServerSettingsSheet {
-        id: serverSettingsSheet
-        onAccepted: {
-            if (isValid) {
-                if (isNewServer) {
-                    appSettings.appendServerSettings(serverSettings)
-                }
-                else {
-                    appSettings.serverSettings.reset()
-                }
-                appSettings.saveServerSettings()
-            }
-        }
-        onRejected: {
-            if (!isNewServer) {
-                areYouSureToDeleteServerDialog.open()
-            }
-        }
-    }
-    QueryDialog {
-        id: areYouSureToDeleteServerDialog
-        titleText: "Are you sure?"
-        message: "Do you want to delete this server?"
-        acceptButtonText: "Yes"
-        rejectButtonText: "No"
-        onAccepted: {
-            appSettings.deleteServerSettings(serverSettingsSheet.serverSettings)
-            serverSettingsSheet.serverSettings = null
-        }
-    }
     InfoBanner {
         id: settingsDeletedBanner
         text: "The new version of the app is incompatible with the old, so your settings have been deleted. Click on this banner to dismiss."
