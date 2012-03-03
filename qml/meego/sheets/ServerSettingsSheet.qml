@@ -33,6 +33,12 @@ Sheet {
     id: serverSettingsSheet
     acceptButtonText: "Save"
     rejectButtonText: isNewServer ? "Cancel" : "Delete"
+    onAccepted: {
+        if (!isValid) {
+            open()
+            invalidBanner.show()
+        }
+    }
     content: Flickable {
         id: configFlickable
         interactive: true
@@ -204,5 +210,11 @@ Sheet {
                 }
             }
         }
+    }
+
+
+    InfoBanner {
+        id: invalidBanner
+        text: "The data you entered is invalid. Please fix it and press the save button again."
     }
 }

@@ -164,19 +164,11 @@ Page {
                 }
                 appSettings.saveServerSettings()
             }
-            else {
-                open()
-                invalidBanner.show()
-            }
         }
         onRejected: {
             if (!isNewServer) {
                 areYouSureToDeleteServerDialog.open()
             }
-        }
-        InfoBanner {
-            id: invalidBanner
-            text: "The data you entered is invalid. Please fix it and press the save button again."
         }
     }
     QueryDialog {
