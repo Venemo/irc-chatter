@@ -279,12 +279,12 @@ Page {
                 }
             }
             MenuItem {
-                text: "About"
-                onClicked: aboutDialog.open()
-            }
-            MenuItem {
                 text: "Settings"
                 onClicked: appWindow.pageStack.push(settingsPage)
+            }
+            MenuItem {
+                text: "Manage servers"
+                onClicked: appWindow.pageStack.push(manageServersPage)
             }
             MenuItem {
                 text: "Disconnect all"
@@ -292,6 +292,10 @@ Page {
                     chatMenu.close()
                     areYouSureToDisconnectAllDialog.open()
                 }
+            }
+            MenuItem {
+                text: "About"
+                onClicked: aboutDialog.open()
             }
             MenuItem {
                 text: "Quit app"

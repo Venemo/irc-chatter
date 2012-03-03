@@ -24,4 +24,41 @@ import "../components"
 
 Page {
     id: manageServersPage
+    tools: ToolBarLayout {
+        id: startPageToolbar
+
+        ToolIcon {
+            platformIconId: "toolbar-back"
+            onClicked: {
+                // TODO: connect/disconnect
+                appWindow.pageStack.pop()
+            }
+        }
+    }
+
+    Flickable {
+        id: manageServersPageFlickable
+        interactive: true
+        contentWidth: parent.width
+        contentHeight: serverSettingsColumn.height + 50
+        clip: true
+        anchors.fill: parent
+
+        Column {
+            id: serverSettingsColumn
+            width: parent.width - 40
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.topMargin: 20
+            anchors.top: parent.top
+
+            ServerSettingsList {
+                id: serverSettingsList
+                onServerChosen: {
+                    serverSettingsSheet.isNewServer = isNewServer
+                    serverSettingsSheet.serverSettings = server
+                    serverSettingsSheet.open()
+                }
+            }
+        }
+    }
 }

@@ -35,10 +35,6 @@ Page {
             platformIconId: "toolbar-back"
             onClicked: appWindow.pageStack.pop()
         }
-        ToolIcon {
-            platformIconId: "toolbar-view-menu"
-            onClicked: (commonMenu.status === DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
-        }
     }
 
     Flickable {

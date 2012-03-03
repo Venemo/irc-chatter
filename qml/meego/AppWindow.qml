@@ -50,6 +50,9 @@ PageStackWindow {
     SettingsPage {
         id: settingsPage
     }
+    ManageServersPage {
+        id: manageServersPage
+    }
 
     // Common components
 
