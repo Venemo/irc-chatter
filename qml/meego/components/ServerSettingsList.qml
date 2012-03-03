@@ -28,6 +28,7 @@ Column {
 
     id: serverSettingsList
     width: parent.width
+    spacing: 10
 
     Repeater {
         id: serverSettingsRepeater

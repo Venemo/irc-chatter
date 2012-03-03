@@ -31,17 +31,12 @@ Row {
         anchors.verticalCenter: parent.verticalCenter
         height: 1
         color: "#000000"
-        width: (parent.width - title1.width) / 2 - 10
+        width: (parent.width - title1.width) - 10
     }
     Label {
         id: title1
         text: titleLabel.text
         font.bold: true
-    }
-    Rectangle {
-        anchors.verticalCenter: parent.verticalCenter
-        height: 1
-        color: "#000000"
-        width: (parent.width - title1.width) / 2 - 10
+        font.pixelSize: 20
     }
 }
