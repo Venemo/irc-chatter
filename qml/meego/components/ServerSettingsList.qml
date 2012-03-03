@@ -22,7 +22,11 @@ import net.venemo.ircchatter 1.0
 
 Column {
     signal serverChosen(variant server, bool isNewServer)
+    signal serverConnectionChanged(variant server, bool connectToServer)
 
+    property bool bindConnectionBack: false
+
+    id: serverSettingsList
     width: parent.width
 
     Repeater {
@@ -72,11 +76,17 @@ Column {
                 checked: shouldConnect
                 anchors.top: appWindow.inPortrait ? serverInfoLabel.bottom : serverTitleLabel.bottom
                 anchors.right: parent.right
+                onCheckedChanged: {
+                    if (!bindConnectionBack) {
+                        serverConnectionChanged(appSettings.serverSettings.getItem(index), checked)
+                    }
+                }
 
                 Binding {
-                    target: appSettings.serverSettings.getItem(index)
-                    property: "shouldConnect"
-                    value: connectSwitch.checked
+                    target: connectSwitch
+                    property: "checked"
+                    value: appSettings.serverSettings.getItem(index).shouldConnect
+                    when: bindConnectionBack
                 }
             }
         }

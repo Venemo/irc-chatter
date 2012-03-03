@@ -85,6 +85,9 @@ Page {
                     serverSettingsSheet.serverSettings = server
                     serverSettingsSheet.open()
                 }
+                onServerConnectionChanged: {
+                    server.shouldConnect = connectToServer
+                }
             }
         }
     }
