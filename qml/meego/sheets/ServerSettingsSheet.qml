@@ -32,7 +32,7 @@ Sheet {
 
     id: serverSettingsSheet
     acceptButtonText: "Save"
-    rejectButtonText: isNewServer ? "Cancel" : "Delete"
+    rejectButtonText: isNewServer ? "Cancel" : ""
     onAccepted: {
         if (!isValid) {
             open()
@@ -208,6 +208,14 @@ Sheet {
                     value: passwordField.text
                     when: canSave
                 }
+            }
+            TitleLabel {
+                text: "Delete"
+            }
+            Button {
+                text: "Delete server"
+                onClicked: reject()
+                anchors.horizontalCenter: parent.horizontalCenter
             }
         }
     }
