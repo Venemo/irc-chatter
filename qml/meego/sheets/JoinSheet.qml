@@ -29,14 +29,14 @@ Sheet {
     acceptButtonText: isChannel ? "Join" : (isQuery ? "Query" : "")
     rejectButtonText: "Cancel"
 
-    property string joinText
+    property alias channelName: channelNameField.text
     property bool autoJoin: false
-    property bool isQuery: joinField.text.length > 0 && joinField.text.charAt(0) !== '#'
-    property bool isChannel: joinField.text.length > 1 && joinField.text.charAt(0) === '#'
+    property bool isQuery: channelNameField.text.length > 0 && channelNameField.text.charAt(0) !== '#'
+    property bool isChannel: channelNameField.text.length > 1 && channelNameField.text.charAt(0) === '#'
 
     onStatusChanged: {
         if (status === DialogStatus.Opening)
-            joinField.forceActiveFocus();
+            channelNameField.forceActiveFocus();
     }
 
     content: Column {
@@ -51,13 +51,13 @@ Sheet {
             text: "(Begin channel names with #)"
         }
         TextField {
-            id: joinField
+            id: channelNameField
             width: parent.width
             placeholderText: "Channel or user name..."
             text: "#"
             onTextChanged: {
-                joinText = text
-                channelCheckBox.checked = text.charAt(0) === '#'
+                if (channelCheckBox !== null)
+                    channelCheckBox.checked = text.charAt(0) === '#'
             }
             inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
             Keys.onReturnPressed: {
@@ -71,13 +71,13 @@ Sheet {
             checked: true
             onCheckedChanged: {
                 if (checked) {
-                    if (joinField.text.charAt(0) !== '#') {
-                        joinField.text = "#" + joinField.text
+                    if (channelNameField.text.charAt(0) !== '#') {
+                        channelNameField.text = "#" + channelNameField.text
                     }
                 }
                 else {
-                    if (joinField.text.charAt(0) === '#') {
-                        joinField.text = joinField.text.substring(1)
+                    if (channelNameField.text.charAt(0) === '#') {
+                        channelNameField.text = channelNameField.text.substring(1)
                     }
                 }
             }

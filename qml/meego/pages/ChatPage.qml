@@ -303,7 +303,7 @@ Page {
         id: joinSheet
         visualParent: chatPage
         onAccepted: {
-            ircModel.currentServer.joinChannel(joinText)
+            ircModel.currentServer.joinChannel(joinSheet.channelName)
         }
     }
     QueryDialog {
