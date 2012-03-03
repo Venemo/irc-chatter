@@ -23,6 +23,7 @@
 
 #include "model/ircmodel.h"
 #include "model/settings/appsettings.h"
+#include "model/helpers/notifier.h"
 
 class AppFocusFilter : public QObject
 {
@@ -36,6 +37,7 @@ public:
         if (event->type() == QEvent::WindowActivate)
         {
             static_cast<IrcModel*>(parent())->setIsAppInFocus(true);
+            Notifier::unpublish();
         }
         else if (event->type() == QEvent::WindowDeactivate)
         {

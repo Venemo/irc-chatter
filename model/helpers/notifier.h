@@ -25,6 +25,7 @@ class Notifier
 {
 public:
     static void notify(const QString &message);
+    static void unpublish();
     
 };
 

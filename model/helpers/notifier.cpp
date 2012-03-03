@@ -31,6 +31,9 @@ void Notifier::notify(const QString &message)
         notificationGroup->publish();
     }
 
+    if (!notificationGroup->isPublished())
+        notificationGroup->publish();
+
     MNotification *notification = new MNotification(MNotification::ImReceivedEvent, "New IRC message", message);
     notification->setImage("/usr/share/icons/hicolor/80x80/apps/irc-chatter-harmattan-icon.png");
     notification->setGroup(*notificationGroup);
@@ -38,4 +41,12 @@ void Notifier::notify(const QString &message)
 
     // TODO: why doesn't the image work?
     // TODO: perhaps add an action so that the app is focused when the user clicks on the notifications
+}
+
+void Notifier::unpublish()
+{
+    if (notificationGroup)
+    {
+        notificationGroup->remove();
+    }
 }
