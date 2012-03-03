@@ -17,8 +17,8 @@ HEADERS += \
     model/servermodel.h \
     model/ircmodel.h \
     qobjectlistmodel.h \
-    appsettings.h \
-    serversettings.h \
+    model/settings/appsettings.h \
+    model/settings/serversettings.h \
     model/clients/abstractircclient.h \
     model/clients/communiircclient.h \
     model/helpers/commandparser.h \
@@ -30,8 +30,8 @@ SOURCES += \
     model/channelmodel.cpp \
     model/ircmodel.cpp \
     model/servermodel.cpp \
-    appsettings.cpp \
-    serversettings.cpp \
+    model/settings/appsettings.cpp \
+    model/settings/serversettings.cpp \
     model/clients/abstractircclient.cpp \
     model/clients/communiircclient.cpp \
     model/helpers/commandparser.cpp \

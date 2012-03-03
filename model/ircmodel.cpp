@@ -20,7 +20,7 @@
 #include <QStringList>
 
 #include "ircmodel.h"
-#include "appsettings.h"
+#include "settings/appsettings.h"
 #include "clients/communiircclient.h"
 
 static bool channelLessThan(ChannelModel * m1, ChannelModel *m2)

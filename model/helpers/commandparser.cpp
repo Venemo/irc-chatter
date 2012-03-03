@@ -20,7 +20,7 @@
 #include <QStringList>
 
 #include "../clients/abstractircclient.h"
-#include "../../appsettings.h"
+#include "../settings/appsettings.h"
 #include "commandparser.h"
 
 CommandParser::CommandParser(QObject *parent, AbstractIrcClient *ircClient, AppSettings *appSettings) :

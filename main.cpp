@@ -22,7 +22,7 @@
 #include <MDeclarativeCache>
 
 #include "model/ircmodel.h"
-#include "appsettings.h"
+#include "model/settings/appsettings.h"
 
 class AppFocusFilter : public QObject
 {

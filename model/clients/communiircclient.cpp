@@ -28,7 +28,7 @@
 #include <IrcCommand>
 
 #include "communiircclient.h"
-#include "../../serversettings.h"
+#include "../settings/serversettings.h"
 
 CommuniIrcClient::CommuniIrcClient(QObject *parent, ServerSettings *serverSettings) :
     AbstractIrcClient(parent, serverSettings)

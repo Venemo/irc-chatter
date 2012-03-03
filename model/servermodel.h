@@ -25,7 +25,7 @@
 #include "util.h"
 #include "qobjectlistmodel.h"
 #include "channelmodel.h"
-#include "appsettings.h"
+#include "settings/appsettings.h"
 
 class AbstractIrcClient;
 class IrcModel;

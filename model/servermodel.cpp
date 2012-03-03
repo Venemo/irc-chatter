@@ -20,7 +20,7 @@
 
 #include "servermodel.h"
 #include "ircmodel.h"
-#include "appsettings.h"
+#include "settings/appsettings.h"
 #include "clients/abstractircclient.h"
 
 ServerModel::ServerModel(IrcModel *parent, const QString &url, AbstractIrcClient *ircClient) :
