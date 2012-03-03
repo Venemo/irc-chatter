@@ -228,5 +228,7 @@ Sheet {
     InfoBanner {
         id: invalidBanner
         text: "The data you entered is invalid. Please fix it and press the save button again."
+        anchors.top: parent.top
+        anchors.topMargin: 45
     }
 }
