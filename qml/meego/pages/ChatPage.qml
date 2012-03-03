@@ -220,12 +220,22 @@ Page {
             id: messageField
             placeholderText: "Type a message"
             text: ircModel.currentChannel !== null ? ircModel.currentChannel.currentMessage : ""
-            onTextChanged: {
-                if (ircModel.currentChannel !== null && ircModel.currentChannel.currentMessage !== messageField.text && shouldUpdateCurrentMessage)
-                    ircModel.currentChannel.currentMessage = text
-            }
             inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
             platformSipAttributes: mySipAttributes
+            onTextChanged: {
+                if (ircModel.currentChannel !== null) {
+                    if (!activeFocus && ircModel.currentChannel.currentMessage !== messageField.text) {
+                        // Erasing useless crap from the message field. ("feature" of some component or whatever)
+                        messageField.text = ircModel.currentChannel.currentMessage
+                    }
+                    if (shouldUpdateCurrentMessage && ircModel.currentChannel.currentMessage !== messageField.text) {
+                        ircModel.currentChannel.currentMessage = text
+                    }
+                }
+            }
+            onFocusChanged: {
+                console.log(messageField.activeFocus)
+            }
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: tabButton.right
             anchors.right: menuToolIcon.left
@@ -240,6 +250,7 @@ Page {
                 if (ircModel.currentChannel !== null)
                     ircModel.currentChannel.getSentMessagesDown()
             }
+
             SipAttributes {
                 id: mySipAttributes
                 actionKeyEnabled: true
