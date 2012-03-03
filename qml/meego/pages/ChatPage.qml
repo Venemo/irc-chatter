@@ -89,16 +89,21 @@ Page {
             id: chatArea
             width: parent.width
             readOnly: true
-            wrapMode: TextEdit.WordWrap
+            wrapMode: TextEdit.Wrap
             textFormat: TextEdit.RichText
             text: ircModel.currentChannel !== null ? ircModel.currentChannel.channelText : ""
-            font.pixelSize: appSettings.fontSize
-
             onTextChanged: {
                 var should = Math.max(0,  chatArea.height - chatFlickable.height)
                 if (chatFlickable.contentY >= chatFlickable.lastSupposedContentY - 220)
                     chatFlickable.lastSupposedContentY = chatFlickable.contentY = should
             }
+            Component.onCompleted: {
+                // chatArea.children[0] is the border image inside the TextArea
+                chatArea.children[0].anchors.topMargin = -600
+                chatArea.children[0].anchors.leftMargin = -100
+                chatArea.children[0].anchors.bottomMargin = -600
+            }
+            font.pixelSize: appSettings.fontSize
 
             Connections {
                 // chatArea.children[3] is the TextEdit inside the TextArea
