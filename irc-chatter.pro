@@ -13,6 +13,7 @@ include(communi.pri)
 
 HEADERS += \
     util.h \
+    appeventlistener.h \
     model/channelmodel.h \
     model/servermodel.h \
     model/ircmodel.h \
@@ -27,6 +28,7 @@ HEADERS += \
 
 SOURCES += \
     main.cpp \
+    appeventlistener.cpp \
     model/channelmodel.cpp \
     model/ircmodel.cpp \
     model/servermodel.cpp \
@@ -64,6 +66,7 @@ unix {
     QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
     QMAKE_LFLAGS += -pie -rdynamic
 
+    QT += dbus
     INSTALLS += target icon desktopfile
     target.path=/usr/bin
     icon.files = installables/irc-chatter-harmattan-icon.png

@@ -21,31 +21,9 @@
 #include <QSettings>
 #include <MDeclarativeCache>
 
+#include "appeventlistener.h"
 #include "model/ircmodel.h"
 #include "model/settings/appsettings.h"
-#include "model/helpers/notifier.h"
-
-class AppFocusFilter : public QObject
-{
-public:
-    AppFocusFilter(IrcModel *parent) : QObject((QObject*)parent) { }
-
-    bool eventFilter(QObject *obj, QEvent *event)
-    {
-        Q_UNUSED(obj);
-
-        if (event->type() == QEvent::WindowActivate)
-        {
-            static_cast<IrcModel*>(parent())->setIsAppInFocus(true);
-            Notifier::unpublish();
-        }
-        else if (event->type() == QEvent::WindowDeactivate)
-        {
-            static_cast<IrcModel*>(parent())->setIsAppInFocus(false);
-        }
-        return false;
-    }
-};
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -64,7 +42,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QApplication *app = MDeclarativeCache::qApplication(argc, argv);
     AppSettings *appSettings = new AppSettings(app);
     IrcModel *model = new IrcModel(app, appSettings);
-    app->installEventFilter(new AppFocusFilter(model));
+    AppEventListener *eventListener = new AppEventListener(model);
+    app->installEventFilter(eventListener);
 
     qmlRegisterType<ServerSettings>("net.venemo.ircchatter", 1, 0, "ServerSettings");
     qmlRegisterType<AppSettings>("net.venemo.ircchatter", 1, 0, "AppSettings");
@@ -72,6 +51,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterUncreatableType<IrcModel>("net.venemo.ircchatter", 1, 0, "IrcModel", "This object is created in the model.");
 
     QDeclarativeView *view = MDeclarativeCache::qDeclarativeView();
+    QObject::connect(eventListener, SIGNAL(applicationActivated()), view, SLOT(raise()));
     QObject::connect(app, SIGNAL(aboutToQuit()), appSettings, SLOT(saveServerSettings()));
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
     view->setWindowTitle("IRC Chatter");

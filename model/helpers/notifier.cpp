@@ -21,14 +21,18 @@
 #include "notifier.h"
 
 static MNotificationGroup *notificationGroup = 0;
+static MRemoteAction *remoteAction = 0;
 
 void Notifier::notify(const QString &message)
 {
     if (!notificationGroup)
     {
+        remoteAction = new MRemoteAction("net.venemo.ircchatter", "/", "net.venemo.ircchatter", "activateApplication");
+
         notificationGroup = new MNotificationGroup(MNotification::ImReceivedEvent, "New IRC messages");
         notificationGroup->setImage("/usr/share/icons/hicolor/80x80/apps/irc-chatter-harmattan-icon.png");
         notificationGroup->publish();
+        notificationGroup->setAction(*remoteAction);
     }
 
     if (!notificationGroup->isPublished())
@@ -37,10 +41,9 @@ void Notifier::notify(const QString &message)
     MNotification *notification = new MNotification(MNotification::ImReceivedEvent, "New IRC message", message);
     notification->setImage("/usr/share/icons/hicolor/80x80/apps/irc-chatter-harmattan-icon.png");
     notification->setGroup(*notificationGroup);
-    notification->publish();
+    notification->setAction(*remoteAction);
 
-    // TODO: why doesn't the image work?
-    // TODO: perhaps add an action so that the app is focused when the user clicks on the notifications
+    notification->publish();
 }
 
 void Notifier::unpublish()
