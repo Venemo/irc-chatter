@@ -26,8 +26,8 @@ import "../components"
 Page {
     function switchToChatPageIfPossible() {
         if (status === PageStatus.Active && isModelReady) {
-            commonMenu.close();
-            appWindow.pageStack.push(chatPage);
+            commonMenu.close()
+            appWindow.pageStack.push(chatPage)
         }
     }
 
@@ -42,13 +42,13 @@ Page {
         }
     }
     onStatusChanged: {
-        switchToChatPageIfPossible();
+        switchToChatPageIfPossible()
     }
 
     BusyIndicator {
         id: connectingIndicator
         anchors.centerIn: parent
-        running: appWindow.pageStack.currentPage == progressPage
+        running: appWindow.pageStack.currentPage === progressPage
         platformStyle: BusyIndicatorStyle { size: "large" }
     }
     Label {
@@ -60,8 +60,10 @@ Page {
     Connections {
         target: ircModel
         onReadyToDisplay: {
-            isModelReady = true;
-            switchToChatPageIfPossible();
+            if (progressPage.status === PageStatus.Active || progressPage.status === PageStatus.Activating) {
+                isModelReady = true
+                switchToChatPageIfPossible()
+            }
         }
     }
 }
