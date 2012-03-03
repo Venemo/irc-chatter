@@ -89,6 +89,15 @@ void AppSettings::appendServerSettings(ServerSettings *serverSettings)
     }
 }
 
+void AppSettings::deleteServerSettings(ServerSettings *serverSettings)
+{
+    if (_serverSettings->getList().contains(serverSettings))
+    {
+        _serverSettings->removeItem(serverSettings);
+    }
+    serverSettings->deleteLater();
+}
+
 int AppSettings::serverSettingsCount() const
 {
     return _serverSettings->rowCount();

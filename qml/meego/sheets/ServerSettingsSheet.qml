@@ -32,7 +32,7 @@ Sheet {
 
     id: serverSettingsSheet
     acceptButtonText: "Save"
-    rejectButtonText: isNewServer ? "Cancel" : ""
+    rejectButtonText: isNewServer ? "Cancel" : "Delete"
     content: Flickable {
         id: configFlickable
         interactive: true

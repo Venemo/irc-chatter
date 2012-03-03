@@ -169,9 +169,25 @@ Page {
                 invalidBanner.show()
             }
         }
+        onRejected: {
+            if (!isNewServer) {
+                areYouSureToDeleteServerDialog.open()
+            }
+        }
         InfoBanner {
             id: invalidBanner
             text: "The data you entered is invalid. Please fix it and press the save button again."
+        }
+    }
+    QueryDialog {
+        id: areYouSureToDeleteServerDialog
+        titleText: "Are you sure?"
+        message: "Do you want to delete this server?"
+        acceptButtonText: "Yes"
+        rejectButtonText: "No"
+        onAccepted: {
+            appSettings.deleteServerSettings(serverSettingsSheet.serverSettings)
+            serverSettingsSheet.serverSettings = null
         }
     }
     InfoBanner {
