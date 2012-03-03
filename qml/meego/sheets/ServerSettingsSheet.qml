@@ -39,6 +39,11 @@ Sheet {
             invalidBanner.show()
         }
     }
+    onStatusChanged: {
+        if (status === DialogStatus.Opening) {
+            configFlickable.contentY = 0
+        }
+    }
     content: Flickable {
         id: configFlickable
         interactive: true
