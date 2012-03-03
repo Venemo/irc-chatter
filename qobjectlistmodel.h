@@ -24,19 +24,22 @@
 class QObjectListModelMagic : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(int itemCount READ itemCount NOTIFY itemCountChanged)
 
 public:
     QObjectListModelMagic(QObject *parent) : QAbstractListModel(parent) { }
     Q_INVOKABLE virtual QObject *getItem(int index) = 0;
     Q_INVOKABLE virtual int rowCount(const QModelIndex &parent = QModelIndex()) const = 0;
     Q_INVOKABLE virtual int indexOf(QObject *obj) const = 0;
-    Q_INVOKABLE void reset() { QAbstractListModel::reset(); }
+    Q_INVOKABLE void reset() { QAbstractListModel::reset(); emit itemCountChanged(); }
+    virtual int itemCount() const = 0;
 
 protected slots:
     virtual void removeDestroyedItem() = 0;
 
 signals:
     void itemAdded(QObject *item);
+    void itemCountChanged();
 
 };
 
@@ -49,6 +52,7 @@ class QObjectListModel : public QObjectListModelMagic
 public:
     explicit QObjectListModel(QObject *parent = 0, QList<X*> *list = new QList<X*>());
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int itemCount() const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role);
@@ -90,6 +94,7 @@ void QObjectListModel<T>::setList(QList<T*> *list)
     beginResetModel();
     _list = list;
     endResetModel();
+    emit itemCountChanged();
 }
 
 template<typename T>
@@ -102,6 +107,12 @@ template<typename T>
 int QObjectListModel<T>::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
+    return _list->count();
+}
+
+template<typename T>
+int QObjectListModel<T>::itemCount() const
+{
     return _list->count();
 }
 
@@ -142,6 +153,7 @@ void QObjectListModel<T>::addItem(T *item)
     endInsertRows();
 
     emit itemAdded(item);
+    emit itemCountChanged();
 }
 
 template<typename T>
@@ -159,6 +171,7 @@ void QObjectListModel<T>::removeItem(T *item)
     _list->removeAt(z);
     disconnect(item, SIGNAL(destroyed()), this, SLOT(removeDestroyedItem()));
     endRemoveRows();
+    emit itemCountChanged();
 }
 
 template<typename T>
@@ -168,6 +181,7 @@ void QObjectListModel<T>::removeItem(int index)
     disconnect(_list[index], SIGNAL(destroyed()), this, SLOT(removeDestroyedItem()));
     _list->removeAt(index);
     endRemoveRows();
+    emit itemCountChanged();
 }
 
 template<typename T>

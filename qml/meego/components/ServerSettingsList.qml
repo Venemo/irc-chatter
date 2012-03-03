@@ -30,53 +30,40 @@ Column {
     width: parent.width
     spacing: 10
 
+    TitleLabel {
+        text: "Configured servers"
+    }
+    Label {
+        text: "No servers configured yet"
+        visible: appSettings.serverSettings.itemCount === 0
+    }
     Repeater {
         id: serverSettingsRepeater
         model: appSettings.serverSettings
         width: parent.width
-        delegate: Item {
-            id: serverSettingItem
-            width: serverSettingsRepeater.width
-            height: appWindow.inPortrait ? 220 : 150
-            anchors.margins: 10
+        delegate: Label {
+            id: serverTitleLabel
+            text: "<b>" + serverUrl + ":" + serverPort + "</b><br/>" + userNickname
+            width: serverSettingsList.width
+            height: implicitHeight + 20
+            verticalAlignment: Text.AlignVCenter
+            textFormat: Text.RichText
 
-            TitleLabel {
-                id: serverTitleLabel
-                text: serverUrl
-                anchors.top: serverSettingItem.top
-                anchors.margins: 10
-            }
-            Label {
-                id: serverInfoLabel
-                text: "Server: " + serverUrl + ":" + serverPort + "\nNick: " + userNickname
-                anchors.margins: 10
+            MouseArea {
                 anchors.left: parent.left
-                anchors.top: appWindow.inPortrait ? serverTitleLabel.bottom : undefined
-                anchors.verticalCenter: appWindow.inPortrait ? undefined : parent.verticalCenter
-            }
-            Button {
-                id: serverEditButton
-                text: "Edit"
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.right: connectSwitch.left
+                anchors.rightMargin: 10
                 onClicked: {
                     serverChosen(appSettings.serverSettings.getItem(index), false)
                 }
-                width: 200
-                anchors.top: connectSwitch.bottom
-                anchors.right: parent.right
-                anchors.topMargin: 10
-            }
-            Label {
-                id: connectLabel
-                text: "Connect"
-                anchors.verticalCenter: connectSwitch.verticalCenter
-                anchors.right: connectSwitch.left
-                anchors.rightMargin: 10
             }
             Switch {
                 id: connectSwitch
                 checked: shouldConnect
-                anchors.top: appWindow.inPortrait ? serverInfoLabel.bottom : serverTitleLabel.bottom
                 anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
                 onCheckedChanged: {
                     if (!bindConnectionBack) {
                         serverConnectionChanged(appSettings.serverSettings.getItem(index), checked)
@@ -86,14 +73,14 @@ Column {
                 Binding {
                     target: connectSwitch
                     property: "checked"
-                    value: appSettings.serverSettings.getItem(index).shouldConnect
+                    value: appSettings.serverSettings.getItem(index) !== null ? appSettings.serverSettings.getItem(index).shouldConnect : false
                     when: bindConnectionBack
                 }
             }
         }
     }
     TitleLabel {
-        text: "Other"
+        text: "New server"
     }
     Button {
         id: newServerButton
