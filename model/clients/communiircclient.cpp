@@ -47,6 +47,8 @@ CommuniIrcClient::CommuniIrcClient(QObject *parent, ServerSettings *serverSettin
     else
         _ircSession->setRealName(serverSettings->userNickname());
 
+    _ircSession->setPort(serverSettings->serverPort());
+
     if (serverSettings->serverSSL())
     {
         QSslSocket* socket = new QSslSocket(_ircSession);
@@ -55,10 +57,7 @@ CommuniIrcClient::CommuniIrcClient(QObject *parent, ServerSettings *serverSettin
         _ircSession->setSocket(socket);
     }
 
-    _ircSession->setPort(serverSettings->serverPort());
-
     connect(_ircSession, SIGNAL(password(QString*)), serverSettings, SLOT(backendAsksForPassword(QString*)));
-
     connect(_ircSession, SIGNAL(connected()), this, SIGNAL(connectedToServer()));
     connect(_ircSession, SIGNAL(disconnected()), this, SIGNAL(disconnectedFromServer()));
     connect(_ircSession, SIGNAL(messageReceived(IrcMessage*)), this, SLOT(messageReceived(IrcMessage*)));

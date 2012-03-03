@@ -232,16 +232,6 @@ void IrcModel::onlineStateChanged(bool online)
         qDebug() << "there are" << _queue.count() << "connections queued";
         qDebug() << "there are" << _servers.count() << "servers to which connection was lost";
 
-        // Queued, not yet connected
-        if (_queue.count())
-        {
-            foreach (ServerSettings *serverModel, _queue)
-            {
-                _queue.removeAll(serverModel);
-                connectToServer(serverModel);
-            }
-        }
-
         // Already connected but lost
         if (_servers.count())
         {
@@ -249,6 +239,16 @@ void IrcModel::onlineStateChanged(bool online)
             {
                 qDebug() << "reconnecting to server " << serverModel->url();
                 serverModel->_ircClient->connectToServer();
+            }
+        }
+
+        // Queued, not yet connected
+        if (_queue.count())
+        {
+            foreach (ServerSettings *serverModel, _queue)
+            {
+                _queue.removeAll(serverModel);
+                connectToServer(serverModel);
             }
         }
     }
