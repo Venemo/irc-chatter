@@ -331,6 +331,29 @@ Page {
             ircModel.currentServer.joinChannel(areYouSureToQueryDialog.queryableUserName)
         }
     }
+    QueryDialog {
+        id: disconnectionDialog
+        titleText: "Disconnected"
+        message: "Your network connection has been lost.\nWe'll try to reconnect you in a few minutes."
+        rejectButtonText: "Quit"
+        onRejected: Qt.quit()
+
+        Connections {
+            target: ircModel
+            onIsOnlineChanged: {
+                console.log("UI: online state changed")
+                if (!ircModel.isOnline) {
+                    if (chatPage.status === PageStatus.Active || chatPage.status === PageStatus.Activating) {
+                        if (disconnectionDialog.status !== DialogStatus.Open)
+                            disconnectionDialog.open()
+                    }
+                }
+                else {
+                    disconnectionDialog.close()
+                }
+            }
+        }
+    }
     WorkingSelectionDialog {
         id: userSelectorDialog
         titleText: "User list of " + (ircModel.currentChannel === null ? "?" : ircModel.currentChannel.name)

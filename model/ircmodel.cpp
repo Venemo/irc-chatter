@@ -39,10 +39,10 @@ IrcModel::IrcModel(QObject *parent, AppSettings *appSettings) :
     _currentChannelIndex(-1),
     _isAppInFocus(true),
     _appSettings(appSettings),
+    _isOnline(false),
     _networkConfigurationManager(new QNetworkConfigurationManager(this)),
     _networkSession(0)
 {
-    connect(_networkConfigurationManager, SIGNAL(onlineStateChanged(bool)), this, SLOT(onlineStateChanged(bool)));
 }
 
 void IrcModel::connectToServers()
@@ -86,7 +86,9 @@ bool IrcModel::anyServersToConnect()
 
 void IrcModel::connectToServer(ServerSettings *serverSettings)
 {
-    if (_networkConfigurationManager->isOnline())
+    qDebug() << "trying to connect to" << serverSettings->serverUrl();
+
+    if (isOnline())
     {
         AbstractIrcClient *ircClient = new CommuniIrcClient(this, serverSettings);
         ServerModel *serverModel = new ServerModel(this, serverSettings->serverUrl(), ircClient);
@@ -102,8 +104,8 @@ void IrcModel::connectToServer(ServerSettings *serverSettings)
     else
     {
         // Putting this IRC connection to the waiting queue
+        qDebug() << "network is offline, adding this to the queue";
         _queue.append(serverSettings);
-        setIsWaitingForConnection(true);
     }
 }
 
@@ -192,11 +194,6 @@ void IrcModel::backendsConnectedToServer()
     }
 }
 
-bool IrcModel::isOnline() const
-{
-    return _networkConfigurationManager->isOnline();
-}
-
 void IrcModel::attemptConnection()
 {
     // Deleting the previous connection object
@@ -227,15 +224,17 @@ void IrcModel::attemptConnectionLater()
 
 void IrcModel::onlineStateChanged(bool online)
 {
+    setIsOnline(online);
+
     if (online)
     {
         // If there are any connections waiting, let's connect them now
+        qDebug() << "there are" << _queue.count() << "connections queued";
+        qDebug() << "there are" << _servers.count() << "servers to which connection was lost";
 
         // Queued, not yet connected
         if (_queue.count())
         {
-            setIsWaitingForConnection(false);
-
             foreach (ServerSettings *serverModel, _queue)
             {
                 _queue.removeAll(serverModel);
@@ -265,8 +264,6 @@ void IrcModel::onlineStateChanged(bool online)
 
         attemptConnectionLater();
     }
-
-    emit isOnlineChanged();
 }
 
 void IrcModel::networkSessionError(QNetworkSession::SessionError error)
@@ -279,13 +276,10 @@ void IrcModel::networkSessionError(QNetworkSession::SessionError error)
     case QNetworkSession::RoamingError:
     case QNetworkSession::InvalidConfigurationError:
     case QNetworkSession::OperationNotSupportedError:
-        // If we're not online, we should attempt a reconnection
-        if (!_networkConfigurationManager->isOnline())
-            attemptConnectionLater();
-        break;
-        // isOnlineChanged already takes care of this
     case QNetworkSession::SessionAbortedError:
     default:
+        // We're assuming that this error means that we're now offline
+        onlineStateChanged(false);
         break;
     }
 }
@@ -294,20 +288,26 @@ void IrcModel::networkSessionStateChanged(QNetworkSession::State state)
 {
     switch (state)
     {
-    // The connection is not available, should reconnect
     case QNetworkSession::NotAvailable:
     case QNetworkSession::Invalid:
         qDebug() << "network session is not available or invalid";
-        attemptConnectionLater();
+        onlineStateChanged(false);
         break;
-        // isOnlineChanged already takes care of these
-    case QNetworkSession::Disconnected:
     case QNetworkSession::Connected:
     case QNetworkSession::Roaming:
-        // isOnlineChanged already takes care of this when it's actually closed
+        qDebug() << "network session is connected";
+        onlineStateChanged(true);
+        break;
+    case QNetworkSession::Disconnected:
+        qDebug() << "network session is disconnected";
+        onlineStateChanged(false);
+        break;
     case QNetworkSession::Closing:
-        // isOnlineChanged already takes care of this when it's actually connected
+        qDebug() << "network session is closing...";
+        break;
     case QNetworkSession::Connecting:
+        qDebug() << "network session is connecting...";
+        break;
     default:
         break;
     }

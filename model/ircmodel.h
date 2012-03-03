@@ -41,9 +41,9 @@ class IrcModel : public QObject
     Q_PROPERTY(QObject* currentServer READ currentServer NOTIFY currentChannelIndexChanged)
     GENPROPERTY_F(bool, _isAppInFocus, isAppInFocus, setIsAppInFocus, isAppInFocusChanged)
     Q_PROPERTY(int isAppInFocus READ isAppInFocus WRITE setIsAppInFocus NOTIFY isAppInFocusChanged)
-    GENPROPERTY_F(bool, _isWaitingForConnection, isWaitingForConnection, setIsWaitingForConnection, isWaitingForConnectionChanged)
-    Q_PROPERTY(int isWaitingForConnection READ isWaitingForConnection WRITE setIsWaitingForConnection NOTIFY isWaitingForConnectionChanged)
     GENPROPERTY_PTR_R(AppSettings*, _appSettings, appSettings)
+    GENPROPERTY_F(bool, _isOnline, isOnline, setIsOnline, isOnlineChanged)
+    Q_PROPERTY(bool isOnline READ isOnline NOTIFY isOnlineChanged)
 
     QNetworkConfigurationManager *_networkConfigurationManager;
     QNetworkSession *_networkSession;
@@ -64,7 +64,6 @@ public:
     Q_INVOKABLE void connectToServers();
     Q_INVOKABLE void disconnectFromServers();
     Q_INVOKABLE bool anyServersToConnect();
-    Q_INVOKABLE bool isOnline() const;
 
 public slots:
     Q_INVOKABLE void attemptConnection();
@@ -83,9 +82,7 @@ signals:
     void currentChannelIndexChanged();
     void readyToDisplay();
     void isAppInFocusChanged();
-    void isWaitingForConnectionChanged();
     void isOnlineChanged();
-
 };
 
 #endif // IRCMODEL_H
