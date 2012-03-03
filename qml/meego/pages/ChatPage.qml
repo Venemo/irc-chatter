@@ -334,7 +334,7 @@ Page {
     QueryDialog {
         id: disconnectionDialog
         titleText: "Disconnected"
-        message: "Your network connection has been lost.\nWe'll try to reconnect you in a few minutes."
+        message: "Your network connection has been lost.\nWe'll try to reconnect you in a few seconds."
         rejectButtonText: "Quit"
         onRejected: Qt.quit()
 

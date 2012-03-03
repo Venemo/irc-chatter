@@ -219,7 +219,7 @@ void IrcModel::attemptConnectionLater()
 {
     qDebug() << "attempting automatic reconnection in 5 seconds";
     // After 5 seconds, attempting a connection
-    QTimer::singleShot(5000, this, SLOT(attemptConnection()));
+    QTimer::singleShot(10000, this, SLOT(attemptConnection()));
 }
 
 void IrcModel::onlineStateChanged(bool online)
