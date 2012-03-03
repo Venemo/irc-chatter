@@ -11,5 +11,6 @@
         <file>qml/meego/sheets/ServerSettingsSheet.qml</file>
         <file>qml/meego/sheets/JoinSheet.qml</file>
         <file>qml/meego/components/ServerSettingsList.qml</file>
+        <file>qml/meego/pages/ManageServersPage.qml</file>
     </qresource>
 </RCC>
