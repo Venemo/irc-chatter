@@ -33,11 +33,11 @@ public:
     {
         Q_UNUSED(obj);
 
-        if (event->type() == QEvent::FocusIn)
+        if (event->type() == QEvent::WindowActivate)
         {
             static_cast<IrcModel*>(parent())->setIsAppInFocus(true);
         }
-        else if (event->type() == QEvent::FocusOut)
+        else if (event->type() == QEvent::WindowDeactivate)
         {
             static_cast<IrcModel*>(parent())->setIsAppInFocus(false);
         }
