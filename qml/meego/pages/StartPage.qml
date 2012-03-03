@@ -54,13 +54,34 @@ Page {
         }
     }
 
+    Rectangle {
+        id: titleRectangle
+        color: "#f9a300"
+        height: 70
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        TextEdit {
+            activeFocusOnPress: false
+            color: "#ffffff"
+            text: "IRC Chatter"
+            anchors.left: parent.left
+            anchors.leftMargin: 20
+            anchors.verticalCenter: parent.verticalCenter
+            font.pixelSize: 30
+        }
+    }
     Flickable {
         id: startPageFlickable
         interactive: true
         contentWidth: parent.width
         contentHeight: serverSettingsColumn.height + 50
         clip: true
-        anchors.fill: parent
+        anchors.top: titleRectangle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
 
         Column {
             id: serverSettingsColumn
@@ -69,11 +90,8 @@ Page {
             anchors.topMargin: 20
             anchors.top: parent.top
 
-            TitleLabel {
-                text: "Welcome to IRC Chatter!"
-            }
             Label {
-                text: "Please select which servers to connect to at startup.\nPress the add button to add a new server."
+                text: "Please select which servers to connect to at startup. Press the add button to add a new server."
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
