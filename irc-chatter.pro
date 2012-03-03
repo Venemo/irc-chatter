@@ -46,17 +46,17 @@ OTHER_FILES += \
     LICENSE-DOCS \
     AUTHORS \
     qml/meego/AppWindow.qml \
-    qml/meego/pages/StartPage.qml \
-    qml/meego/pages/ProgressPage.qml \
-    qml/meego/pages/ChatPage.qml \
-    qml/meego/pages/SettingsPage.qml \
-    qml/meego/sheets/JoinSheet.qml \
-    qml/meego/sheets/ServerSettingsSheet.qml \
     qml/meego/components/TitleLabel.qml \
     qml/meego/components/WorkingSelectionDialog.qml \
     qml/meego/components/CommonDialog.qml \
     qml/meego/components/ServerSettingsList.qml \
-    qml/meego/pages/ManageServersPage.qml
+    qml/meego/pages/StartPage.qml \
+    qml/meego/pages/ProgressPage.qml \
+    qml/meego/pages/ChatPage.qml \
+    qml/meego/pages/SettingsPage.qml \
+    qml/meego/pages/ManageServersPage.qml \
+    qml/meego/sheets/JoinSheet.qml \
+    qml/meego/sheets/ServerSettingsSheet.qml
 
 CONFIG += meegotouch
 
@@ -83,8 +83,4 @@ contains(MEEGO_EDITION, harmattan) {
     splashportrait.path = /usr/share/irc-chatter
     splashlandscape.files = installables/irc-chatter-splash-harmattan-landscape.jpg
     splashlandscape.path = /usr/share/irc-chatter
-}
-
-symbian {
-    TARGET.UID3 = 0xE3B586A7
 }
