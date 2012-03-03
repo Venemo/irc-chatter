@@ -1,3 +1,17 @@
+irc-chatter (0.2.90) unreleased; urgency=low
+
+  * Added support for connecting to multiple servers
+  * Improved handling of offline state
+  * Offline state is now displayed to the user
+  * New settings, more customization
+  * Notifications now work
+  * Channel join UI is easier to use
+  * Other adjustments to the user interface
+  * Huge refactoring of the code
+  * Lots of bug fixes
+
+ -- Timur Kristóf <venemo@msn.com>  Sun, 04 Dec 2011 13:48:22 +0200
+
 irc-chatter (0.1.90) unreleased; urgency=low
 
   * IRC library updated to newest version
@@ -9,8 +23,6 @@ irc-chatter (0.1.90) unreleased; urgency=low
   * Clicking on a username will now query the user
   * Automatic reconnect when the connection is lost
   * Font size setting now works
-  * TODO: Support for connecting to multiple servers at the same time
-  * TODO: Some adjustments to the user interface
 
  -- Timur Kristóf <venemo@msn.com>  Sun, 04 Dec 2011 13:48:22 +0200
 

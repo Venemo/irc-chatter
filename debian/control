@@ -2,9 +2,9 @@ Source: irc-chatter
 Section: user/other
 Priority: extra
 Maintainer: Timur Kristof (Venemo) <venemo@fedoraproject.org>
-Build-Depends: debhelper (>= 5), 
+Build-Depends: debhelper (>= 5), pkg-config,
  libqt4-dev (>= 4.7), qt-components-dev,
- applauncherd-dev, pkg-config
+ applauncherd-dev, libmeegotouch-dev
 Standards-Version: 3.7.3
 Homepage: http://wiki.meego.com/IRC_Chatter
 

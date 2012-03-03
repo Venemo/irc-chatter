@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
-// Copyright (C) 2011, Timur Kristóf <venemo@fedoraproject.org>
+// Copyright (C) 2011-2012, Timur Kristóf <venemo@fedoraproject.org>
 
 #ifndef QOBJECTLISTMODEL_H
 #define QOBJECTLISTMODEL_H
