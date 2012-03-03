@@ -79,76 +79,13 @@ Page {
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
             }
-            Repeater {
-                id: serverSettingsRepeater
-                model: appSettings.serverSettings
-                width: parent.width
-                delegate: Item {
-                    id: serverSettingItem
-                    width: serverSettingsRepeater.width
-                    height: appWindow.inPortrait ? 220 : 150
-                    anchors.margins: 10
-
-                    TitleLabel {
-                        id: serverTitleLabel
-                        text: serverUrl
-                        anchors.top: serverSettingItem.top
-                        anchors.margins: 10
-                    }
-                    Label {
-                        id: serverInfoLabel
-                        text: "Server: " + serverUrl + ":" + serverPort + "\nNick: " + userNickname
-                        anchors.margins: 10
-                        anchors.left: parent.left
-                        anchors.top: appWindow.inPortrait ? serverTitleLabel.bottom : undefined
-                        anchors.verticalCenter: appWindow.inPortrait ? undefined : parent.verticalCenter
-                    }
-                    Button {
-                        id: serverEditButton
-                        text: "Edit"
-                        onClicked: {
-                            serverSettingsSheet.isNewServer = false
-                            serverSettingsSheet.serverSettings = appSettings.serverSettings.getItem(index)
-                            serverSettingsSheet.open()
-                        }
-                        width: 200
-                        anchors.top: connectSwitch.bottom
-                        anchors.right: parent.right
-                        anchors.topMargin: 10
-                    }
-                    Label {
-                        id: connectLabel
-                        text: "Connect"
-                        anchors.verticalCenter: connectSwitch.verticalCenter
-                        anchors.right: connectSwitch.left
-                        anchors.rightMargin: 10
-                    }
-                    Switch {
-                        id: connectSwitch
-                        checked: shouldConnect
-                        anchors.top: appWindow.inPortrait ? serverInfoLabel.bottom : serverTitleLabel.bottom
-                        anchors.right: parent.right
-
-                        Binding {
-                            target: appSettings.serverSettings.getItem(index)
-                            property: "shouldConnect"
-                            value: connectSwitch.checked
-                        }
-                    }
-                }
-            }
-            TitleLabel {
-                text: "Other"
-            }
-            Button {
-                id: newServerButton
-                text: "Add a new server"
-                onClicked: {
-                    serverSettingsSheet.isNewServer = true
-                    serverSettingsSheet.serverSettings = appSettings.newServerSettings()
+            ServerSettingsList {
+                id: serverSettingsList
+                onServerChosen: {
+                    serverSettingsSheet.isNewServer = isNewServer
+                    serverSettingsSheet.serverSettings = server
                     serverSettingsSheet.open()
                 }
-                anchors.horizontalCenter: parent.horizontalCenter
             }
         }
     }

@@ -54,7 +54,8 @@ OTHER_FILES += \
     qml/meego/sheets/ServerSettingsSheet.qml \
     qml/meego/components/TitleLabel.qml \
     qml/meego/components/WorkingSelectionDialog.qml \
-    qml/meego/components/CommonDialog.qml
+    qml/meego/components/CommonDialog.qml \
+    qml/meego/components/ServerSettingsList.qml
 
 CONFIG += meegotouch
 

@@ -10,5 +10,6 @@
         <file>qml/meego/pages/SettingsPage.qml</file>
         <file>qml/meego/sheets/ServerSettingsSheet.qml</file>
         <file>qml/meego/sheets/JoinSheet.qml</file>
+        <file>qml/meego/components/ServerSettingsList.qml</file>
     </qresource>
 </RCC>
