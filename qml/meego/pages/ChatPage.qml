@@ -75,7 +75,7 @@ Page {
     Flickable {
         id: chatFlickable
         anchors.top: parent.top
-        anchors.bottom: chatRectangle.top
+        anchors.bottom: messageToolBar.top
         anchors.left: parent.left
         anchors.right: channelNameBg.left
 
@@ -125,7 +125,7 @@ Page {
         width: 60
         anchors.top: parent.top
         anchors.right: parent.right
-        anchors.bottom: chatRectangle.top
+        anchors.bottom: messageToolBar.top
         onHeightChanged: {
             adjustChatAreaHeight()
         }
@@ -189,81 +189,73 @@ Page {
             flickableItem: channelSwitcherFlickable
         }
     }
-    Rectangle {
-        id: chatRectangle
-        gradient: Gradient {
-            GradientStop {
-                color: "#777777"
-                position: 0
-            }
-            GradientStop {
-                color: "#bbbbbb"
-                position: 0.5
-            }
-        }
-        height: messageField.implicitHeight * 1.2
+    ToolBar {
+        id: messageToolBar
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
 
-        ToolIcon {
-            id: tabButton
-            platformIconId: "toolbar-reply"
-            onClicked: {
-                messageField.forceActiveFocus()
-                ircModel.currentChannel.autoCompleteNick()
+        tools: ToolBarLayout {
+
+            ToolIcon {
+                id: autoCompleteToolIcon
+                platformIconId: "toolbar-reply"
+                onClicked: {
+                    messageField.forceActiveFocus()
+                    ircModel.currentChannel.autoCompleteNick()
+                }
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
             }
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
-        }
-        TextField {
-            id: messageField
-            placeholderText: "Type a message"
-            text: ircModel.currentChannel !== null ? ircModel.currentChannel.currentMessage : ""
-            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            platformSipAttributes: mySipAttributes
-            onTextChanged: {
-                if (ircModel.currentChannel !== null) {
-                    if (!activeFocus && ircModel.currentChannel.currentMessage !== messageField.text) {
-                        // Erasing useless crap from the message field. ("feature" of some component or whatever)
-                        messageField.text = ircModel.currentChannel.currentMessage
-                    }
-                    if (shouldUpdateCurrentMessage && ircModel.currentChannel.currentMessage !== messageField.text) {
-                        ircModel.currentChannel.currentMessage = text
+            TextField {
+                id: messageField
+                placeholderText: "Type a message"
+                text: ircModel.currentChannel !== null ? ircModel.currentChannel.currentMessage : ""
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+                platformSipAttributes: mySipAttributes
+                onTextChanged: {
+                    if (ircModel.currentChannel !== null) {
+                        if (!activeFocus && ircModel.currentChannel.currentMessage !== messageField.text) {
+                            // Erasing useless crap from the message field. ("feature" of some component or whatever)
+                            messageField.text = ircModel.currentChannel.currentMessage
+                        }
+                        if (shouldUpdateCurrentMessage && ircModel.currentChannel.currentMessage !== messageField.text) {
+                            ircModel.currentChannel.currentMessage = text
+                        }
                     }
                 }
-            }
-            onFocusChanged: {
-                console.log(messageField.activeFocus)
-            }
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: tabButton.right
-            anchors.right: menuToolIcon.left
-            Keys.onReturnPressed: {
-                sendCurrentMessage()
-            }
-            Keys.onUpPressed: {
-                if (ircModel.currentChannel !== null)
-                    ircModel.currentChannel.getSentMessagesUp()
-            }
-            Keys.onDownPressed: {
-                if (ircModel.currentChannel !== null)
-                    ircModel.currentChannel.getSentMessagesDown()
-            }
+                onFocusChanged: {
+                    console.log(messageField.activeFocus)
+                }
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: autoCompleteToolIcon.right
+                anchors.right: menuToolIcon.left
+                Keys.onReturnPressed: {
+                    sendCurrentMessage()
+                }
+                Keys.onUpPressed: {
+                    if (ircModel.currentChannel !== null)
+                        ircModel.currentChannel.getSentMessagesUp()
+                }
+                Keys.onDownPressed: {
+                    if (ircModel.currentChannel !== null)
+                        ircModel.currentChannel.getSentMessagesDown()
+                }
 
-            SipAttributes {
-                id: mySipAttributes
-                actionKeyEnabled: true
-                actionKeyHighlighted: true
-                actionKeyLabel: "Send!"
+                SipAttributes {
+                    id: mySipAttributes
+                    actionKeyEnabled: true
+                    actionKeyHighlighted: true
+                    actionKeyLabel: "Send!"
+                }
             }
-        }
-        ToolIcon {
-            id: menuToolIcon
-            platformIconId: "toolbar-view-menu"
-            onClicked: (chatMenu.status === DialogStatus.Closed) ? chatMenu.open() : chatMenu.close()
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.right: parent.right
+            ToolIcon {
+                id: menuToolIcon
+                platformIconId: "toolbar-view-menu"
+                onClicked: (chatMenu.status === DialogStatus.Closed) ? chatMenu.open() : chatMenu.close()
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+            }
         }
     }
     Menu {
