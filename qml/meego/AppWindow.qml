@@ -71,27 +71,6 @@ PageStackWindow {
         rejectButtonText: "No"
         onAccepted: Qt.quit()
     }
-    ServerSettingsSheet {
-        id: serverSettingsSheet
-        onAccepted: {
-            if (isValid) {
-                if (isNewServer) {
-                    appSettings.appendServerSettings(serverSettings)
-                }
-                else {
-                    appSettings.serverSettings.reset()
-                    if (serverSettingsSheet.serverSettings.isConnected)
-                        serverSettingBanner.show()
-                }
-                appSettings.saveServerSettings()
-            }
-        }
-        onRejected: {
-            if (!isNewServer) {
-                areYouSureToDeleteServerDialog.open()
-            }
-        }
-    }
     QueryDialog {
         id: areYouSureToDeleteServerDialog
         titleText: "Are you sure?"
@@ -120,10 +99,5 @@ PageStackWindow {
                 onClicked: quitDialog.open()
             }
         }
-    }
-    InfoBanner {
-        id: serverSettingBanner
-        text: "Changes to the server will be applied next time you connect to it."
-        parent: appWindow.pageStack.currentPage
     }
 }

@@ -60,9 +60,14 @@ Page {
                 id: serverSettingsList
                 bindConnectionBack: false
                 onServerChosen: {
-                    serverSettingsSheet.isNewServer = isNewServer
-                    serverSettingsSheet.serverSettings = server
-                    serverSettingsSheet.open()
+                    if (!server.isConnected && !server.isConnecting) {
+                        serverSettingsSheet.isNewServer = isNewServer
+                        serverSettingsSheet.serverSettings = server
+                        serverSettingsSheet.open()
+                    }
+                    else {
+                        cantEditConnectedServerBanner.show()
+                    }
                 }
                 onServerConnectionChanged: {
                     if (manageServersPage.status === PageStatus.Active) {
@@ -114,5 +119,28 @@ Page {
             currentServer.shouldConnect = true
             serverSettingsList.bindConnectionBack = false;
         }
+    }
+    ServerSettingsSheet {
+        id: serverSettingsSheet
+        onAccepted: {
+            if (isValid) {
+                if (isNewServer) {
+                    appSettings.appendServerSettings(serverSettings)
+                }
+                else {
+                    appSettings.serverSettings.reset()
+                }
+                appSettings.saveServerSettings()
+            }
+        }
+        onRejected: {
+            if (!isNewServer) {
+                areYouSureToDeleteServerDialog.open()
+            }
+        }
+    }
+    InfoBanner {
+        id: cantEditConnectedServerBanner
+        text: "You must disconnect from the server before editing its settings"
     }
 }

@@ -82,6 +82,7 @@ Column {
                 }
                 BusyIndicator {
                     id: serverConnectingIndicator
+                    visible: false
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: moreIndicator.left
                     anchors.rightMargin: 20

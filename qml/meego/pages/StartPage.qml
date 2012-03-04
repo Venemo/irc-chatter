@@ -109,6 +109,25 @@ Page {
             }
         }
     }
+    ServerSettingsSheet {
+        id: serverSettingsSheet
+        onAccepted: {
+            if (isValid) {
+                if (isNewServer) {
+                    appSettings.appendServerSettings(serverSettings)
+                }
+                else {
+                    appSettings.serverSettings.reset()
+                }
+                appSettings.saveServerSettings()
+            }
+        }
+        onRejected: {
+            if (!isNewServer) {
+                areYouSureToDeleteServerDialog.open()
+            }
+        }
+    }
     InfoBanner {
         id: settingsDeletedBanner
         text: "The new version of the app is incompatible with the old, so your settings have been deleted. Click on this banner to dismiss."
