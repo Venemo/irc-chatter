@@ -217,7 +217,7 @@ void IrcModel::attemptConnection()
 
 void IrcModel::attemptConnectionLater()
 {
-    qDebug() << "attempting automatic reconnection in 5 seconds";
+    qDebug() << "attempting automatic reconnection in 10 seconds";
     // After 5 seconds, attempting a connection
     QTimer::singleShot(10000, this, SLOT(attemptConnection()));
 }
@@ -259,6 +259,8 @@ void IrcModel::onlineStateChanged(bool online)
         foreach (ServerModel *serverModel, _servers)
         {
             qDebug() << "disconnecting from server " << serverModel->url();
+            serverModel->_ircClient->socket()->disconnectFromHost();
+            serverModel->_ircClient->socket()->disconnect();
             serverModel->_ircClient->disconnectFromServer();
         }
 
