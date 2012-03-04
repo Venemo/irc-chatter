@@ -361,3 +361,8 @@ void CommuniIrcClient::sendRaw(const QString &message)
 {
     _ircSession->sendRaw(message);
 }
+
+QAbstractSocket *CommuniIrcClient::socket()
+{
+    return _ircSession->socket();
+}

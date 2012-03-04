@@ -96,7 +96,7 @@ void IrcModel::connectToServer(ServerSettings *serverSettings)
         serverModel->_autoJoinChannels = serverSettings->autoJoinChannels();
         _servers.append(serverModel);
 
-        connect(ircClient, SIGNAL(connectedToServer()), this, SLOT(backendsConnectedToServer()));
+        connect(ircClient->socket(), SIGNAL(connected()), this, SLOT(backendsConnectedToServer()));
         connect(serverModel, SIGNAL(channelsChanged()), this, SLOT(refreshChannelList()));
 
         ircClient->connectToServer();
@@ -189,7 +189,6 @@ void IrcModel::backendsConnectedToServer()
     if (_currentChannelIndex == -1)
     {
         qDebug() << "this is the first connection, and it succeeded";
-        setCurrentChannelIndex(0);
         emit readyToDisplay();
     }
 }

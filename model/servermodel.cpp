@@ -219,8 +219,14 @@ void ServerModel::addModelForChannel(const QString &channelName)
         {
             channel->setChannelType(ChannelModel::Query);
         }
+
         _channels[channelName] = channel;
         emit this->channelsChanged();
+
+        IrcModel *ircModel = static_cast<IrcModel*>(parent());
+
+        if (ircModel->currentChannelIndex() == -1)
+            ircModel->setCurrentChannelIndex(0);
     }
 }
 
