@@ -31,6 +31,7 @@ ServerModel::ServerModel(IrcModel *parent, const QString &url, AbstractIrcClient
 {
     _settings = new AppSettings(this);
 
+    connect(_ircClient->socket(), SIGNAL(connected()), this, SLOT(socketConnected()));
     connect(_ircClient, SIGNAL(connectedToServer()), this, SLOT(connectedToServer()));
     connect(_ircClient, SIGNAL(disconnectedFromServer()), this, SLOT(disconnectedFromServer()));
 
@@ -62,6 +63,21 @@ ServerModel::~ServerModel()
         _ircClient->quit("Quitting. (with IRC Chatter)");
         _ircClient->deleteLater();
     }
+}
+
+void ServerModel::socketConnected()
+{
+    if (_defaultChannel)
+    {
+        IrcModel *ircModel = static_cast<IrcModel*>(parent());
+        ircModel->setCurrentChannelIndex(-1);
+
+        _channels.remove(_defaultChannel->name());
+        _defaultChannel->deleteLater();
+        ircModel->refreshChannelList();
+    }
+
+    _defaultChannel = 0;
 }
 
 void ServerModel::connectedToServer()
@@ -206,7 +222,7 @@ void ServerModel::addModelForChannel(const QString &channelName)
     if (!_channels.contains(channelName))
     {
         ChannelModel *channel = new ChannelModel(this, channelName, _ircClient);
-        if (_channels.count() == 0)
+        if (_defaultChannel == 0)
         {
             _defaultChannel = channel;
             channel->setChannelType(ChannelModel::Server);

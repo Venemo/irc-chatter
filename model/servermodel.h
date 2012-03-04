@@ -61,6 +61,7 @@ signals:
     void kickReceived(const QString &channelName, const QString &reason);
 
 private slots:
+    void socketConnected();
     void addModelForChannel(const QString &channelName);
     void removeModelForChannel(const QString &channelName);
 
