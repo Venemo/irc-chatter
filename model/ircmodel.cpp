@@ -301,16 +301,19 @@ void IrcModel::networkSessionStateChanged(QNetworkSession::State state)
     case QNetworkSession::NotAvailable:
     case QNetworkSession::Invalid:
         qDebug() << "network session is not available or invalid";
-        onlineStateChanged(false);
+        if (_isOnline)
+            onlineStateChanged(false);
         break;
     case QNetworkSession::Connected:
     case QNetworkSession::Roaming:
         qDebug() << "network session is connected";
-        onlineStateChanged(true);
+        if (!_isOnline)
+            onlineStateChanged(true);
         break;
     case QNetworkSession::Disconnected:
         qDebug() << "network session is disconnected";
-        onlineStateChanged(false);
+        if (_isOnline)
+            onlineStateChanged(false);
         break;
     case QNetworkSession::Closing:
         qDebug() << "network session is closing...";
