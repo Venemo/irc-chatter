@@ -70,7 +70,7 @@ Page {
                             areYouSureToConnectDialog.currentServer = server
                             areYouSureToConnectDialog.open()
                         }
-                        else {
+                        else if (!connectToServer) {
                             areYouSureToDisconnectDialog.currentServer = server
                             areYouSureToDisconnectDialog.open()
                         }

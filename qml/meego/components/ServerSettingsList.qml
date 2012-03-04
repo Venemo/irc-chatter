@@ -80,6 +80,19 @@ Column {
                         serverChosen(appSettings.serverSettings.getItem(index), false)
                     }
                 }
+                BusyIndicator {
+                    id: serverConnectingIndicator
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: moreIndicator.left
+                    anchors.rightMargin: 20
+
+                    Connections {
+                        target: appSettings.serverSettings.getItem(index) !== null ? appSettings.serverSettings.getItem(index) : undefined
+                        onIsConnectingChanged: {
+                            serverConnectingIndicator.visible = serverConnectingIndicator.running = appSettings.serverSettings.getItem(index).isConnecting
+                        }
+                    }
+                }
                 MoreIndicator {
                     id: moreIndicator
                     anchors.verticalCenter: parent.verticalCenter

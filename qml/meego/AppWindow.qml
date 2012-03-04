@@ -80,7 +80,8 @@ PageStackWindow {
                 }
                 else {
                     appSettings.serverSettings.reset()
-                    serverSettingBanner.show()
+                    if (serverSettingsSheet.serverSettings.isConnected)
+                        serverSettingBanner.show()
                 }
                 appSettings.saveServerSettings()
             }
