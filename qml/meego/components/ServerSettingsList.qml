@@ -41,28 +41,15 @@ Column {
         id: serverSettingsRepeater
         model: appSettings.serverSettings
         width: parent.width
-        delegate: Label {
-            id: serverTitleLabel
-            text: "<b>" + serverUrl + ":" + serverPort + "</b><br/>" + userNickname
+        delegate: Rectangle {
             width: serverSettingsList.width
-            height: implicitHeight + 20
-            verticalAlignment: Text.AlignVCenter
-            textFormat: Text.RichText
+            height: serverTitleLabel.height
+            color: "transparent"
 
-            MouseArea {
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.right: connectSwitch.left
-                anchors.rightMargin: 10
-                onClicked: {
-                    serverChosen(appSettings.serverSettings.getItem(index), false)
-                }
-            }
             Switch {
                 id: connectSwitch
                 checked: shouldConnect
-                anchors.right: parent.right
+                anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 onCheckedChanged: {
                     if (!bindConnectionBack) {
@@ -75,6 +62,29 @@ Column {
                     property: "checked"
                     value: appSettings.serverSettings.getItem(index) !== null ? appSettings.serverSettings.getItem(index).shouldConnect : false
                     when: bindConnectionBack
+                }
+            }
+            Label {
+                id: serverTitleLabel
+                text: "<b>" + serverUrl + ":" + serverPort + "</b><br/>" + userNickname
+                height: implicitHeight + 20
+                verticalAlignment: Text.AlignVCenter
+                textFormat: Text.RichText
+                anchors.left: connectSwitch.right
+                anchors.leftMargin: 20
+                anchors.right: parent.right
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        serverChosen(appSettings.serverSettings.getItem(index), false)
+                    }
+                }
+                MoreIndicator {
+                    id: moreIndicator
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
                 }
             }
         }
