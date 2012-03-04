@@ -91,6 +91,7 @@ Page {
             readOnly: true
             wrapMode: TextEdit.Wrap
             textFormat: TextEdit.RichText
+            enableSoftwareInputPanel: false
             text: ircModel.currentChannel !== null ? ircModel.currentChannel.channelText : ""
             onTextChanged: {
                 var should = Math.max(0,  chatArea.height - chatFlickable.height)
@@ -220,17 +221,20 @@ Page {
                 platformSipAttributes: mySipAttributes
                 onTextChanged: {
                     if (ircModel.currentChannel !== null) {
-                        if (!activeFocus && ircModel.currentChannel.currentMessage !== messageField.text) {
-                            // Erasing useless crap from the message field. ("feature" of some component or whatever)
-                            messageField.text = ircModel.currentChannel.currentMessage
+                        //console.log("text changed! " + text)
+
+                        // This is a WORKAROUND for a bug.
+                        // After the user clicks on chatArea and then messageField, random HTML gets copied
+                        // if "error correction" is enabled in the text input settings
+                        if (Math.abs(text.length - ircModel.currentChannel.currentMessage.length) == 1) {
+                            if (shouldUpdateCurrentMessage && ircModel.currentChannel.currentMessage !== messageField.text) {
+                                ircModel.currentChannel.currentMessage = text
+                            }
                         }
-                        if (shouldUpdateCurrentMessage && ircModel.currentChannel.currentMessage !== messageField.text) {
-                            ircModel.currentChannel.currentMessage = text
+                        else if (ircModel.currentChannel.currentMessage !== text) {
+                            text = ircModel.currentChannel.currentMessage
                         }
                     }
-                }
-                onFocusChanged: {
-                    console.log(messageField.activeFocus)
                 }
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: autoCompleteToolIcon.right
