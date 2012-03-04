@@ -48,7 +48,6 @@ Page {
     }
     function adjustForOrientationChange() {
         scrollToBottom()
-        chatFlickable.lastSupposedContentY = chatFlickable.contentY
     }
     function adjustChatAreaHeight() {
         chatArea.height = Math.max(channelNameBg.height, chatArea.implicitHeight)
@@ -83,8 +82,6 @@ Page {
         contentHeight: chatArea.height
         clip: true
 
-        property int lastSupposedContentY: 0
-
         TextArea {
             id: chatArea
             width: parent.width
@@ -95,9 +92,7 @@ Page {
             text: ircModel.currentChannel !== null ? ircModel.currentChannel.channelText : ""
             inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
             onTextChanged: {
-                var should = Math.max(0,  chatArea.height - chatFlickable.height)
-                if (chatFlickable.contentY >= chatFlickable.lastSupposedContentY - 220)
-                    chatFlickable.lastSupposedContentY = chatFlickable.contentY = should
+                scrollToBottom()
             }
             Component.onCompleted: {
                 // chatArea.children[0] is the border image inside the TextArea
