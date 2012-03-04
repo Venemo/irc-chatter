@@ -1,3 +1,16 @@
+irc-chatter (0.2.92) unstable; urgency=low
+
+  * Improved server setting list interface
+  * Added connection indicator to the server management page
+  * "Connecting, please wait" will appear for a shorter time
+  * Fixed a bug when random text was entered into the text field
+  * Fixed a bug with connectivity
+  * Fixed a bug after reconnecting to a server
+  * Fixed a bug with notifications
+  * The main text area will always scroll down
+
+ -- Timur Kristóf <venemo@msn.com>  Sun, 04 Mar 2012 14:17:22 +0200
+
 irc-chatter (0.2.91) unreleased; urgency=low
 
   * User interface feels more native on Harmattan
