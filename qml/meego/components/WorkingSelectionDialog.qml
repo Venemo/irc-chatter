@@ -69,8 +69,7 @@ CommonDialog {
             placeholderText: "Search"
             width: parent.width
             visible: selectorDialog.searchFieldVisible
-
-            property string fullText: text + platformPreedit
+            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
         }
 
         ListView {
@@ -96,7 +95,7 @@ CommonDialog {
 
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    visible: searchField.fullText.length === 0 || (searchFieldVisible && displayableText.toLowerCase().indexOf(searchField.fullText.toLowerCase()) > -1);
+                    visible: searchField.text.length === 0 || (searchFieldVisible && displayableText.toLowerCase().indexOf(searchField.text.toLowerCase()) > -1);
                     height: visible ? selectorDialog.platformStyle.itemHeight : 0
 
                     MouseArea {

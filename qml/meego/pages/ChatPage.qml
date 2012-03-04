@@ -93,6 +93,7 @@ Page {
             textFormat: TextEdit.RichText
             enableSoftwareInputPanel: false
             text: ircModel.currentChannel !== null ? ircModel.currentChannel.channelText : ""
+            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
             onTextChanged: {
                 var should = Math.max(0,  chatArea.height - chatFlickable.height)
                 if (chatFlickable.contentY >= chatFlickable.lastSupposedContentY - 220)
@@ -221,18 +222,8 @@ Page {
                 platformSipAttributes: mySipAttributes
                 onTextChanged: {
                     if (ircModel.currentChannel !== null) {
-                        //console.log("text changed! " + text)
-
-                        // This is a WORKAROUND for a bug.
-                        // After the user clicks on chatArea and then messageField, random HTML gets copied
-                        // if "error correction" is enabled in the text input settings
-                        if (Math.abs(text.length - ircModel.currentChannel.currentMessage.length) == 1) {
-                            if (shouldUpdateCurrentMessage && ircModel.currentChannel.currentMessage !== messageField.text) {
-                                ircModel.currentChannel.currentMessage = text
-                            }
-                        }
-                        else if (ircModel.currentChannel.currentMessage !== text) {
-                            text = ircModel.currentChannel.currentMessage
+                        if (shouldUpdateCurrentMessage && ircModel.currentChannel.currentMessage !== messageField.text) {
+                            ircModel.currentChannel.currentMessage = text
                         }
                     }
                 }
