@@ -43,6 +43,7 @@ IrcModel::IrcModel(QObject *parent, AppSettings *appSettings) :
     _networkConfigurationManager(new QNetworkConfigurationManager(this)),
     _networkSession(0)
 {
+    _isOnline = _networkConfigurationManager->isOnline();
 }
 
 void IrcModel::connectToServers()
