@@ -18,6 +18,7 @@
 
 import QtQuick 1.1
 import com.nokia.meego 1.0
+import com.nokia.extras 1.0
 import net.venemo.ircchatter 1.0
 import "pages"
 import "sheets"
@@ -79,6 +80,7 @@ PageStackWindow {
                 }
                 else {
                     appSettings.serverSettings.reset()
+                    serverSettingBanner.show()
                 }
                 appSettings.saveServerSettings()
             }
@@ -117,5 +119,10 @@ PageStackWindow {
                 onClicked: quitDialog.open()
             }
         }
+    }
+    InfoBanner {
+        id: serverSettingBanner
+        text: "Changes to the server will be applied next time you connect to it."
+        parent: appWindow.pageStack.currentPage
     }
 }
