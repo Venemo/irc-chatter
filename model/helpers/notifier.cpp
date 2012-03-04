@@ -31,8 +31,8 @@ void Notifier::notify(const QString &message)
 
         notificationGroup = new MNotificationGroup(MNotification::ImReceivedEvent, "New IRC messages");
         notificationGroup->setImage("/usr/share/icons/hicolor/80x80/apps/irc-chatter-harmattan-icon.png");
-        notificationGroup->publish();
         notificationGroup->setAction(*remoteAction);
+        notificationGroup->publish();
     }
 
     if (!notificationGroup->isPublished())
