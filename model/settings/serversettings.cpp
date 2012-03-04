@@ -26,7 +26,9 @@ ServerSettings::ServerSettings(QObject *parent, const QString &url, const quint1
     _serverPort(port),
     _serverSSL(ssl),
     _serverPassword(password),
-    _autoJoinChannels(autoJoinChannels)
+    _autoJoinChannels(autoJoinChannels),
+    _isConnecting(false),
+    _isConnected(false)
 {
     if (!_autoJoinChannels.length() && url == "irc.freenode.net")
     {
