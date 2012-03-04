@@ -29,17 +29,17 @@
 
 class AbstractIrcClient;
 class IrcModel;
+class ServerSettings;
 
 class ServerModel : public QObject
 {
     Q_OBJECT
 
-    GENPROPERTY_R(QString, _url, url)
     Q_PROPERTY(QString url READ url)
 
     QHash<QString, ChannelModel*> _channels;
     AbstractIrcClient *_ircClient;
-    AppSettings *_settings;
+    ServerSettings *_serverSettings;
     ChannelModel *_defaultChannel;
     QStringList _autoJoinChannels;
 
@@ -47,11 +47,12 @@ class ServerModel : public QObject
     friend class AppSettings;
 
 protected:
-    explicit ServerModel(IrcModel *parent, const QString &url, AbstractIrcClient *_ircClient);
+    explicit ServerModel(IrcModel *parent, ServerSettings *serverSettings, AbstractIrcClient *_ircClient);
     ChannelModel *findOrCreateChannel(const QString &channelName);
 
 public:
     ~ServerModel();
+    const QString &url() const;
     Q_INVOKABLE void joinChannel(const QString &channelName);
     Q_INVOKABLE void partChannel(const QString &channelName);
     Q_INVOKABLE void displayError(const QString &error);

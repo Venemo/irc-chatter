@@ -23,14 +23,12 @@
 #include "settings/appsettings.h"
 #include "clients/abstractircclient.h"
 
-ServerModel::ServerModel(IrcModel *parent, const QString &url, AbstractIrcClient *ircClient) :
+ServerModel::ServerModel(IrcModel *parent, ServerSettings *serverSettings, AbstractIrcClient *ircClient) :
     QObject((QObject*)parent),
-    _url(url),
     _ircClient(ircClient),
+    _serverSettings(serverSettings),
     _defaultChannel(0)
 {
-    _settings = new AppSettings(this);
-
     connect(_ircClient->socket(), SIGNAL(connected()), this, SLOT(socketConnected()));
     connect(_ircClient, SIGNAL(connectedToServer()), this, SLOT(connectedToServer()));
     connect(_ircClient, SIGNAL(disconnectedFromServer()), this, SLOT(disconnectedFromServer()));
@@ -65,6 +63,11 @@ ServerModel::~ServerModel()
     }
 }
 
+const QString &ServerModel::url() const
+{
+    return _serverSettings->serverUrl();
+}
+
 void ServerModel::socketConnected()
 {
     if (_defaultChannel)
@@ -89,6 +92,9 @@ void ServerModel::connectedToServer()
         addModelForChannel(channelName);
         _ircClient->joinChannel(channelName);
     }
+
+    _serverSettings->setIsConnecting(false);
+    _serverSettings->setIsConnected(true);
 }
 
 void ServerModel::disconnectedFromServer()
