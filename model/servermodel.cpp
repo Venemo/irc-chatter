@@ -120,14 +120,24 @@ void ServerModel::receiveMessage(const QString &channelName, const QString &user
 
 void ServerModel::receiveCtcpRequest(const QString &userName, const QString &message)
 {
+    qDebug() << "CTCP request received " << userName << message;
+
     if (_defaultChannel)
-        _defaultChannel->receiveCtcpRequest(userName, message);
+        _defaultChannel->appendEmphasisedInfo("CTCP " + message + " received from: " + userName);
+
+    if (message.toUpper() == QString("VERSION"))
+    {
+        qDebug() << "Sending CTCP VERSION reply";
+        _ircClient->sendCtcpReply(userName, "IRC Chatter, the first MeeGo IRC client");
+    }
 }
 
 void ServerModel::receiveCtcpReply(const QString &userName, const QString &message)
 {
+    qDebug() << "CTCP reply received " << userName << message;
+
     if (_defaultChannel)
-        _defaultChannel->receiveCtcpReply(userName, message);
+        _defaultChannel->appendEmphasisedInfo("CTCP Reply from " + userName + ": " + message);
 }
 
 void ServerModel::receiveCtcpAction(const QString &channelName, const QString &userName, const QString &message)

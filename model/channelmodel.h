@@ -82,8 +82,6 @@ public:
 
     void receiveMessage(const QString &userName, QString message);
     void receiveCtcpAction(const QString &userName, QString message);
-    void receiveCtcpRequest(const QString &userName, QString message);
-    void receiveCtcpReply(const QString &userName, QString message);
     void receiveJoined(const QString &userName);
     void receiveParted(const QString &userName, QString reason);
     void receiveQuit(const QString &userName, QString reason);

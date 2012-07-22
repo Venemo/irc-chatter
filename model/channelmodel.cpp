@@ -224,19 +224,6 @@ void ChannelModel::receiveCtcpAction(const QString &userName, QString message)
         emit newMessageReceived();
 }
 
-void ChannelModel::receiveCtcpRequest(const QString &userName, QString message)
-{
-    qDebug() << "CTCP request received " << userName << message;
-    // TODO
-    // _backend->sendCommand(IrcCommand::createCtcpReply(userName, "IRC Chatter, the first MeeGo IRC client"));
-}
-
-void ChannelModel::receiveCtcpReply(const QString &userName, QString message)
-{
-    qDebug() << "CTCP reply received " << userName << message;
-    appendEmphasisedInfo("CTCP Reply from " + userName + ": " + message);
-}
-
 void ChannelModel::receiveTopic(const QString &value)
 {
     _topic = value;
