@@ -294,7 +294,7 @@ Page {
         id: joinSheet
         visualParent: chatPage
         onAccepted: {
-            ircModel.currentServer.joinChannel(joinSheet.channelName)
+            ircModel.currentServer.joinChannel(joinSheet.channelName, joinSheet.channelKey)
         }
     }
     QueryDialog {

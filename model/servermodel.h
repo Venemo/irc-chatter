@@ -53,7 +53,7 @@ protected:
 public:
     ~ServerModel();
     const QString &url() const;
-    Q_INVOKABLE void joinChannel(const QString &channelName);
+    Q_INVOKABLE void joinChannel(const QString &channelName, const QString &channelKey = QString());
     Q_INVOKABLE void partChannel(const QString &channelName);
     Q_INVOKABLE void displayError(const QString &error);
 

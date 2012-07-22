@@ -30,6 +30,7 @@ Sheet {
     rejectButtonText: "Cancel"
 
     property alias channelName: channelNameField.text
+    property alias channelKey: channelKeyField.text
     property bool autoJoin: false
     property bool isQuery: channelNameField.text.length > 0 && channelNameField.text.charAt(0) !== '#'
     property bool isChannel: channelNameField.text.length > 1 && channelNameField.text.charAt(0) === '#'
@@ -64,6 +65,13 @@ Sheet {
                 if (isChannel || isQuery)
                     accept();
             }
+        }
+        TextField {
+            id: channelKeyField
+            width: parent.width
+            placeholderText: "Channel key (if needed)"
+            text: ""
+            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
         }
         CheckBox {
             id: channelCheckBox

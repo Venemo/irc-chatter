@@ -43,7 +43,8 @@ void CommandParser::parseAndSendCommand(const QString &channelName, const QStrin
             if (!commandParts[1].startsWith('#'))
                 commandParts[1].insert(0, '#');
 
-            _ircClient->joinChannel(commandParts[1]);
+            // TODO: add possibility to store channel keys in the autojoin
+            _ircClient->joinChannel(commandParts[1], QString());
         }
         else
         {

@@ -73,7 +73,7 @@ public:
     virtual void disconnectFromServer() = 0;
 
     virtual void quit(const QString &message) = 0;
-    virtual void joinChannel(const QString &channelName) = 0;
+    virtual void joinChannel(const QString &channelName, const QString &channelKey) = 0;
     virtual void partChannel(const QString &channelName, const QString &reason) = 0;
     virtual void queryUser(const QString &userName) = 0;
     virtual void closeUser(const QString &userName) = 0;

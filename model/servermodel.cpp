@@ -90,7 +90,8 @@ void ServerModel::connectedToServer()
     foreach (QString channelName, _autoJoinChannels)
     {
         addModelForChannel(channelName);
-        _ircClient->joinChannel(channelName);
+        // TODO: add possibility to store channel keys in the autojoin
+        _ircClient->joinChannel(channelName, QString());
     }
 
     _serverSettings->setIsConnecting(false);
@@ -263,7 +264,7 @@ void ServerModel::removeModelForChannel(const QString &channelName)
     }
 }
 
-void ServerModel::joinChannel(const QString &channelName)
+void ServerModel::joinChannel(const QString &channelName, const QString &channelKey)
 {
     qDebug() << "joining channel or querying user " << channelName;
 
@@ -272,7 +273,7 @@ void ServerModel::joinChannel(const QString &channelName)
         addModelForChannel(channelName);
 
         if (channelName.startsWith('#'))
-            _ircClient->joinChannel(channelName);
+            _ircClient->joinChannel(channelName, channelKey);
         else
             _ircClient->queryUser(channelName);
     }

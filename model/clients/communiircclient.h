@@ -48,7 +48,7 @@ public slots:
     virtual void disconnectFromServer();
 
     virtual void quit(const QString &message);
-    virtual void joinChannel(const QString &channelName);
+    virtual void joinChannel(const QString &channelName, const QString &channelKey);
     virtual void partChannel(const QString &channelName, const QString &message);
     virtual void queryUser(const QString &userName);
     virtual void closeUser(const QString &userName);

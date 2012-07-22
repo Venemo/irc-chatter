@@ -296,9 +296,9 @@ void CommuniIrcClient::quit(const QString &message)
     _ircSession->sendCommand(IrcCommand::createQuit(message));
 }
 
-void CommuniIrcClient::joinChannel(const QString &channelName)
+void CommuniIrcClient::joinChannel(const QString &channelName, const QString &channelKey)
 {
-    _ircSession->sendCommand(IrcCommand::createJoin(channelName));
+    _ircSession->sendCommand(IrcCommand::createJoin(channelName, channelKey));
     emit joinedChannel(channelName);
 }
 
