@@ -135,6 +135,7 @@ Page {
         }
         onRejected: {
             if (!isNewServer) {
+                areYouSureToDeleteServerDialog.serverSettingsSheet = serverSettingsSheet
                 areYouSureToDeleteServerDialog.open()
             }
         }

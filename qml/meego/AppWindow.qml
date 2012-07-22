@@ -72,14 +72,18 @@ PageStackWindow {
         onAccepted: Qt.quit()
     }
     QueryDialog {
+        property ServerSettingsSheet serverSettingsSheet: null
+
         id: areYouSureToDeleteServerDialog
         titleText: "Are you sure?"
         message: "Do you want to delete this server?"
         acceptButtonText: "Yes"
         rejectButtonText: "No"
         onAccepted: {
-            appSettings.deleteServerSettings(serverSettingsSheet.serverSettings)
-            serverSettingsSheet.serverSettings = null
+            if (serverSettingsSheet !== null) {
+                appSettings.deleteServerSettings(serverSettingsSheet.serverSettings)
+                serverSettingsSheet.serverSettings = null
+            }
         }
     }
     Menu {
