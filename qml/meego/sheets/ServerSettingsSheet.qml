@@ -216,9 +216,11 @@ Sheet {
             }
             TitleLabel {
                 text: "Delete"
+                visible: !isNewServer
             }
             Button {
                 text: "Delete server"
+                visible: !isNewServer
                 onClicked: reject()
                 anchors.horizontalCenter: parent.horizontalCenter
             }
