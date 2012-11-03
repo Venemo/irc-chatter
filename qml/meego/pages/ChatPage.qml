@@ -329,7 +329,7 @@ Page {
                 }
             }
             MenuItem {
-                text: "User list"
+                text: ("User list (%1)").arg(ircModel.currentChannel === null ? 0 : ircModel.currentChannel.userCount)
                 visible: ircModel.currentChannel === null ? false : (ircModel.currentChannel.name.charAt(0) === '#')
                 onClicked: {
                     chatMenu.close()
@@ -387,7 +387,7 @@ Page {
     }
     WorkingSelectionDialog {
         id: userSelectorDialog
-        titleText: "User list of " + (ircModel.currentChannel === null ? "?" : ircModel.currentChannel.name)
+        titleText: ("%1 (%2)").arg(ircModel.currentChannel === null ? "?" : ircModel.currentChannel.name).arg(ircModel.currentChannel === null ? 0 : ircModel.currentChannel.userCount)
         model: ircModel.currentChannel === null ? null : ircModel.currentChannel.users
         onAccepted: {
             if (userSelectorDialog.selectedIndex >= 0) {
