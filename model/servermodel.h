@@ -20,12 +20,12 @@
 #define SERVERMODEL_H
 
 #include <QObject>
-#include <QHash>
 
 #include "util.h"
 #include "qobjectlistmodel.h"
 #include "channelmodel.h"
 #include "settings/appsettings.h"
+#include "helpers/channelmodelcollection.h"
 
 class AbstractIrcClient;
 class IrcModel;
@@ -38,7 +38,7 @@ class ServerModel : public QObject
     Q_PROPERTY(QString url READ url)
     Q_PROPERTY(QObject* serverSettings READ serverSettings NOTIFY serverSettingsChanged)
 
-    QHash<QString, ChannelModel*> _channels;
+    ChannelModelCollection _channels;
     AbstractIrcClient *_ircClient;
     ServerSettings *_serverSettings;
     ChannelModel *_defaultChannel;
@@ -57,7 +57,7 @@ public:
     void connectToServer();
     void disconnectFromServer();
     ChannelModel *findOrCreateChannel(const QString &channelName);
-    QHash<QString, ChannelModel*> &channels();
+    ChannelModelCollection &channels();
 
     Q_INVOKABLE void joinChannel(const QString &channelName, const QString &channelKey = QString());
     Q_INVOKABLE void partChannel(const QString &channelName);

@@ -24,7 +24,8 @@ HEADERS += \
     model/clients/communiircclient.h \
     model/helpers/commandparser.h \
     model/helpers/channelhelper.h \
-    model/helpers/notifier.h
+    model/helpers/notifier.h \
+    model/helpers/channelmodelcollection.h
 
 SOURCES += \
     main.cpp \
@@ -38,7 +39,8 @@ SOURCES += \
     model/clients/communiircclient.cpp \
     model/helpers/commandparser.cpp \
     model/helpers/channelhelper.cpp \
-    model/helpers/notifier.cpp
+    model/helpers/notifier.cpp \
+    model/helpers/channelmodelcollection.cpp
 
 RESOURCES += \
     ui-meego.qrc

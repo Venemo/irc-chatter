@@ -73,7 +73,7 @@ ServerSettings *ServerModel::serverSettings() const
     return _serverSettings;
 }
 
-QHash<QString, ChannelModel*> &ServerModel::channels()
+ChannelModelCollection &ServerModel::channels()
 {
     return _channels;
 }
@@ -277,7 +277,7 @@ void ServerModel::addModelForChannel(const QString &channelName)
             channel->setChannelType(ChannelModel::Query);
         }
 
-        _channels[channelName] = channel;
+        _channels.insert(channelName, channel);
         emit this->channelsChanged();
 
         IrcModel *ircModel = static_cast<IrcModel*>(parent());
