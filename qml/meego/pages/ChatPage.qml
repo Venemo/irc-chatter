@@ -26,6 +26,8 @@ import "../components"
 
 Page {
     property bool shouldUpdateCurrentMessage: true
+    property bool isCurrentServerConnected: ircModel.currentServer !== null ? ircModel.currentServer.serverSettings.isConnected : false
+    property bool isCurrentServerConnecting: ircModel.currentServer !== null ? ircModel.currentServer.serverSettings.isConnecting : false
 
     function sendCurrentMessage() {
         if (ircModel.currentChannel !== null) {
@@ -124,9 +126,9 @@ Page {
 
     // UI element for showing connected/disconnected status
     Rectangle {
-        color: "#88000000"
+        color: "#99000000"
         anchors.fill: chatFlickable
-        visible: ircModel.currentServer !== null ? !ircModel.currentServer.serverSettings.isConnected : false
+        visible: !isCurrentServerConnected
 
         MouseArea {
             anchors.fill: parent
@@ -134,11 +136,32 @@ Page {
         }
 
         Label {
-            anchors.fill: parent
-            verticalAlignment: Text.AlignVCenter
+            visible: !isCurrentServerConnecting
+            anchors.centerIn: parent
+            width: parent.width * 4 / 5
             horizontalAlignment: Text.AlignHCenter
             color: "#fff"
-            text: "Disconnected"
+            text: "You are disconnected from this IRC server. Please establish a network connection to reconnect."
+        }
+
+        BusyIndicator {
+            visible: isCurrentServerConnecting
+            running: !isCurrentServerConnected && isCurrentServerConnecting
+            anchors.bottom: connectingDisplayLabel.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            platformStyle: BusyIndicatorStyle {
+                size: "large"
+                inverted: true
+            }
+        }
+        Label {
+            id: connectingDisplayLabel
+            visible: isCurrentServerConnecting
+            anchors.centerIn: parent
+            width: parent.width * 4 / 5
+            horizontalAlignment: Text.AlignHCenter
+            color: "#fff"
+            text: "Connecting to this IRC server..."
         }
     }
 
