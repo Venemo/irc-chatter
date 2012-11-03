@@ -19,6 +19,8 @@
 #include <QtCore>
 #include <QStringList>
 
+#include <unistd.h>
+
 #include "ircmodel.h"
 #include "settings/appsettings.h"
 #include "clients/communiircclient.h"
@@ -40,16 +42,15 @@ IrcModel::IrcModel(QObject *parent, AppSettings *appSettings) :
     _isAppInFocus(true),
     _appSettings(appSettings),
     _isOnline(false),
-    _networkConfigurationManager(new QNetworkConfigurationManager(this)),
-    _networkSession(0)
+    _networkConfigurationManager(new QNetworkConfigurationManager(this))
 {
     _isOnline = _networkConfigurationManager->isOnline();
+
+    connect(_networkConfigurationManager, SIGNAL(onlineStateChanged(bool)), this, SLOT(onlineStateChanged(bool)));
 }
 
 void IrcModel::connectToServers()
 {
-    attemptConnection();
-
     foreach (ServerSettings *serverSettings, _appSettings->serverSettings()->getList())
     {
         if (serverSettings->shouldConnect())
@@ -199,40 +200,14 @@ void IrcModel::backendsConnectedToServer()
     }
 }
 
-void IrcModel::attemptConnection()
-{
-    // Deleting the previous connection object
-    if (_networkSession)
-        _networkSession->deleteLater();
-
-    qDebug() << "attempting connection";
-
-    // Trying to establish a connection
-    const bool canConnect = (_networkConfigurationManager->capabilities() & QNetworkConfigurationManager::CanStartAndStopInterfaces);
-    QNetworkConfiguration config = _networkConfigurationManager->defaultConfiguration();
-    if (config.isValid() && canConnect)
-    {
-        _networkSession = new QNetworkSession(config, this);
-        connect(_networkSession, SIGNAL(stateChanged(QNetworkSession::State)), this, SLOT(networkSessionStateChanged(QNetworkSession::State)));
-        connect(_networkSession, SIGNAL(error(QNetworkSession::SessionError)), this, SLOT(networkSessionError(QNetworkSession::SessionError)));
-        qDebug() << "opening new network session";
-        _networkSession->open();
-    }
-}
-
-void IrcModel::attemptConnectionLater()
-{
-    qDebug() << "attempting automatic reconnection in 10 seconds";
-    // After 5 seconds, attempting a connection
-    QTimer::singleShot(10000, this, SLOT(attemptConnection()));
-}
-
 void IrcModel::onlineStateChanged(bool online)
 {
     setIsOnline(online);
 
     if (online)
     {
+        sleep(2);
+
         // If there are any connections waiting, let's connect them now
         qDebug() << "there are" << _queue.count() << "connections queued";
         qDebug() << "there are" << _servers.count() << "servers to which connection was lost";
@@ -241,7 +216,7 @@ void IrcModel::onlineStateChanged(bool online)
         if (_servers.count())
         {
             foreach (ServerModel *serverModel, _servers)
-            {
+            {                
                 qDebug() << "reconnecting to server " << serverModel->url();
                 serverModel->_serverSettings->setIsConnecting(true);
                 serverModel->_ircClient->connectToServer();
@@ -267,61 +242,9 @@ void IrcModel::onlineStateChanged(bool online)
             qDebug() << "disconnecting from server " << serverModel->url();
             serverModel->_serverSettings->setIsConnecting(false);
             serverModel->_serverSettings->setIsConnected(false);
-            serverModel->_ircClient->socket()->disconnectFromHost();
-            serverModel->_ircClient->socket()->disconnect();
             serverModel->_ircClient->disconnectFromServer();
+            serverModel->_ircClient->deleteLater();
+            serverModel->_ircClient = new CommuniIrcClient(this, serverModel->_serverSettings);
         }
-
-        attemptConnectionLater();
-    }
-}
-
-void IrcModel::networkSessionError(QNetworkSession::SessionError error)
-{
-    qDebug() << "network session error";
-
-    switch (error)
-    {
-    case QNetworkSession::UnknownSessionError:
-    case QNetworkSession::RoamingError:
-    case QNetworkSession::InvalidConfigurationError:
-    case QNetworkSession::OperationNotSupportedError:
-    case QNetworkSession::SessionAbortedError:
-    default:
-        // We're assuming that this error means that we're now offline
-        onlineStateChanged(false);
-        break;
-    }
-}
-
-void IrcModel::networkSessionStateChanged(QNetworkSession::State state)
-{
-    switch (state)
-    {
-    case QNetworkSession::NotAvailable:
-    case QNetworkSession::Invalid:
-        qDebug() << "network session is not available or invalid";
-        if (_isOnline)
-            onlineStateChanged(false);
-        break;
-    case QNetworkSession::Connected:
-    case QNetworkSession::Roaming:
-        qDebug() << "network session is connected";
-        if (!_isOnline)
-            onlineStateChanged(true);
-        break;
-    case QNetworkSession::Disconnected:
-        qDebug() << "network session is disconnected";
-        if (_isOnline)
-            onlineStateChanged(false);
-        break;
-    case QNetworkSession::Closing:
-        qDebug() << "network session is closing...";
-        break;
-    case QNetworkSession::Connecting:
-        qDebug() << "network session is connecting...";
-        break;
-    default:
-        break;
     }
 }

@@ -46,7 +46,6 @@ class IrcModel : public QObject
     Q_PROPERTY(bool isOnline READ isOnline NOTIFY isOnlineChanged)
 
     QNetworkConfigurationManager *_networkConfigurationManager;
-    QNetworkSession *_networkSession;
     QList<ServerSettings*> _queue;
     QList<ServerModel*> _servers;
     QObjectListModel<ChannelModel> _allChannels;
@@ -66,15 +65,11 @@ public:
     Q_INVOKABLE bool anyServersToConnect();
 
 public slots:
-    Q_INVOKABLE void attemptConnection();
-    Q_INVOKABLE void attemptConnectionLater();
     void refreshChannelList();
 
 private slots:
     void backendsConnectedToServer();
     void onlineStateChanged(bool online);
-    void networkSessionError(QNetworkSession::SessionError error);
-    void networkSessionStateChanged(QNetworkSession::State state);
 
 signals:
     void allChannelsChanged();
