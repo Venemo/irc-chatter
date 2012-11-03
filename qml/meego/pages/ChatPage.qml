@@ -121,6 +121,27 @@ Page {
     ScrollDecorator {
         flickableItem: chatFlickable
     }
+
+    // UI element for showing connected/disconnected status
+    Rectangle {
+        color: "#88000000"
+        anchors.fill: chatFlickable
+        visible: ircModel.currentServer !== null ? !ircModel.currentServer.serverSettings.isConnected : false
+
+        MouseArea {
+            anchors.fill: parent
+            enabled: parent.visible
+        }
+
+        Label {
+            anchors.fill: parent
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            color: "#fff"
+            text: "Disconnected"
+        }
+    }
+
     Rectangle {
         id: channelNameBg
         color: "#f9a300"
@@ -202,6 +223,7 @@ Page {
             ToolIcon {
                 id: autoCompleteToolIcon
                 platformIconId: "toolbar-reply"
+                enabled: messageField.enabled
                 onClicked: {
                     messageField.forceActiveFocus()
                     ircModel.currentChannel.autoCompleteNick()
@@ -211,7 +233,8 @@ Page {
             }
             TextField {
                 id: messageField
-                placeholderText: "Type a message"
+                enabled: ircModel.currentServer !== null ? ircModel.currentServer.serverSettings.isConnected : true
+                placeholderText: enabled ? "Type a message" : "Disconnected"
                 text: ircModel.currentChannel !== null ? ircModel.currentChannel.currentMessage : ""
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
                 platformSipAttributes: mySipAttributes
@@ -323,29 +346,6 @@ Page {
         message: "Would you like to query user " + areYouSureToQueryDialog.queryableUserName + " ?"
         onAccepted: {
             ircModel.currentServer.joinChannel(areYouSureToQueryDialog.queryableUserName)
-        }
-    }
-    QueryDialog {
-        id: disconnectionDialog
-        titleText: "Disconnected"
-        message: "Your network connection has been lost.\nWe'll try to reconnect you in a few seconds."
-        rejectButtonText: "Quit"
-        onRejected: Qt.quit()
-
-        Connections {
-            target: ircModel
-            onIsOnlineChanged: {
-                console.log("UI: online state changed")
-                if (!ircModel.isOnline) {
-                    if (chatPage.status === PageStatus.Active || chatPage.status === PageStatus.Activating) {
-                        if (disconnectionDialog.status !== DialogStatus.Open)
-                            disconnectionDialog.open()
-                    }
-                }
-                else {
-                    disconnectionDialog.close()
-                }
-            }
         }
     }
     WorkingSelectionDialog {

@@ -68,6 +68,11 @@ const QString &ServerModel::url() const
     return _serverSettings->serverUrl();
 }
 
+ServerSettings *ServerModel::serverSettings() const
+{
+    return _serverSettings;
+}
+
 void ServerModel::socketConnected()
 {
     if (_defaultChannel)

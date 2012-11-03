@@ -36,6 +36,7 @@ class ServerModel : public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString url READ url)
+    Q_PROPERTY(QObject* serverSettings READ serverSettings NOTIFY serverSettingsChanged)
 
     QHash<QString, ChannelModel*> _channels;
     AbstractIrcClient *_ircClient;
@@ -53,12 +54,14 @@ protected:
 public:
     ~ServerModel();
     const QString &url() const;
+    ServerSettings *serverSettings() const;
     Q_INVOKABLE void joinChannel(const QString &channelName, const QString &channelKey = QString());
     Q_INVOKABLE void partChannel(const QString &channelName);
     Q_INVOKABLE void displayError(const QString &error);
 
 signals:
     void channelsChanged();
+    void serverSettingsChanged();
     void kickReceived(const QString &channelName, const QString &reason);
 
 private slots:
