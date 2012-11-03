@@ -36,12 +36,14 @@ Page {
 
         ToolIcon {
             platformIconId: "toolbar-add"
+            visible: appSettings.serverSettings.itemCount !== 0
             onClicked: serverSettingsList.showAddNewServer()
         }
 
         Button {
             text: "Connect!"
             anchors.centerIn: parent
+            visible: appSettings.serverSettings.itemCount !== 0
             width: 200
 
             onClicked: {
@@ -59,6 +61,10 @@ Page {
         ToolIcon {
             platformIconId: "toolbar-view-menu"
             onClicked: (commonMenu.status === DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
+            anchors {
+                right: parent.right
+                verticalCenter: parent.verticalCenter
+            }
         }
     }
 
@@ -80,16 +86,56 @@ Page {
             font.pixelSize: 30
         }
     }
+    Item {
+        anchors {
+            top: titleRectangle.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+        visible: appSettings.serverSettings.itemCount === 0
+
+        Column {
+            width: parent.width - 40
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.topMargin: 20
+            anchors.top: parent.top
+            spacing: 15
+
+            Label {
+                text: "Welcome!"
+                font {
+                   bold: true
+                   pixelSize: 30
+                }
+            }
+            Label {
+                text: "You haven't set up any servers yet. To add a server, click on the button below."
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                width: parent.width
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+        }
+
+        Button {
+            text: "Add new server"
+            anchors.centerIn: parent
+            onClicked: serverSettingsList.showAddNewServer()
+        }
+    }
     Flickable {
         id: startPageFlickable
         interactive: contentHeight > height
         contentWidth: parent.width
         contentHeight: serverSettingsColumn.height + 50
         clip: true
-        anchors.top: titleRectangle.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        visible: appSettings.serverSettings.itemCount !== 0
+        anchors {
+            top: titleRectangle.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
 
         Column {
             id: serverSettingsColumn
