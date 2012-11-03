@@ -118,7 +118,7 @@ void ChannelModel::receiveKicked(const QString &origin, const QString &nick, QSt
     appendEmphasisedInfo("*** " + origin + " has kicked " + nick + " with message '" + message + "'.");
 }
 
-QString &ChannelModel::processMessage(QString &msg, bool *hasUserNick)
+QString ChannelModel::processMessage(QString msg, bool *hasUserNick)
 {
     msg.replace('&', "&amp;");
     msg.replace('<', "&lt;");
@@ -188,7 +188,6 @@ void ChannelModel::receiveMessage(const QString &userName, QString message)
             && ((hasUserNick && appSettings()->notifyOnNick())
             || (!_name.startsWith('#') && appSettings()->notifyOnPrivmsg())))
     {
-
         Notifier::notify(message);
     }
 

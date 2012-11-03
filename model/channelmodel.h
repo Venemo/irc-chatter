@@ -73,7 +73,7 @@ public:
 
     void adjustForSentMessagesIndex();
     void parseCommand(const QString &msg);
-    QString &processMessage(QString &msg, bool *hasUserNick = 0);
+    QString processMessage(QString msg, bool *hasUserNick = 0);
 
     void appendLine(const QString &line);
     void appendEmphasisedInfo(QString msg);
