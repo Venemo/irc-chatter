@@ -35,7 +35,7 @@ class ChannelModel : public QObject
 private:
     Q_OBJECT
 
-    GENPROPERTY_R(QString, _name, name)
+    GENPROPERTY_F(QString, _name, name, setName, nameChanged)
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
     GENPROPERTY_R(QString, _currentMessage, currentMessage)
     Q_PROPERTY(QString currentMessage READ currentMessage WRITE setCurrentMessage NOTIFY currentMessageChanged)
