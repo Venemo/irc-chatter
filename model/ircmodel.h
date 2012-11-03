@@ -68,14 +68,12 @@ public slots:
     void refreshChannelList();
 
 private slots:
-    void backendsConnectedToServer();
     void onlineStateChanged(bool online);
 
 signals:
     void allChannelsChanged();
     void serversChanged();
     void currentChannelIndexChanged();
-    void readyToDisplay();
     void isAppInFocusChanged();
     void isOnlineChanged();
 };

@@ -98,10 +98,7 @@ void IrcModel::connectToServer(ServerSettings *serverSettings)
         ServerModel *serverModel = new ServerModel(this, serverSettings, ircClient);
 
         _servers.append(serverModel);
-
-        connect(ircClient->socket(), SIGNAL(connected()), this, SLOT(backendsConnectedToServer()));
         connect(serverModel, SIGNAL(channelsChanged()), this, SLOT(refreshChannelList()));
-
         ircClient->connectToServer();
     }
     else
@@ -188,15 +185,6 @@ int IrcModel::getChannelIndex(const QString &currentChannelName, const QString &
 void IrcModel::setCurrentChannel(const QString &currentChannelName, const QString &currentServerName)
 {
     setCurrentChannelIndex(getChannelIndex(currentChannelName, currentServerName));
-}
-
-void IrcModel::backendsConnectedToServer()
-{
-    if (_currentChannelIndex == -1)
-    {
-        qDebug() << "this is the first connection, and it succeeded";
-        emit readyToDisplay();
-    }
 }
 
 void IrcModel::onlineStateChanged(bool online)
