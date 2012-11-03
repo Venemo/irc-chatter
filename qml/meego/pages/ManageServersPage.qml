@@ -33,6 +33,15 @@ Page {
                 appWindow.pageStack.pop()
             }
         }
+        ToolIcon {
+            platformIconId: "toolbar-add"
+            onClicked: serverSettingsList.showAddNewServer()
+        }
+
+        ToolIcon {
+            platformIconId: "toolbar-view-menu"
+            onClicked: (commonMenu.status === DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
+        }
     }
     onStatusChanged: {
         if (status === PageStatus.Activating) {
