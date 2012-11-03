@@ -1,3 +1,23 @@
+irc-chatter (0.3.0) unstable; urgency=low
+
+  * Facelift for start page
+  * New start page appearance when no servers are set up
+  * Facelift for manage servers page
+  * Removed the old "Connecting, please wait" dialog
+  * Automatic reconnection on socket errors
+  * Added time stamp to join/part/leave messages and nick changes
+  * Added userlist name count to UI
+  * Removed the no predictive and no auto uppercase hints from the chat text
+  * Added support for channel keys
+  * Upgraded libcommuni to 1.1
+  * Bug fix - automatic reconnection after disconnection
+  * Bug fix - HTML no longer appears in notifications
+  * Bug fix - Close button no longer appears for the server
+  * Bug fix - Channel names are now handled in a case-insensitive way
+  * Bug fix - Delete button will not appear for servers which are not added
+
+ -- Timur Kristóf <venemo@msn.com>  Sun, 04 Nov 2012 00:41:22 +0200
+
 irc-chatter (0.2.92) unstable; urgency=low
 
   * Improved server setting list interface

@@ -1,7 +1,7 @@
 
 TARGET = irc-chatter
 TEMPLATE = app
-VERSION = 0.2.93
+VERSION = 0.3.0
 QT += core declarative network
 
 DEFINES += \
