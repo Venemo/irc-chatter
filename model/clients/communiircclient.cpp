@@ -51,7 +51,7 @@ CommuniIrcClient::CommuniIrcClient(QObject *parent, ServerSettings *serverSettin
 
     if (serverSettings->serverSSL())
     {
-        QSslSocket* socket = new QSslSocket(_ircSession);
+        QSslSocket *socket = new QSslSocket(_ircSession);
         socket->ignoreSslErrors();
         socket->setPeerVerifyMode(QSslSocket::VerifyNone);
         _ircSession->setSocket(socket);
@@ -288,7 +288,6 @@ void CommuniIrcClient::connectToServer()
 void CommuniIrcClient::disconnectFromServer()
 {
     _ircSession->close();
-    _ircSession->socket()->disconnectFromHost();
 }
 
 void CommuniIrcClient::quit(const QString &message)
