@@ -37,6 +37,7 @@ class ServerModel : public QObject
 
     Q_PROPERTY(QString url READ url)
     Q_PROPERTY(QObject* serverSettings READ serverSettings NOTIFY serverSettingsChanged)
+    Q_PROPERTY(QObject* defaultChannel READ defaultChannel NOTIFY defaultChannelChanged)
 
     ChannelModelCollection _channels;
     AbstractIrcClient *_ircClient;
@@ -53,6 +54,7 @@ public:
 
     const QString &url() const;
     ServerSettings *serverSettings() const;
+    ChannelModel *defaultChannel() const;
 
     void connectToServer();
     void disconnectFromServer();
@@ -66,6 +68,7 @@ public:
 signals:
     void channelsChanged();
     void serverSettingsChanged();
+    void defaultChannelChanged();
     void kickReceived(const QString &channelName, const QString &reason);
 
 private slots:

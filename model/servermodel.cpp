@@ -81,6 +81,11 @@ ChannelModelCollection &ServerModel::channels()
     return _channels;
 }
 
+ChannelModel *ServerModel::defaultChannel() const
+{
+    return _defaultChannel;
+}
+
 void ServerModel::connectToServer()
 {
     _serverSettings->setIsConnected(false);
@@ -270,6 +275,7 @@ void ServerModel::addModelForChannel(const QString &channelName)
         {
             _defaultChannel = channel;
             channel->setChannelType(ChannelModel::Server);
+            emit defaultChannelChanged();
         }
         else if (channelName.startsWith('#'))
         {

@@ -319,6 +319,7 @@ Page {
         MenuLayout {
             MenuItem {
                 text: (ircModel.currentChannel !== null && ircModel.currentChannel.name.charAt(0)) === '#' ? "Part" : "Close"
+                visible: ircModel.currentChannel !== null && ircModel.currentChannel !== ircModel.currentServer.defaultChannel
                 onClicked:  areYouSureToPartDialog.open()
             }
             MenuItem {
