@@ -36,13 +36,11 @@ bool AppEventListener::eventFilter(QObject *obj, QEvent *event)
 
     if (event->type() == QEvent::WindowActivate && !_model->isAppInFocus())
     {
-        qDebug() << "window activated";
         _model->setIsAppInFocus(true);
         Notifier::unpublish();
     }
     else if (event->type() == QEvent::WindowDeactivate && _model->isAppInFocus())
     {
-        qDebug() << "window deactivated";
         _model->setIsAppInFocus(false);
     }
     return false;
