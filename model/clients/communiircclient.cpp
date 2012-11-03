@@ -70,7 +70,7 @@ void CommuniIrcClient::socketError(QAbstractSocket::SocketError error)
 {
     qDebug() << Q_FUNC_INFO << "socket error:" << error << "trying to reopen session";
     emit this->socketErrorHappened(error);
-    QTimer::singleShot(800, _ircSession, SLOT(open()));
+    QTimer::singleShot(8000, _ircSession, SLOT(open()));
 }
 
 void CommuniIrcClient::messageReceived(IrcMessage *message)
