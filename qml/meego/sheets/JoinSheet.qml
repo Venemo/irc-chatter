@@ -41,15 +41,19 @@ Sheet {
     }
 
     content: Column {
-        anchors.centerIn: parent
-        spacing: 10
-        Label {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "Channel name to join or user name to query"
+        anchors {
+            left: parent.left
+            right: parent.right
+            leftMargin: 15
+            rightMargin: 15
+            verticalCenter: parent.verticalCenter
         }
+        spacing: 15
         Label {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: "(Begin channel names with #)"
+            text: "Channel name to join or user name to query (begin channel names with #)"
+            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+            width: parent.width
         }
         TextField {
             id: channelNameField
