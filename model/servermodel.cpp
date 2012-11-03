@@ -73,6 +73,25 @@ ServerSettings *ServerModel::serverSettings() const
     return _serverSettings;
 }
 
+QHash<QString, ChannelModel*> &ServerModel::channels()
+{
+    return _channels;
+}
+
+void ServerModel::connectToServer()
+{
+    _serverSettings->setIsConnected(false);
+    _serverSettings->setIsConnecting(true);
+    _ircClient->connectToServer();
+}
+
+void ServerModel::disconnectFromServer()
+{
+    _ircClient->disconnectFromServer();
+    _serverSettings->setIsConnected(false);
+    _serverSettings->setIsConnecting(false);
+}
+
 void ServerModel::socketConnected()
 {
     if (_defaultChannel)
@@ -92,7 +111,7 @@ void ServerModel::connectedToServer()
 {
     qDebug() << "backend of " << url() << " is now connected to server";
 
-    foreach (QString channelName, _autoJoinChannels)
+    foreach (QString channelName, _serverSettings->autoJoinChannels())
     {
         addModelForChannel(channelName);
         // TODO: add possibility to store channel keys in the autojoin
