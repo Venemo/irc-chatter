@@ -35,7 +35,15 @@ Page {
         id: startPageToolbar
 
         ToolIcon {
-            platformIconId: "toolbar-done"
+            platformIconId: "toolbar-add"
+            onClicked: serverSettingsList.showAddNewServer()
+        }
+
+        Button {
+            text: "Connect!"
+            anchors.centerIn: parent
+            width: 200
+
             onClicked: {
                 commonMenu.close()
                 if (ircModel.anyServersToConnect()) {
@@ -46,8 +54,8 @@ Page {
                     noServersToConnectBanner.show()
                 }
             }
-
         }
+
         ToolIcon {
             platformIconId: "toolbar-view-menu"
             onClicked: (commonMenu.status === DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
@@ -89,7 +97,15 @@ Page {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: 20
             anchors.top: parent.top
+            spacing: 15
 
+            Label {
+                text: "Welcome!"
+                font {
+                   bold: true
+                   pixelSize: 30
+                }
+            }
             Label {
                 text: "Please select which servers to connect to at startup. Press the add button to add a new server."
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere

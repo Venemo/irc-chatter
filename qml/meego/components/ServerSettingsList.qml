@@ -25,15 +25,54 @@ Column {
     signal serverConnectionChanged(variant server, bool connectToServer)
 
     property bool bindConnectionBack: false
+    property bool anySelected: false
+
+    function showAddNewServer() {
+        serverChosen(appSettings.newServerSettings(), true)
+    }
 
     id: serverSettingsList
     width: parent.width
-    spacing: 10
+    spacing: 15
 
     TitleLabel {
-        text: "Configured servers"
+        text: "Choose servers"
+    }
+    ButtonRow {
+        exclusive: false
+        width: parent.width * 9 / 10
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        Button {
+            text: "All"
+            onClicked: {
+                bindConnectionBack = true
+                for (var i = 0; i < appSettings.serverSettings.itemCount; i++) {
+                    appSettings.serverSettings.getItem(i).shouldConnect = true
+                }
+                bindConnectionBack = false
+                anySelected = true
+            }
+        }
+        Button {
+            text: "None"
+            onClicked: {
+                bindConnectionBack = true
+                for (var i = 0; i < appSettings.serverSettings.itemCount; i++) {
+                    appSettings.serverSettings.getItem(i).shouldConnect = false
+                }
+                bindConnectionBack = false
+                anySelected = false
+            }
+        }
+    }
+    TitleLabel {
+        text: "Your configured servers"
     }
     Label {
+        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+        width: parent.width
+        anchors.horizontalCenter: parent.horizontalCenter
         text: "No servers configured yet"
         visible: appSettings.serverSettings.itemCount === 0
     }
@@ -55,6 +94,7 @@ Column {
                     if (!bindConnectionBack) {
                         serverConnectionChanged(appSettings.serverSettings.getItem(index), checked)
                     }
+                    anySelected = ircModel.anyServersToConnect();
                 }
 
                 Binding {
@@ -102,16 +142,5 @@ Column {
                 }
             }
         }
-    }
-    TitleLabel {
-        text: "New server"
-    }
-    Button {
-        id: newServerButton
-        text: "Add a new server"
-        onClicked: {
-            serverChosen(appSettings.newServerSettings(), true)
-        }
-        anchors.horizontalCenter: parent.horizontalCenter
     }
 }
