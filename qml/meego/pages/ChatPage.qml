@@ -136,7 +136,7 @@ Page {
         }
 
         Label {
-            visible: !isCurrentServerConnecting
+            visible: !isCurrentServerConnecting && ircModel.currentServer !== null
             anchors.centerIn: parent
             width: parent.width * 4 / 5
             horizontalAlignment: Text.AlignHCenter
@@ -145,23 +145,38 @@ Page {
         }
 
         BusyIndicator {
-            visible: isCurrentServerConnecting
-            running: !isCurrentServerConnected && isCurrentServerConnecting
-            anchors.bottom: connectingDisplayLabel.top
-            anchors.horizontalCenter: parent.horizontalCenter
+            id: connectingIndicator
+            visible: isCurrentServerConnecting || ircModel.currentServer === null
+            running: visible
+            anchors.centerIn: parent
             platformStyle: BusyIndicatorStyle {
                 size: "large"
                 inverted: true
             }
         }
         Label {
-            id: connectingDisplayLabel
-            visible: isCurrentServerConnecting
-            anchors.centerIn: parent
+            visible: isCurrentServerConnecting && ircModel.currentServer !== null
             width: parent.width * 4 / 5
             horizontalAlignment: Text.AlignHCenter
+            anchors {
+                topMargin: 15
+                top: connectingIndicator.bottom
+                horizontalCenter: parent.horizontalCenter
+            }
             color: "#fff"
-            text: "Connecting to this IRC server..."
+            text: "Connecting to this IRC server, please wait..."
+        }
+        Label {
+            visible: ircModel.currentServer === null
+            width: parent.width * 4 / 5
+            horizontalAlignment: Text.AlignHCenter
+            anchors {
+                topMargin: 15
+                top: connectingIndicator.bottom
+                horizontalCenter: parent.horizontalCenter
+            }
+            color: "#fff"
+            text: "Connecting, please wait..."
         }
     }
 
