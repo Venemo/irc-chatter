@@ -29,6 +29,9 @@ ServerModel::ServerModel(IrcModel *parent, ServerSettings *serverSettings, Abstr
     _serverSettings(serverSettings),
     _defaultChannel(0)
 {
+    _serverSettings->setIsConnected(false);
+    _serverSettings->setIsConnecting(true);
+
     connect(_ircClient->socket(), SIGNAL(connected()), this, SLOT(socketConnected()));
     connect(_ircClient, SIGNAL(connectedToServer()), this, SLOT(connectedToServer()));
     connect(_ircClient, SIGNAL(disconnectedFromServer()), this, SLOT(disconnectedFromServer()));
