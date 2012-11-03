@@ -63,6 +63,14 @@ CommuniIrcClient::CommuniIrcClient(QObject *parent, ServerSettings *serverSettin
     connect(_ircSession, SIGNAL(connected()), this, SIGNAL(connectedToServer()));
     connect(_ircSession, SIGNAL(disconnected()), this, SIGNAL(disconnectedFromServer()));
     connect(_ircSession, SIGNAL(messageReceived(IrcMessage*)), this, SLOT(messageReceived(IrcMessage*)));
+    connect(_ircSession, SIGNAL(socketError(QAbstractSocket::SocketError)), this, SLOT(socketError(QAbstractSocket::SocketError)));
+}
+
+void CommuniIrcClient::socketError(QAbstractSocket::SocketError error)
+{
+    qDebug() << Q_FUNC_INFO << "socket error:" << error << "trying to reopen session";
+    emit this->socketErrorHappened(error);
+    QTimer::singleShot(800, _ircSession, SLOT(open()));
 }
 
 void CommuniIrcClient::messageReceived(IrcMessage *message)

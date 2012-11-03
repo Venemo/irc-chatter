@@ -41,6 +41,7 @@ public:
 
 private slots:
     void messageReceived(IrcMessage *message);
+    void socketError(QAbstractSocket::SocketError error);
     
 public slots:
     virtual const QString currentNick();

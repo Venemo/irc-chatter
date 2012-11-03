@@ -42,6 +42,7 @@ signals:
     // Implementations of this class SHOULD emit these signals when appropriate.
     void connectedToServer();
     void disconnectedFromServer();
+    void socketErrorHappened(QAbstractSocket::SocketError error);
 
     // Messages corresponding to a single channel.
     void receiveUserNames(const QString &channelName, const QStringList &userNames);
