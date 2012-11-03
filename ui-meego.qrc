@@ -7,7 +7,6 @@
         <file>qml/meego/components/ServerSettingsList.qml</file>
         <file>qml/meego/pages/ChatPage.qml</file>
         <file>qml/meego/pages/StartPage.qml</file>
-        <file>qml/meego/pages/ProgressPage.qml</file>
         <file>qml/meego/pages/SettingsPage.qml</file>
         <file>qml/meego/pages/ManageServersPage.qml</file>
         <file>qml/meego/sheets/ServerSettingsSheet.qml</file>

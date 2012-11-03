@@ -39,7 +39,7 @@ Page {
             onClicked: {
                 commonMenu.close()
                 if (ircModel.anyServersToConnect()) {
-                    appWindow.pageStack.push(progressPage)
+                    appWindow.pageStack.push(chatPage)
                     ircModel.connectToServers()
                 }
                 else {

@@ -42,9 +42,6 @@ PageStackWindow {
     StartPage {
         id: startPage
     }
-    ProgressPage {
-        id: progressPage
-    }
     ChatPage {
         id: chatPage
     }

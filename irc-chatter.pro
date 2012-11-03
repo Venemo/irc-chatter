@@ -53,7 +53,6 @@ OTHER_FILES += \
     qml/meego/components/CommonDialog.qml \
     qml/meego/components/ServerSettingsList.qml \
     qml/meego/pages/StartPage.qml \
-    qml/meego/pages/ProgressPage.qml \
     qml/meego/pages/ChatPage.qml \
     qml/meego/pages/SettingsPage.qml \
     qml/meego/pages/ManageServersPage.qml \
