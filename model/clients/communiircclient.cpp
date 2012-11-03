@@ -30,6 +30,8 @@
 #include "communiircclient.h"
 #include "../settings/serversettings.h"
 
+#define FIX_EMPTY_CHANNEL_NAME(channelName) channelName.length() > 0 ? channelName : _ircSession->host()
+
 CommuniIrcClient::CommuniIrcClient(QObject *parent, ServerSettings *serverSettings) :
     AbstractIrcClient(parent, serverSettings)
 {
@@ -77,17 +79,17 @@ void CommuniIrcClient::messageReceived(IrcMessage *message)
         if (msg->isAction())
         {
             // This is a CTCP action
-            emit receiveCtcpAction(channelName, msg->sender().name(), msg->message());
+            emit receiveCtcpAction(FIX_EMPTY_CHANNEL_NAME(channelName), msg->sender().name(), msg->message());
         }
         else if (msg->isRequest())
         {
             // This is a CTCP request
-            emit receiveCtcpRequest(msg->sender().name(), msg->message());
+            emit receiveCtcpRequest(FIX_EMPTY_CHANNEL_NAME(msg->sender().name()), msg->message());
         }
         else
         {
             // This is a normal message
-            emit receiveMessage(channelName, msg->sender().name(), msg->message());
+            emit receiveMessage(FIX_EMPTY_CHANNEL_NAME(channelName), msg->sender().name(), msg->message());
         }
         break;
     }
@@ -133,17 +135,17 @@ void CommuniIrcClient::messageReceived(IrcMessage *message)
         if (msg->isReply())
         {
             // This is a CTCP reply message
-            emit receiveCtcpReply(msg->sender().name(), msg->message());
+            emit receiveCtcpReply(FIX_EMPTY_CHANNEL_NAME(msg->sender().name()), msg->message());
         }
         else if (msg->target().startsWith('#'))
         {
             // This is a channel notice message
-            emit receiveMessage(msg->target(), msg->sender().name(), msg->message());
+            emit receiveMessage(FIX_EMPTY_CHANNEL_NAME(msg->target()), msg->sender().name(), msg->message());
         }
         else
         {
             // This is a channel notice message
-            emit receiveMessage(msg->sender().name(), msg->sender().name(), msg->message());
+            emit receiveMessage(FIX_EMPTY_CHANNEL_NAME(msg->sender().name()), msg->sender().name(), msg->message());
         }
         break;
     }
@@ -298,13 +300,13 @@ void CommuniIrcClient::quit(const QString &message)
 void CommuniIrcClient::joinChannel(const QString &channelName, const QString &channelKey)
 {
     _ircSession->sendCommand(IrcCommand::createJoin(channelName, channelKey));
-    emit joinedChannel(channelName);
+    emit joinedChannel(FIX_EMPTY_CHANNEL_NAME(channelName));
 }
 
 void CommuniIrcClient::partChannel(const QString &channelName, const QString &message)
 {
     _ircSession->sendCommand(IrcCommand::createPart(channelName, message));
-    emit partedChannel(channelName);
+    emit partedChannel(FIX_EMPTY_CHANNEL_NAME(channelName));
 }
 
 void CommuniIrcClient::queryUser(const QString &userName)
