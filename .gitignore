@@ -10,3 +10,6 @@ Makefile
 debian/irc-chatter
 qtc_packaging
 MANIFEST
+build-stamp
+configure-stamp
+

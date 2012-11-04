@@ -89,4 +89,4 @@ contains(MEEGO_EDITION, harmattan) {
     splashlandscape.path = /usr/share/irc-chatter
 }
 
-QMAKE_CLEAN += Makefile
+QMAKE_CLEAN += Makefile build-stamp configure-stamp irc-chatter
