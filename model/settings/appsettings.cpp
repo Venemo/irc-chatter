@@ -18,6 +18,7 @@
 
 #include <QtCore>
 #include <QDebug>
+#include <QFont>
 
 #include "appsettings.h"
 
@@ -101,4 +102,14 @@ void AppSettings::deleteServerSettings(ServerSettings *serverSettings)
 int AppSettings::serverSettingsCount() const
 {
     return _serverSettings->rowCount();
+}
+
+QString AppSettings::getDefaultFont() const
+{
+#if MEEGO_EDITION_HARMATTAN
+    return "Nokia Pure";
+#else
+    QFont font;
+    return font.family();
+#endif
 }

@@ -76,6 +76,7 @@ public:
     Q_INVOKABLE void deleteServerSettings(ServerSettings *serverSettings);
     Q_INVOKABLE int serverSettingsCount() const;
     Q_INVOKABLE ServerSettings *newServerSettings() { return new ServerSettings(this); }
+    Q_INVOKABLE QString getDefaultFont() const;
 
 public slots:
     Q_INVOKABLE void saveServerSettings();
