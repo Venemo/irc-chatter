@@ -24,19 +24,26 @@ import "../pages"
 import "../sheets"
 import "../components"
 
+// This is the settings page
+// Allows the user to configure the app settings,
+// but not the server settings.
 Page {
     property string color: appSettings.sidebarColor
 
     id: settingsPage
+
+    // Simple custom toolbar here
     tools: ToolBarLayout {
         visible: true
 
+        // Back button
         ToolIcon {
             platformIconId: "toolbar-back"
             onClicked: appWindow.pageStack.pop()
         }
     }
 
+    // Flickable area for all the settings
     Flickable {
         id: settingsFlickable
         anchors.fill: parent
@@ -46,6 +53,7 @@ Page {
         contentHeight: settingsColumn.height + 30
         clip: true
 
+        // Layout for all the settings
         Column {
             id: settingsColumn
             spacing: 10
@@ -54,9 +62,33 @@ Page {
             anchors.top: parent.top
             anchors.topMargin: 20
 
+            // ANATOMY OF A SETTING
+            // --------------------
+            //
+            //Label { // Label which contains the setting
+            //    text: "Setting text"
+            //    width: parent.width
+            //    height: timestampsSwitch.height // Height of the contained UI element
+            //    verticalAlignment: Text.AlignVCenter
+            //
+            //    Switch { // UI element for manipulating a setting
+            //        id: timestampsSwitch
+            //        anchors.right: parent.right
+            //        checked: appSettings.displayTimestamps // Binding against appSettings
+            //
+            //        Binding { // Back binding against appSettings
+            //            target: appSettings
+            //            property: "displayTimestamps"
+            //            value: timestampsSwitch.checked
+            //        }
+            //    }
+            //}
+
+            // SETTING GROUP
             TitleLabel {
                 text: "Appearance"
             }
+            // SETTING: Whether or not to show misc events in the channel text areas
             Label {
                 text: "Show join/part/quit/nick events"
                 width: parent.width
@@ -75,6 +107,7 @@ Page {
                     }
                 }
             }
+            // SETTING: Show time stamps on messages
             Label {
                 text: "Show timestamps"
                 width: parent.width
@@ -93,6 +126,7 @@ Page {
                     }
                 }
             }
+            // SETTING: Use monospace font for channel text area
             Label {
                 text: "Use monospace font"
                 width: parent.width
@@ -111,6 +145,7 @@ Page {
                     }
                 }
             }
+            // SETTING: Autofocus the channel text field after switching channels
             Label {
                 text: "Autofocus text field"
                 width: parent.width
@@ -129,6 +164,7 @@ Page {
                     }
                 }
             }
+            // SETTING: Color of the sidebar in the chat window
             Label {
                 text: "Sidebar color"
                 width: parent.width
@@ -142,6 +178,7 @@ Page {
                     onClicked: colorSelectionDialog.open()
                 }
             }
+            // SETTING: Font size in the chat text area
             Label {
                 text: "Font size"
                 width: parent.width
@@ -172,9 +209,11 @@ Page {
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }
+            // SETTING GROUP
             TitleLabel {
                 text: "Send notifications for"
             }
+            // SETTING: Send OS notifications for messages in queries
             Label {
                 text: "Messages in queries"
                 width: parent.width
@@ -193,6 +232,7 @@ Page {
                     }
                 }
             }
+            // SETTING: Send OS notifications for messages in channels which contain the user's nickname
             Label {
                 text: "Messages containing your nick"
                 width: parent.width
@@ -211,9 +251,11 @@ Page {
                     }
                 }
             }
+            // SETTING GROUP
             TitleLabel {
                 text: "Customizations"
             }
+            // SETTING: Quit message which is sent when the user disconnects
             Label {
                 text: "Quit Message"
             }
@@ -229,6 +271,7 @@ Page {
                     value: quitField.text
                 }
             }
+            // SETTING: Message which is sent when the user parts a channel
             Label {
                 text: "Part Message"
             }
@@ -244,6 +287,7 @@ Page {
                     value: partField.text
                 }
             }
+            // SETTING: Message which is sent when the user kicks someone from a channel
             Label {
                 text: "Kick Message"
             }
@@ -264,11 +308,15 @@ Page {
     ScrollDecorator {
         flickableItem: settingsFlickable
     }
+    // Selection dialog for selecting the sidebar color
     WorkingSelectionDialog {
         id: colorSelectionDialog
         titleText: "Sidebar Color"
         searchFieldVisible: false
+
         model: ListModel {
+
+            // This function is what interprets the selection when the user selects a color
             function interpretColor() {
                 var item = colorListModel.get(colorSelectionDialog.selectedIndex);
                 color = item.color
@@ -307,6 +355,7 @@ Page {
         }
         onAccepted: colorListModel.interpretColor()
     }
+    // This event handler will set the dialog and the tumbler button to the name of the selected color
     Component.onCompleted: {
         for (var i = 0; i < colorListModel.count; i++) {
             var item = colorListModel.get(i)

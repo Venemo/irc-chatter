@@ -22,22 +22,30 @@ import net.venemo.ircchatter 1.0
 import "../sheets"
 import "../components"
 
+// This is the manage servers page.
+// Purpose is to edit and toggle server settings
 Page {
     id: manageServersPage
+
+    // Custom toolbar
     tools: ToolBarLayout {
         id: startPageToolbar
 
+        // Back button
         ToolIcon {
             platformIconId: "toolbar-back"
             onClicked: {
                 appWindow.pageStack.pop()
             }
         }
+
+        // Adds a new server
         ToolIcon {
             platformIconId: "toolbar-add"
             onClicked: serverSettingsList.showAddNewServer()
         }
 
+        // Menu button
         ToolIcon {
             platformIconId: "toolbar-view-menu"
             onClicked: (commonMenu.status === DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
@@ -45,11 +53,14 @@ Page {
     }
     onStatusChanged: {
         if (status === PageStatus.Activating) {
+            // Activate back bindings to make the UI reflect the actual settings
             serverSettingsList.bindConnectionBack = true
+            // Deactivate back bindings to prevent binding loops
             serverSettingsList.bindConnectionBack = false
         }
     }
 
+    // Flickable area for the server settings
     Flickable {
         id: manageServersPageFlickable
         interactive: contentHeight > height
@@ -58,6 +69,7 @@ Page {
         clip: true
         anchors.fill: parent
 
+        // Contains all the server settings
         Column {
             id: serverSettingsColumn
             width: parent.width - 40
@@ -65,6 +77,7 @@ Page {
             anchors.topMargin: 20
             anchors.top: parent.top
 
+            // Displays the server settings list
             ServerSettingsList {
                 id: serverSettingsList
                 bindConnectionBack: false
@@ -75,6 +88,7 @@ Page {
                         serverSettingsSheet.open()
                     }
                     else {
+                        // User can only edit a server setting if it's disconnected
                         cantEditConnectedServerBanner.show()
                     }
                 }
@@ -93,6 +107,7 @@ Page {
             }
         }
     }
+    // Shows are you sure to connect
     QueryDialog {
         property ServerSettings currentServer: null
 
@@ -111,6 +126,7 @@ Page {
             serverSettingsList.bindConnectionBack = false;
         }
     }
+    // Shows are you sure to disconnect
     QueryDialog {
         property ServerSettings currentServer: null
 
@@ -129,6 +145,7 @@ Page {
             serverSettingsList.bindConnectionBack = false;
         }
     }
+    // Server settings sheet (should be here because otherwise it appears buggily)
     ServerSettingsSheet {
         id: serverSettingsSheet
         onAccepted: {
@@ -149,6 +166,7 @@ Page {
             }
         }
     }
+    // Shows info that you must disconnect before editing the server settings
     InfoBanner {
         id: cantEditConnectedServerBanner
         text: "You must disconnect from the server before editing its settings"

@@ -24,9 +24,24 @@ import "../pages"
 import "../sheets"
 import "../components"
 
+// Main page of the app
+// Displays the messages in the current channel, list of channels,
+// And some UI to send new messages and do stuff.
+
+// HOW IT WORKS
+// ------------
+// The ircModel contains all the channels in all servers (grouped by servers).
+// This page just displays things from the ircModel
+//
+// ircModel.currentChannel - the channel that is currently selected
+// ircModel.currentServer - the server of the channel that is currently selected
+
 Page {
+    // To prevent binding loops
     property bool shouldUpdateCurrentMessage: true
+    // Whether the current server is connected
     property bool isCurrentServerConnected: ircModel.currentServer !== null ? ircModel.currentServer.serverSettings.isConnected : false
+    // Whether the current server is connecting
     property bool isCurrentServerConnecting: ircModel.currentServer !== null ? ircModel.currentServer.serverSettings.isConnecting : false
 
     function sendCurrentMessage() {
@@ -64,6 +79,7 @@ Page {
         }
     }
 
+    // Contains the chat text area
     Flickable {
         id: chatFlickable
         anchors.top: parent.top
@@ -172,6 +188,7 @@ Page {
         }
     }
 
+    // Contains the channel switcher
     Rectangle {
         id: channelNameBg
         color: appSettings.sidebarColor
@@ -242,6 +259,8 @@ Page {
             flickableItem: channelSwitcherFlickable
         }
     }
+
+    // Toolbar isn't associated with the page (so it can go up when the VKB opens)
     ToolBar {
         id: messageToolBar
         anchors.bottom: parent.bottom
@@ -250,6 +269,7 @@ Page {
 
         tools: ToolBarLayout {
 
+            // Auto completes nicknames
             ToolIcon {
                 id: autoCompleteToolIcon
                 platformIconId: "toolbar-reply"
@@ -261,6 +281,8 @@ Page {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
             }
+
+            // Currently typed message (maintained on a per-channel basis)
             TextField {
                 id: messageField
                 enabled: ircModel.currentServer !== null ? ircModel.currentServer.serverSettings.isConnected : true
@@ -297,6 +319,8 @@ Page {
                     actionKeyLabel: "Send!"
                 }
             }
+
+            // Menu button
             ToolIcon {
                 id: menuToolIcon
                 platformIconId: "toolbar-view-menu"
@@ -306,15 +330,19 @@ Page {
             }
         }
     }
+
+    // Custom menu
     Menu {
         id: chatMenu
         visualParent: pageStack
         MenuLayout {
+            // Part channel / close query
             MenuItem {
                 text: (ircModel.currentChannel !== null && ircModel.currentChannel.name.charAt(0)) === '#' ? "Part" : "Close"
                 visible: ircModel.currentChannel !== null && ircModel.currentChannel !== ircModel.currentServer.defaultChannel
                 onClicked:  areYouSureToPartDialog.open()
             }
+            // Join a channel / query a user
             MenuItem {
                 text: "Join/Query"
                 onClicked: {
@@ -322,6 +350,7 @@ Page {
                     joinSheet.open()
                 }
             }
+            // Show user list
             MenuItem {
                 text: ("User list (%1)").arg(ircModel.currentChannel === null ? 0 : ircModel.currentChannel.userCount)
                 visible: ircModel.currentChannel === null ? false : (ircModel.currentChannel.name.charAt(0) === '#')
@@ -330,20 +359,24 @@ Page {
                     userSelectorDialog.open()
                 }
             }
+            // Show the settings page
             MenuItem {
                 text: "Settings"
                 onClicked: appWindow.pageStack.push(settingsPage)
             }
+            // Show the manage servers page
             MenuItem {
                 text: "Manage servers"
                 onClicked: appWindow.pageStack.push(manageServersPage)
             }
+            // Show the about box
             MenuItem {
                 text: "About"
                 onClicked: aboutDialog.open()
             }
         }
     }
+    // UI for joining a channel or querying a user
     JoinSheet {
         id: joinSheet
         visualParent: chatPage
@@ -351,6 +384,7 @@ Page {
             ircModel.currentServer.joinChannel(joinSheet.channelName, joinSheet.channelKey)
         }
     }
+    // Shows are you sure to part/close?
     QueryDialog {
         id: areYouSureToPartDialog
         acceptButtonText: "Yes"
@@ -368,6 +402,7 @@ Page {
             }
         }
     }
+    // Shows are you sure to query this user
     QueryDialog {
         property string queryableUserName: ""
         id: areYouSureToQueryDialog
@@ -379,6 +414,7 @@ Page {
             ircModel.currentServer.joinChannel(areYouSureToQueryDialog.queryableUserName)
         }
     }
+    // Shows user list of the current channel
     WorkingSelectionDialog {
         id: userSelectorDialog
         titleText: ("%1 (%2)").arg(ircModel.currentChannel === null ? "?" : ircModel.currentChannel.name).arg(ircModel.currentChannel === null ? 0 : ircModel.currentChannel.userCount)
