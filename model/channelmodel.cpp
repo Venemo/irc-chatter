@@ -45,6 +45,7 @@ ChannelModel::ChannelModel(ServerModel *parent, const QString &channelName, Abst
     _displayedLines(0),
     _sentMessagesIndex(-1)
 {
+    connect(_commandParser, SIGNAL(commandParseError(QString)), this, SLOT(appendError(QString)));
 }
 
 ChannelModel::~ChannelModel()
@@ -169,7 +170,10 @@ void ChannelModel::appendDeemphasisedInfo(QString msg)
 
 void ChannelModel::appendError(QString msg)
 {
-    appendLine("<span style='color: red'>[ERROR] " + processMessage(msg) + "</span>");
+    msg = processMessage(msg);
+    msg.replace("&amp;lt;", "&lt;");
+    msg.replace("&amp;gt;", "&gt;");
+    appendLine("<span style='color: red'>[ERROR] " + msg + "</span>");
 }
 
 void ChannelModel::receiveMessage(const QString &userName, QString message)

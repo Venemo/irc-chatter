@@ -75,11 +75,6 @@ public:
     void parseCommand(const QString &msg);
     QString processMessage(QString msg, bool *hasUserNick = 0);
 
-    void appendLine(const QString &line);
-    void appendEmphasisedInfo(QString msg);
-    void appendDeemphasisedInfo(QString msg);
-    void appendError(QString msg);
-
     void receiveMessage(const QString &userName, QString message);
     void receiveCtcpAction(const QString &userName, QString message);
     void receiveJoined(const QString &userName);
@@ -120,6 +115,11 @@ signals:
 public slots:
     void sendCurrentMessage();
     void updateUserList();
+
+    void appendLine(const QString &line);
+    void appendEmphasisedInfo(QString msg);
+    void appendDeemphasisedInfo(QString msg);
+    void appendError(QString msg);
 
 };
 
