@@ -220,6 +220,10 @@ void CommuniIrcClient::processNumericMessage(IrcNumericMessage *message)
 
         _receivedUserNames[message->parameters()[2]] += newNames;
     }
+    else if (message->code() == Irc::RPL_WHOISUSER)
+    {
+        qDebug() << "received whois" << message->code() << message->parameters();
+    }
     else if (message->code() == Irc::RPL_MOTD)
     {
         emit receiveMotd(message->parameters().at(1));
@@ -369,6 +373,12 @@ void CommuniIrcClient::kick(const QString &channelName, const QString &userName,
 void CommuniIrcClient::sendRaw(const QString &message)
 {
     _ircSession->sendRaw(message);
+}
+
+void CommuniIrcClient::sendWhois(const QString userName)
+{
+    IrcCommand *command = IrcCommand::createWhois(userName);
+    _ircSession->sendCommand(command);
 }
 
 QAbstractSocket *CommuniIrcClient::socket()

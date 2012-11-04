@@ -61,6 +61,7 @@ public slots:
     virtual void changeNick(const QString &newNick);
     virtual void kick(const QString &channelName, const QString &userName, const QString &message);
     virtual void sendRaw(const QString &message);
+    virtual void sendWhois(const QString userName);
 
     virtual QAbstractSocket *socket();
     

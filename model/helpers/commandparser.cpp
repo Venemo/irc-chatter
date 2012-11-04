@@ -153,6 +153,13 @@ void CommandParser::parseAndSendCommand(const QString &channelName, const QStrin
         emit commandParseError("Sending raw command '" + rawCommand + "' to the server.");
         _ircClient->sendRaw(rawCommand);
     }
+    else if (commandParts[0] == "/whois")
+    {
+        if (n == 2)
+            _ircClient->sendWhois(commandParts[1]);
+        else
+            emit commandParseError("Invalid command. Correct usage: '/whois &lt;user name&gt;'");
+    }
     // TODO
 //    else if (commandParts[0] == "/quote")
 //    {

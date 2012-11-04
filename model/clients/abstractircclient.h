@@ -86,6 +86,7 @@ public:
     virtual void changeNick(const QString &newNick) = 0;
     virtual void kick(const QString &channelName, const QString &userName, const QString &message) = 0;
     virtual void sendRaw(const QString &message) = 0;
+    virtual void sendWhois(const QString userName) = 0;
 
     virtual QAbstractSocket *socket() = 0;
 
