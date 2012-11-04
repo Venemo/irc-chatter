@@ -1,3 +1,13 @@
+irc-chatter (0.3.1) unstable; urgency=low
+
+  * Upgraded libcommuni to 1.2
+  * Bug fix - command parse errors appear correctly
+  * Bug fix - nick name changes are handled correctly
+  * Bug fix - channel user list remains consistent
+  * Readded the no predictive and no auto uppercase hints from the chat text (now it works)
+
+ -- Timur Kristóf <venemo@msn.com>  Sun, 04 Nov 2012 02:12:22 +0200
+
 irc-chatter (0.3.0) unstable; urgency=low
 
   * Facelift for start page
