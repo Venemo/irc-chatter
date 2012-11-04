@@ -243,7 +243,17 @@ void ChannelModel::receiveUserList(const QStringList &userList)
 
 void ChannelModel::updateUserList()
 {
+    // Alphabetic order for nick names
+
+    QMap<QString, QString> strMap;
+    foreach (const QString &str, _userNames)
+    {
+        strMap.insert(str.toLower(), str);
+    }
+
+    _userNames = strMap.values();
     _users->setStringList(_userNames);
+    emit usersChanged();
 }
 
 void ChannelModel::sendCurrentMessage()
