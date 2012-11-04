@@ -45,7 +45,7 @@ ServerModel::ServerModel(IrcModel *parent, ServerSettings *serverSettings, Abstr
     connect(_ircClient, SIGNAL(receiveMessage(QString,QString,QString)), this, SLOT(receiveMessage(QString,QString,QString)));
     connect(_ircClient, SIGNAL(receiveModeChange(QString,QString,QString)), this, SLOT(receiveModeChange(QString,QString,QString)));
     connect(_ircClient, SIGNAL(receiveMotd(QString)), this, SLOT(receiveMotd(QString)));
-    connect(_ircClient, SIGNAL(receiveNickChange(QString,QString)), this, SLOT(receiveMotd(QString)));
+    connect(_ircClient, SIGNAL(receiveNickChange(QString,QString)), this, SLOT(receiveNickChange(QString,QString)));
     connect(_ircClient, SIGNAL(receivePart(QString,QString,QString)), this, SLOT(receivePart(QString,QString,QString)));
     connect(_ircClient, SIGNAL(receiveQuit(QString,QString)), this, SLOT(receiveQuit(QString,QString)));
     connect(_ircClient, SIGNAL(receiveTopic(QString,QString)), this, SLOT(receiveTopic(QString,QString)));
