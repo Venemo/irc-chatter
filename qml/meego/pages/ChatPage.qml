@@ -274,6 +274,7 @@ Page {
                 enabled: ircModel.currentServer !== null ? ircModel.currentServer.serverSettings.isConnected : true
                 placeholderText: enabled ? "Type a message" : "Disconnected"
                 text: ircModel.currentChannel !== null ? ircModel.currentChannel.currentMessage : ""
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
                 platformSipAttributes: mySipAttributes
                 onTextChanged: {
                     if (ircModel.currentChannel !== null) {
