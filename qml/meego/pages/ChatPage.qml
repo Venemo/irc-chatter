@@ -147,7 +147,7 @@ Page {
         BusyIndicator {
             id: connectingIndicator
             visible: isCurrentServerConnecting || ircModel.currentServer === null
-            running: visible
+            running: visible && ircModel.currentServer !== null
             anchors.centerIn: parent
             platformStyle: BusyIndicatorStyle {
                 size: "large"
@@ -176,7 +176,7 @@ Page {
                 horizontalCenter: parent.horizontalCenter
             }
             color: "#fff"
-            text: "Connecting, please wait..."
+            text: "Not connected"
         }
     }
 
@@ -272,7 +272,7 @@ Page {
             TextField {
                 id: messageField
                 enabled: ircModel.currentServer !== null ? ircModel.currentServer.serverSettings.isConnected : true
-                placeholderText: enabled ? "Type a message" : "Disconnected"
+                placeholderText: enabled ? "Type a message" : "Not connected"
                 text: ircModel.currentChannel !== null ? ircModel.currentChannel.currentMessage : ""
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
                 platformSipAttributes: mySipAttributes
