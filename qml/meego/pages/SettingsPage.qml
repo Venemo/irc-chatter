@@ -269,56 +269,51 @@ Page {
         titleText: "Sidebar Color"
         searchFieldVisible: false
         model: ListModel {
+            function interpretColor() {
+                var item = colorListModel.get(colorSelectionDialog.selectedIndex);
+                color = item.color
+                colorButton.text = item.name
+            }
+
+            id: colorListModel
             ListElement {
                 name: "Orange (Default)"
+                color: "#f9a300"
             }
             ListElement {
                 name: "Green"
+                color: "#9fce00"
             }
             ListElement {
                 name: "Red"
+                color: "#ff0000"
             }
             ListElement {
                 name: "Blue"
+                color: "#0000ff"
             }
             ListElement {
                 name: "Grey"
+                color: "#999999"
             }
             ListElement {
                 name: "Purple"
+                color: "#400758"
             }
             ListElement {
                 name: "Yellow"
+                color: "#cec700"
             }
         }
-        onAccepted: {
-            if (colorSelectionDialog.selectedIndex == 0) {
-                color = "#f9a300"
-                colorButton.text = "Orange"
-            }
-            else if (colorSelectionDialog.selectedIndex == 1) {
-                colorButton.text = "Green"
-                color = "#73ba0e"
-            }
-            else if (colorSelectionDialog.selectedIndex == 2) {
-                colorButton.text = "Red"
-                color = "#ff0000"
-            }
-            else if (colorSelectionDialog.selectedIndex == 3) {
-                colorButton.text = "Blue"
-                color = "#0000ff"
-            }
-            else if (colorSelectionDialog.selectedIndex == 4) {
-                colorButton.text = "Grey"
-                color = "#999999"
-            }
-            else if (colorSelectionDialog.selectedIndex == 5) {
-                colorButton.text = "Purple"
-                color = "#400758"
-            }
-            else {
-                colorButton.text = "Yellow"
-                color = "#cec700"
+        onAccepted: colorListModel.interpretColor()
+    }
+    Component.onCompleted: {
+        for (var i = 0; i < colorListModel.count; i++) {
+            var item = colorListModel.get(i)
+            if (item.color === appSettings.sidebarColor) {
+                colorSelectionDialog.selectedIndex = i
+                colorListModel.interpretColor();
+                break;
             }
         }
     }

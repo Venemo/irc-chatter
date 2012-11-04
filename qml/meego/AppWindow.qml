@@ -69,7 +69,7 @@ PageStackWindow {
         onAccepted: Qt.quit()
     }
     QueryDialog {
-        property ServerSettingsSheet serverSettingsSheet: null
+        property variant serverSettingsSheet: null
 
         id: areYouSureToDeleteServerDialog
         titleText: "Are you sure?"

@@ -61,15 +61,6 @@ Page {
         if (mainPage.status === PageStatus.Active) {
             commonMenu.close()
             adjustChatAreaHeight()
-
-            chatArea.font.pixelSize = appSettings.fontSize
-
-            if(appSettings.fontMonospace)
-                chatArea.font.family = "Monospace"
-            else
-                chatArea.font.family = "Nokia Pure"
-
-            channelNameBg.color = appSettings.sidebarColor
         }
     }
 
@@ -93,6 +84,8 @@ Page {
             enableSoftwareInputPanel: false
             text: ircModel.currentChannel !== null ? ircModel.currentChannel.channelText : ""
             inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+            font.pixelSize: appSettings.fontSize
+            font.family: appSettings.fontMonospace ? "Monospace" : appSettings.getDefaultFont()
             onTextChanged: {
                 scrollToBottom()
             }
@@ -102,7 +95,6 @@ Page {
                 chatArea.children[0].anchors.leftMargin = -100
                 chatArea.children[0].anchors.bottomMargin = -600
             }
-            font.pixelSize: appSettings.fontSize
 
             Connections {
                 // chatArea.children[3] is the TextEdit inside the TextArea
@@ -182,7 +174,7 @@ Page {
 
     Rectangle {
         id: channelNameBg
-        color: "#f9a300"
+        color: appSettings.sidebarColor
         width: 60
         anchors.top: parent.top
         anchors.right: parent.right

@@ -48,6 +48,7 @@ Page {
 
             onClicked: {
                 commonMenu.close()
+                //appWindow.pageStack.push(chatPage)
                 if (ircModel.anyServersToConnect()) {
                     appWindow.pageStack.push(chatPage)
                     ircModel.connectToServers()
