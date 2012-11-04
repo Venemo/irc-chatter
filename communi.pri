@@ -46,7 +46,8 @@ HEADERS += \
     communi/include/ircsender.h \
     communi/include/ircsession.h \
     communi/include/ircutil.h \
-    communi/include/ircglobal.h
+    communi/include/ircglobal.h \
+    communi/include/irccodecplugin.h
 
 SOURCES += \
     communi/src/irc.cpp \
@@ -56,6 +57,7 @@ SOURCES += \
     communi/src/ircsender.cpp \
     communi/src/ircsession.cpp \
     communi/src/ircutil.cpp \
-    communi/src/ircdecoder.cpp
+    communi/src/ircdecoder.cpp \
+    communi/src/irccodecplugin.cpp
 
 INCLUDEPATH += communi/include

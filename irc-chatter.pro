@@ -88,3 +88,5 @@ contains(MEEGO_EDITION, harmattan) {
     splashlandscape.files = installables/irc-chatter-splash-harmattan-landscape.jpg
     splashlandscape.path = /usr/share/irc-chatter
 }
+
+QMAKE_CLEAN += Makefile
