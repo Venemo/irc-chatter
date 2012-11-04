@@ -23,6 +23,9 @@ import net.venemo.ircchatter 1.0
 import "../sheets"
 import "../components"
 
+// This is the page which appears when the app is started.
+// Provides user-friendly screen when the app is started for the first time,
+// and a convenient way to select which servers to connect to.
 Page {
     id: startPage
     onStatusChanged: {
@@ -31,15 +34,19 @@ Page {
                 settingsDeletedBanner.show()
         }
     }
+
+    // Custom toolbar layout for this page
     tools: ToolBarLayout {
         id: startPageToolbar
 
+        // Adds a new server
         ToolIcon {
             platformIconId: "toolbar-add"
             visible: appSettings.serverSettings.itemCount !== 0
             onClicked: serverSettingsList.showAddNewServer()
         }
 
+        // Connects to the selected servers
         Button {
             text: "Connect!"
             anchors.centerIn: parent
@@ -59,6 +66,7 @@ Page {
             }
         }
 
+        // Menu button
         ToolIcon {
             platformIconId: "toolbar-view-menu"
             onClicked: (commonMenu.status === DialogStatus.Closed) ? commonMenu.open() : commonMenu.close()
@@ -69,6 +77,7 @@ Page {
         }
     }
 
+    // Contains the application title bar
     Rectangle {
         id: titleRectangle
         color: "#f9a300"
@@ -77,6 +86,7 @@ Page {
         anchors.left: parent.left
         anchors.right: parent.right
 
+        // Title bar text
         TextEdit {
             activeFocusOnPress: false
             color: "#ffffff"
@@ -87,6 +97,8 @@ Page {
             font.pixelSize: 30
         }
     }
+
+    // Firstrun experience - user friendly message when no servers are set up
     Item {
         anchors {
             top: titleRectangle.bottom
@@ -124,6 +136,8 @@ Page {
             onClicked: serverSettingsList.showAddNewServer()
         }
     }
+
+    // Startup experience - provides UI for selecting servers to connect to
     Flickable {
         id: startPageFlickable
         interactive: contentHeight > height
@@ -159,6 +173,7 @@ Page {
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
             }
+            // This is where the user can select servers to connect to
             ServerSettingsList {
                 id: serverSettingsList
                 onServerChosen: {
@@ -172,6 +187,7 @@ Page {
             }
         }
     }
+    // Server settings sheet (must be here, otherwise appears incorrectly)
     ServerSettingsSheet {
         id: serverSettingsSheet
         onAccepted: {
@@ -192,11 +208,13 @@ Page {
             }
         }
     }
+    // Show when the current settings version is incompatible with the old
     InfoBanner {
         id: settingsDeletedBanner
         text: "The new version of the app is incompatible with the old, so your settings have been deleted. Click on this banner to dismiss."
         timerEnabled: false
     }
+    // Show when no servers are selected
     InfoBanner {
         id: noServersToConnectBanner
         text: "You didn't select any servers to connect to."
