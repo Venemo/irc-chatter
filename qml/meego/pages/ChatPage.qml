@@ -135,8 +135,13 @@ Page {
     // UI element for showing connected/disconnected status
     Rectangle {
         color: "#99000000"
-        anchors.fill: chatFlickable
         visible: !isCurrentServerConnected
+        height: 80
+        anchors {
+            top: chatFlickable.top
+            left: chatFlickable.left
+            right: chatFlickable.right
+        }
 
         MouseArea {
             anchors.fill: parent
@@ -146,19 +151,23 @@ Page {
         Label {
             visible: !isCurrentServerConnecting && ircModel.currentServer !== null
             anchors.centerIn: parent
-            width: parent.width * 4 / 5
+            width: parent.width
             horizontalAlignment: Text.AlignHCenter
             color: "#fff"
-            text: "You are disconnected from this IRC server. Please establish a network connection to reconnect."
+            text: "Disconnected from this server."
         }
 
         BusyIndicator {
             id: connectingIndicator
             visible: isCurrentServerConnecting || ircModel.currentServer === null
             running: visible && ircModel.currentServer !== null
-            anchors.centerIn: parent
+            anchors {
+                left: parent.left
+                leftMargin: 15
+                verticalCenter: parent.verticalCenter
+            }
             platformStyle: BusyIndicatorStyle {
-                size: "large"
+                size: "small"
                 inverted: true
             }
         }
@@ -167,21 +176,21 @@ Page {
             width: parent.width * 4 / 5
             horizontalAlignment: Text.AlignHCenter
             anchors {
-                topMargin: 15
-                top: connectingIndicator.bottom
-                horizontalCenter: parent.horizontalCenter
+                leftMargin: 15
+                left: connectingIndicator.right
+                verticalCenter: parent.verticalCenter
             }
             color: "#fff"
-            text: "Connecting to this IRC server, please wait..."
+            text: "Connecting to this server..."
         }
         Label {
             visible: ircModel.currentServer === null
             width: parent.width * 4 / 5
             horizontalAlignment: Text.AlignHCenter
             anchors {
-                topMargin: 15
-                top: connectingIndicator.bottom
-                horizontalCenter: parent.horizontalCenter
+                leftMargin: 15
+                left: connectingIndicator.right
+                verticalCenter: parent.verticalCenter
             }
             color: "#fff"
             text: "Not connected"
