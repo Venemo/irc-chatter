@@ -159,7 +159,7 @@ Page {
 
         BusyIndicator {
             id: connectingIndicator
-            visible: isCurrentServerConnecting || ircModel.currentServer === null
+            visible: (isCurrentServerConnecting || ircModel.currentServer === null) && !refreshButton.visible
             running: visible && ircModel.currentServer !== null
             anchors {
                 left: parent.left
@@ -194,6 +194,36 @@ Page {
             }
             color: "#fff"
             text: "Not connected"
+        }
+        Rectangle {
+            color: "#fff"
+            visible: refreshButton.visible
+            anchors {
+                fill: refreshButton
+                leftMargin: 17
+                rightMargin: 17
+                topMargin: 10
+                bottomMargin: 10
+            }
+            radius: 10
+        }
+        ToolIcon
+        {
+            id: refreshButton
+            platformIconId: "toolbar-refresh"
+            visible: false
+            anchors {
+                verticalCenter: connectingIndicator.verticalCenter
+                horizontalCenter: connectingIndicator.horizontalCenter
+            }
+            onClicked: {
+                visible = false
+                ircModel.attemptReconnection()
+            }
+        }
+        Connections {
+            target: ircModel
+            onShowReconnectUi: refreshButton.visible = true
         }
     }
 
