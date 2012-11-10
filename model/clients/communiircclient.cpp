@@ -302,6 +302,7 @@ void CommuniIrcClient::connectToServer()
 void CommuniIrcClient::disconnectFromServer()
 {
     _ircSession->close();
+    _ircSession->socket()->disconnectFromHost();
 }
 
 void CommuniIrcClient::quit(const QString &message)

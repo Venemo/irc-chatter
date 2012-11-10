@@ -67,6 +67,7 @@ public:
 
 public slots:
     void refreshChannelList();
+    void attemptReconnect();
 
 private slots:
     void onlineStateChanged(bool online);

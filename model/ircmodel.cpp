@@ -55,8 +55,13 @@ void IrcModel::networkConfigurationChanged(QNetworkConfiguration config)
     if (config.identifier() != _lastNetConfigId && config.state() == QNetworkConfiguration::Active)
     {
         onlineStateChanged(false);
-        onlineStateChanged(true);
+        QTimer::singleShot(2000, this, SLOT(attemptReconnect()));
     }
+}
+
+void IrcModel::attemptReconnect()
+{
+    onlineStateChanged(true);
 }
 
 void IrcModel::connectToServers()
@@ -162,7 +167,7 @@ void IrcModel::refreshChannelList()
     }
 
     QList<ChannelModel*> *allChannelsList = new QList<ChannelModel*>(),
-                *oldChannelsList = &_allChannels.getList();
+            *oldChannelsList = &_allChannels.getList();
 
     foreach (ServerModel *serverModel, _servers)
     {
@@ -216,7 +221,7 @@ void IrcModel::onlineStateChanged(bool online)
         if (_servers.count())
         {
             foreach (ServerModel *serverModel, _servers)
-            {                
+            {
                 qDebug() << "reconnecting to server " << serverModel->url();
                 serverModel->connectToServer();
             }
