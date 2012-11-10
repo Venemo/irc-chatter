@@ -221,10 +221,6 @@ Page {
                 ircModel.attemptReconnection()
             }
         }
-        Connections {
-            target: ircModel
-            onShowReconnectUi: refreshButton.visible = true
-        }
     }
 
     // Contains the channel switcher
