@@ -20,36 +20,27 @@
 #include <MNotification>
 #include "notifier.h"
 
-static MNotificationGroup *notificationGroup = 0;
-static MRemoteAction *remoteAction = 0;
-
-void Notifier::notify(const QString &message)
+void Notifier::notify(const QString &summary, const QString &message)
 {
-    if (!notificationGroup)
+    QList<MNotification*> notifications = MNotification::notifications();
+    foreach (MNotification *n, notifications)
     {
-        remoteAction = new MRemoteAction("net.venemo.ircchatter", "/", "net.venemo.ircchatter", "activateApplication");
-
-        notificationGroup = new MNotificationGroup("irc-chatter.irc", "New IRC messages");
-        notificationGroup->setIdentifier("irc");
-        notificationGroup->setAction(*remoteAction);
-        notificationGroup->publish();
+        if (n->summary() == summary)
+            n->remove();
     }
 
-    if (!notificationGroup->isPublished())
-        notificationGroup->publish();
-
-    MNotification *notification = new MNotification("irc-chatter.irc", "New IRC message", message);
+    MNotification *notification = new MNotification("irc-chatter.irc", summary, message);
     notification->setIdentifier("irc");
-    notification->setGroup(*notificationGroup);
-    notification->setAction(*remoteAction);
+    notification->setAction(MRemoteAction("net.venemo.ircchatter", "/", "net.venemo.ircchatter", "activateApplication"));
 
     notification->publish();
 }
 
 void Notifier::unpublish()
 {
-    if (notificationGroup)
+    QList<MNotification*> notifications = MNotification::notifications();
+    foreach (MNotification *n, notifications)
     {
-        notificationGroup->remove();
+        n->remove();
     }
 }

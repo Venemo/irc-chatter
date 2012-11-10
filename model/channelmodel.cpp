@@ -192,7 +192,13 @@ void ChannelModel::receiveMessage(const QString &userName, QString message)
             && ((hasUserNick && appSettings()->notifyOnNick())
             || (!_name.startsWith('#') && appSettings()->notifyOnPrivmsg())))
     {
-        Notifier::notify(message);
+        QString summary;
+        if (_channelType == ChannelModel::Query)
+            summary = "IRC message from " + userName;
+        else
+            summary = "IRC message on " + _name;
+
+        Notifier::notify(summary, userName + ": " + message);
     }
 
     if (hasUserNick || !name().startsWith('#'))
@@ -217,8 +223,13 @@ void ChannelModel::receiveCtcpAction(const QString &userName, QString message)
             && ((hasUserNick && appSettings()->notifyOnNick())
             || (!_name.startsWith('#') && appSettings()->notifyOnPrivmsg())))
     {
+        QString summary;
+        if (_channelType == ChannelModel::Query)
+            summary = "IRC message from " + userName;
+        else
+            summary = "IRC message on " + _name;
 
-        Notifier::notify(message);
+        Notifier::notify(summary, userName + " " + message);
     }
 
     if (hasUserNick || !name().startsWith('#'))
