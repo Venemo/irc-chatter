@@ -38,19 +38,88 @@ static bool channelLessThan(ChannelModel * m1, ChannelModel *m2)
 
 IrcModel::IrcModel(QObject *parent, AppSettings *appSettings) :
     QObject(parent),
+    _networkConfigurationManager(new QNetworkConfigurationManager(this)),
+    _networkSession(0),
     _currentChannelIndex(-1),
     _isAppInFocus(true),
     _appSettings(appSettings),
-    _isOnline(false),
-    _networkConfigurationManager(new QNetworkConfigurationManager(this))
+    _isOnline(false)
 {
-    _isOnline = _networkConfigurationManager->isOnline();
+    //connect(_networkConfigurationManager, SIGNAL(onlineStateChanged(bool)), this, SLOT(onlineStateChanged(bool)));
+}
 
-    connect(_networkConfigurationManager, SIGNAL(onlineStateChanged(bool)), this, SLOT(onlineStateChanged(bool)));
+void IrcModel::networkSessionOpened()
+{
+    qDebug() << "Network session opened";
+    onlineStateChanged(true);
+}
+
+void IrcModel::networkSessionClosed()
+{
+    qDebug() << "Network session closed";
+    onlineStateChanged(false);
+}
+
+void IrcModel::networkSessionStateChanged(QNetworkSession::State state)
+{
+    switch (state)
+    {
+    case QNetworkSession::Invalid:
+    {
+        qDebug() << "Network session state is Invalid";
+        break;
+    }
+    case QNetworkSession::NotAvailable:
+    {
+        qDebug() << "Network session state is NotAvailable";
+        break;
+    }
+    case QNetworkSession::Connecting:
+    {
+        qDebug() << "Network session state is Connecting";
+        break;
+    }
+    case QNetworkSession::Connected:
+    {
+        qDebug() << "Network session state is Connected";
+        break;
+    }
+    case QNetworkSession::Closing:
+    {
+        qDebug() << "Network session state is Closing";
+        break;
+    }
+    case QNetworkSession::Disconnected:
+    {
+        qDebug() << "Network session state is Disconnected";
+        break;
+    }
+    case QNetworkSession::Roaming:
+    {
+        qDebug() << "Network session state is Roaming";
+        break;
+    }
+    default:
+    {
+        qDebug() << "unsupported QNetworkSession::State value!";
+        break;
+    }
+    }
 }
 
 void IrcModel::connectToServers()
 {
+    if (_networkSession == 0)
+    {
+        _networkSession = new QNetworkSession(_networkConfigurationManager->defaultConfiguration(), _networkConfigurationManager);
+        connect(_networkSession, SIGNAL(stateChanged(QNetworkSession::State)), this, SLOT(networkSessionStateChanged(QNetworkSession::State)));
+        connect(_networkSession, SIGNAL(opened()), this, SLOT(networkSessionOpened()));
+        connect(_networkSession, SIGNAL(closed()), this, SLOT(networkSessionClosed()));
+    }
+
+    if (!_networkSession->isOpen())
+        _networkSession->open();
+
     foreach (ServerSettings *serverSettings, _appSettings->serverSettings()->getList())
     {
         if (serverSettings->shouldConnect())
@@ -71,6 +140,7 @@ void IrcModel::disconnectFromServers()
     _servers.clear();
 
     refreshChannelList();
+    _networkSession->close();
 }
 
 bool IrcModel::anyServersToConnect()
@@ -152,7 +222,7 @@ void IrcModel::refreshChannelList()
     }
 
     QList<ChannelModel*> *allChannelsList = new QList<ChannelModel*>(),
-                *oldChannelsList = &_allChannels.getList();
+            *oldChannelsList = &_allChannels.getList();
 
     foreach (ServerModel *serverModel, _servers)
     {
@@ -189,12 +259,13 @@ void IrcModel::setCurrentChannel(const QString &currentChannelName, const QStrin
 
 void IrcModel::onlineStateChanged(bool online)
 {
+    if (online == _isOnline)
+        return;
+
     setIsOnline(online);
 
     if (online)
     {
-        sleep(2);
-
         // If there are any connections waiting, let's connect them now
         qDebug() << "there are" << _queue.count() << "connections queued";
         qDebug() << "there are" << _servers.count() << "servers to which connection was lost";
@@ -203,7 +274,7 @@ void IrcModel::onlineStateChanged(bool online)
         if (_servers.count())
         {
             foreach (ServerModel *serverModel, _servers)
-            {                
+            {
                 qDebug() << "reconnecting to server " << serverModel->url();
                 serverModel->connectToServer();
             }
@@ -229,4 +300,5 @@ void IrcModel::onlineStateChanged(bool online)
             serverModel->disconnectFromServer();
         }
     }
+
 }
