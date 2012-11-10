@@ -1,3 +1,12 @@
+irc-chatter (0.3.2) unstable; urgency=low
+
+  * Added notification icons
+  * Added per-channel notifications with last relevant message
+  * Fixed a few issues with the settings UI
+  * Reconnect ability when the user switches to other network without disconnecting
+
+ -- Timur Kristóf <venemo@msn.com>  Sun, 04 Nov 2012 02:12:22 +0200
+
 irc-chatter (0.3.1) unstable; urgency=low
 
   * Upgraded libcommuni to 1.2
