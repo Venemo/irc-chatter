@@ -49,6 +49,7 @@ class IrcModel : public QObject
     QList<ServerSettings*> _queue;
     QList<ServerModel*> _servers;
     QObjectListModel<ChannelModel> _allChannels;
+    QString _lastNetConfigId;
 
 public:
     explicit IrcModel(QObject *parent, AppSettings *appSettings);
@@ -69,6 +70,7 @@ public slots:
 
 private slots:
     void onlineStateChanged(bool online);
+    void networkConfigurationChanged(QNetworkConfiguration);
 
 signals:
     void allChannelsChanged();

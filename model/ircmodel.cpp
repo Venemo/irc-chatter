@@ -19,8 +19,6 @@
 #include <QtCore>
 #include <QStringList>
 
-#include <unistd.h>
-
 #include "ircmodel.h"
 #include "settings/appsettings.h"
 #include "clients/communiircclient.h"
@@ -47,6 +45,18 @@ IrcModel::IrcModel(QObject *parent, AppSettings *appSettings) :
     _isOnline = _networkConfigurationManager->isOnline();
 
     connect(_networkConfigurationManager, SIGNAL(onlineStateChanged(bool)), this, SLOT(onlineStateChanged(bool)));
+    connect(_networkConfigurationManager, SIGNAL(configurationChanged(QNetworkConfiguration)), this, SLOT(networkConfigurationChanged(QNetworkConfiguration)));
+}
+
+void IrcModel::networkConfigurationChanged(QNetworkConfiguration config)
+{
+    qDebug() << Q_FUNC_INFO << "config details" << config.name() << config.identifier() << config.state();
+
+    if (config.identifier() != _lastNetConfigId && config.state() == QNetworkConfiguration::Active)
+    {
+        onlineStateChanged(false);
+        onlineStateChanged(true);
+    }
 }
 
 void IrcModel::connectToServers()
@@ -189,11 +199,14 @@ void IrcModel::setCurrentChannel(const QString &currentChannelName, const QStrin
 
 void IrcModel::onlineStateChanged(bool online)
 {
+    if (_isOnline == online)
+        return;
+
     setIsOnline(online);
 
     if (online)
     {
-        sleep(2);
+        _lastNetConfigId = _networkConfigurationManager->defaultConfiguration().identifier();
 
         // If there are any connections waiting, let's connect them now
         qDebug() << "there are" << _queue.count() << "connections queued";
