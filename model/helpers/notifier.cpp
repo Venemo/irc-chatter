@@ -29,8 +29,8 @@ void Notifier::notify(const QString &message)
     {
         remoteAction = new MRemoteAction("net.venemo.ircchatter", "/", "net.venemo.ircchatter", "activateApplication");
 
-        notificationGroup = new MNotificationGroup(MNotification::ImReceivedEvent, "New IRC messages");
-        notificationGroup->setImage("/usr/share/icons/hicolor/80x80/apps/irc-chatter-harmattan-icon.png");
+        notificationGroup = new MNotificationGroup("irc-chatter.irc", "New IRC messages");
+        notificationGroup->setIdentifier("irc");
         notificationGroup->setAction(*remoteAction);
         notificationGroup->publish();
     }
@@ -38,8 +38,8 @@ void Notifier::notify(const QString &message)
     if (!notificationGroup->isPublished())
         notificationGroup->publish();
 
-    MNotification *notification = new MNotification(MNotification::ImReceivedEvent, "New IRC message", message);
-    notification->setImage("/usr/share/icons/hicolor/80x80/apps/irc-chatter-harmattan-icon.png");
+    MNotification *notification = new MNotification("irc-chatter.irc", "New IRC message", message);
+    notification->setIdentifier("irc");
     notification->setGroup(*notificationGroup);
     notification->setAction(*remoteAction);
 

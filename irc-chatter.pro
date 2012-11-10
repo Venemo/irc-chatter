@@ -83,11 +83,17 @@ contains(MEEGO_EDITION, harmattan) {
     PKGCONFIG += qdeclarative-boostable
     INCLUDEPATH += /usr/include/applauncherd
 
-    INSTALLS += splashportrait splashlandscape
-    splashportrait.files = installables/irc-chatter-splash-harmattan-portrait.jpg
-    splashportrait.path = /usr/share/irc-chatter
-    splashlandscape.files = installables/irc-chatter-splash-harmattan-landscape.jpg
-    splashlandscape.path = /usr/share/irc-chatter
+    # Portrait and landscape splash screens
+    splashes.files = installables/irc-chatter-splash-harmattan-portrait.jpg installables/irc-chatter-splash-harmattan-landscape.jpg
+    splashes.path = /usr/share/irc-chatter
+    # Notification icons
+    notifyicons.files = installables/irc-chatter-harmattan-icon.png installables/irc-chatter-harmattan-lpm-icon.png installables/irc-chatter-harmattan-statusbar-icon.png
+    notifyicons.path = /usr/share/themes/blanco/meegotouch/icons
+    # Notification event type config
+    notifyconfig.files = installables/irc-chatter.irc.conf
+    notifyconfig.path = /usr/share/meegotouch/notifications/eventtypes
+
+    INSTALLS = target splashes notifyicons icon notifyconfig desktopfile
 }
 
 QMAKE_CLEAN += Makefile build-stamp configure-stamp irc-chatter
