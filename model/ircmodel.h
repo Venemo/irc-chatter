@@ -34,13 +34,6 @@ class AppSettings;
 class IrcModel : public QObject
 {
     Q_OBJECT
-
-    QNetworkConfigurationManager *_networkConfigurationManager;
-    QNetworkSession *_networkSession;
-    QList<ServerSettings*> _queue;
-    QList<ServerModel*> _servers;
-    QObjectListModel<ChannelModel> _allChannels;
-
     Q_PROPERTY(QObject* allChannels READ allChannels NOTIFY allChannelsChanged)
     GENPROPERTY_F(int, _currentChannelIndex, currentChannelIndex, setCurrentChannelIndex, currentChannelIndexChanged)
     Q_PROPERTY(int currentChannelIndex READ currentChannelIndex WRITE setCurrentChannelIndex NOTIFY currentChannelIndexChanged)
@@ -51,6 +44,11 @@ class IrcModel : public QObject
     GENPROPERTY_PTR_R(AppSettings*, _appSettings, appSettings)
     GENPROPERTY_F(bool, _isOnline, isOnline, setIsOnline, isOnlineChanged)
     Q_PROPERTY(bool isOnline READ isOnline NOTIFY isOnlineChanged)
+
+    QNetworkConfigurationManager *_networkConfigurationManager;
+    QList<ServerSettings*> _queue;
+    QList<ServerModel*> _servers;
+    QObjectListModel<ChannelModel> _allChannels;
 
 public:
     explicit IrcModel(QObject *parent, AppSettings *appSettings);
@@ -67,13 +65,10 @@ public:
     Q_INVOKABLE bool anyServersToConnect();
 
 public slots:
-    Q_INVOKABLE void refreshChannelList();
+    void refreshChannelList();
 
 private slots:
     void onlineStateChanged(bool online);
-    void networkSessionStateChanged(QNetworkSession::State state);
-    void networkSessionOpened();
-    void networkSessionClosed();
 
 signals:
     void allChannelsChanged();
@@ -81,7 +76,6 @@ signals:
     void currentChannelIndexChanged();
     void isAppInFocusChanged();
     void isOnlineChanged();
-    void showReconnectUi();
 };
 
 #endif // IRCMODEL_H
