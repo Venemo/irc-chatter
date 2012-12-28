@@ -53,6 +53,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QApplication *app = new QApplication(argc, argv);
     QDeclarativeView *view = new QDeclarativeView();
 #endif
+    QApplication::addLibraryPath("./plugins");
 
     AppSettings *appSettings = new AppSettings(app);
     IrcModel *model = new IrcModel(app, appSettings);

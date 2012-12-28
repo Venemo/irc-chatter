@@ -9,8 +9,6 @@ DEFINES += \
     HAVE_ICU \
     APP_VERSION=\\\"$$VERSION\\\"
 
-include(communi.pri)
-
 HEADERS += \
     helpers/util.h \
     helpers/appeventlistener.h \
@@ -66,34 +64,57 @@ CONFIG += meegotouch
 unix {
     QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
     QMAKE_LFLAGS += -pie -rdynamic
-
     QT += dbus
-    INSTALLS += target icon desktopfile
+    INSTALLS = target
+
     target.path=/usr/bin
-    icon.files = installables/irc-chatter-harmattan-icon.png
-    icon.path = /usr/share/icons/hicolor/80x80/apps
-    desktopfile.files = installables/irc-chatter-harmattan.desktop
-    desktopfile.path = /usr/share/applications
+    # TODO: create generic desktop and icon files
 }
 
+# for MeeGo 1.2 Harmattan
 contains(MEEGO_EDITION, harmattan) {
-    # for Harmattan
     DEFINES += MEEGO_EDITION_HARMATTAN HAVE_APPLAUNCHERD HAVE_MNOTIFICATION
     CONFIG += qdeclarative-boostable link_pkgconfig
+    # Note: you will need to have Communi installed in your sysroot for this to build correctly
     PKGCONFIG += qdeclarative-boostable
-    INCLUDEPATH += /usr/include/applauncherd
+    INCLUDEPATH += /usr/include/applauncherd /usr/include/Communi
+    LIBS += -lCommuni
 
+    # IRC Chatter app
+    target.path=/opt/irc-chatter
+    # Icon
+    icon.files = installables/harmattan/irc-chatter-harmattan-icon.png
+    icon.path = /usr/share/icons/hicolor/80x80/apps
+    desktopfile.files = installables/harmattan/irc-chatter-harmattan.desktop
+    desktopfile.path = /usr/share/applications
+    # Communi libraries
+    communilib.files = installables/harmattan/libCommuni.so.1
+    communilib.path = /opt/irc-chatter
+    communiuchardetplugin.files = installables/harmattan/libuchardetplugin.so
+    communiuchardetplugin.path = /opt/irc-chatter/plugins/communi
     # Portrait and landscape splash screens
-    splashes.files = installables/irc-chatter-splash-harmattan-portrait.jpg installables/irc-chatter-splash-harmattan-landscape.jpg
+    splashes.files = installables/harmattan/irc-chatter-splash-harmattan-portrait.jpg installables/harmattan/irc-chatter-splash-harmattan-landscape.jpg
     splashes.path = /usr/share/irc-chatter
     # Notification icons
-    notifyicons.files = installables/irc-chatter-harmattan-icon.png installables/irc-chatter-harmattan-lpm-icon.png installables/irc-chatter-harmattan-statusbar-icon.png
+    notifyicons.files = installables/harmattan/irc-chatter-harmattan-icon.png installables/harmattan/irc-chatter-harmattan-lpm-icon.png installables/harmattan/irc-chatter-harmattan-statusbar-icon.png
     notifyicons.path = /usr/share/themes/blanco/meegotouch/icons
     # Notification event type config
-    notifyconfig.files = installables/irc-chatter.irc.conf
+    notifyconfig.files = installables/harmattan/irc-chatter.irc.conf
     notifyconfig.path = /usr/share/meegotouch/notifications/eventtypes
 
-    INSTALLS = target splashes notifyicons icon notifyconfig desktopfile
+    INSTALLS = target splashes notifyicons icon notifyconfig desktopfile communilib communiuchardetplugin
+
+
+    contains(DEFINES, HARMATTAN_DEV) {
+        INSTALLS = target communilib communiuchardetplugin
+        target.path = /home/developer
+        communilib.path = /home/developer
+        communiuchardetplugin.path = /home/developer/plugins/communi
+        QMAKE_LFLAGS += -Wl,--rpath=/home/developer,-O3
+        message("Using the Harmattan development configuration.")
+    } else {
+        QMAKE_LFLAGS += -Wl,--rpath=/opt/irc-chatter,-O3
+    }
 }
 
 QMAKE_CLEAN += Makefile build-stamp configure-stamp irc-chatter

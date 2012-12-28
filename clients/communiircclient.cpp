@@ -19,13 +19,13 @@
 #include <QtCore/QTimer>
 #include <QtNetwork/QSslSocket>
 
-#include <Irc>
-#include <IrcSession>
-#include <IrcSender>
-#include <IrcUtil>
-#include <IrcGlobal>
-#include <IrcMessage>
-#include <IrcCommand>
+#include <Communi/Irc>
+#include <Communi/IrcSession>
+#include <Communi/IrcSender>
+#include <Communi/IrcUtil>
+#include <Communi/IrcGlobal>
+#include <Communi/IrcMessage>
+#include <Communi/IrcCommand>
 
 #include "clients/communiircclient.h"
 #include "model/settings/serversettings.h"
