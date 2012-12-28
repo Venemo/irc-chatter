@@ -38,7 +38,7 @@ public:
     void addItem(QObject *item);
     void removeItem(QObject *item);
     void removeItem(int index);
-    QObject* getItem(int index);
+    Q_INVOKABLE QObject* getItem(int index);
     int indexOf(QObject *obj) const;
 
     template<typename T>

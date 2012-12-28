@@ -256,7 +256,7 @@ Page {
                     model: ircModel.allChannels
                     delegate: Label {
                         id: myLabel
-                        text: model.name
+                        text: model.object.name
                         height: channelNameBg.width
                         verticalAlignment: Text.AlignVCenter
                         color: isCurrent ? "white" : (hasNewMessageWithUserNick ? "red" : (hasNewMessage ? "blue" : "black"))

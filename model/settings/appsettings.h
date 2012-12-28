@@ -54,7 +54,7 @@ class AppSettings : public QObject
     Q_PROPERTY(int fontSize READ fontSize WRITE setFontSize NOTIFY fontSizeChanged)
 
     QSettings _backend;
-    QObjectListModel<ServerSettings> *_serverSettings;
+    QObjectListModel *_serverSettings;
 
 public:
     explicit AppSettings(QObject *parent = 0);
@@ -71,7 +71,7 @@ public:
     SETTINGPROPERTY(bool, notifyOnPrivmsg, setNotifyOnPrivmsg, notifyOnPrivmsgChanged, "notifyOnPrivmsg", true)
     SETTINGPROPERTY(int, fontSize, setFontSize, fontSizeChanged, "fontSize", 24)
 
-    QObjectListModel<ServerSettings> *serverSettings();
+    QObjectListModel *serverSettings();
     Q_INVOKABLE void appendServerSettings(ServerSettings *serverSettings);
     Q_INVOKABLE void deleteServerSettings(ServerSettings *serverSettings);
     Q_INVOKABLE int serverSettingsCount() const;

@@ -28,7 +28,7 @@
 AppSettings::AppSettings(QObject *parent) :
     QObject(parent),
     _areSettingsDeleted(false),
-    _serverSettings(new QObjectListModel<ServerSettings>(this))
+    _serverSettings(new QObjectListModel(this))
 {
     // Checking for settings version
 
@@ -64,7 +64,7 @@ AppSettings::AppSettings(QObject *parent) :
     }
 }
 
-QObjectListModel<ServerSettings> *AppSettings::serverSettings()
+QObjectListModel *AppSettings::serverSettings()
 {
     return _serverSettings;
 }
@@ -76,7 +76,7 @@ void AppSettings::saveServerSettings()
     QDataStream stream(&buffer);
     buffer.open(QBuffer::WriteOnly);
     stream << _serverSettings->rowCount();
-    foreach (ServerSettings *server, _serverSettings->getList())
+    foreach (ServerSettings *server, *(_serverSettings->getList<ServerSettings>()))
         stream << (*server);
     buffer.close();
     _backend.setValue(APPSETTING_SERVERSETTINGS, array);
@@ -84,7 +84,7 @@ void AppSettings::saveServerSettings()
 
 void AppSettings::appendServerSettings(ServerSettings *serverSettings)
 {
-    if (!_serverSettings->getList().contains(serverSettings))
+    if (!_serverSettings->getList()->contains(serverSettings))
     {
         _serverSettings->addItem(serverSettings);
     }
@@ -92,7 +92,7 @@ void AppSettings::appendServerSettings(ServerSettings *serverSettings)
 
 void AppSettings::deleteServerSettings(ServerSettings *serverSettings)
 {
-    if (_serverSettings->getList().contains(serverSettings))
+    if (_serverSettings->getList()->contains(serverSettings))
     {
         _serverSettings->removeItem(serverSettings);
     }

@@ -87,7 +87,7 @@ Column {
 
             Switch {
                 id: connectSwitch
-                checked: shouldConnect
+                checked: model.object.shouldConnect
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 onCheckedChanged: {
@@ -106,7 +106,7 @@ Column {
             }
             Label {
                 id: serverTitleLabel
-                text: "<b>" + serverUrl + ":" + serverPort + "</b><br/>" + userNickname
+                text: "<b>" + model.object.serverUrl + ":" + model.object.serverPort + "</b><br/>" + model.object.userNickname
                 height: implicitHeight + 20
                 verticalAlignment: Text.AlignVCenter
                 textFormat: Text.RichText

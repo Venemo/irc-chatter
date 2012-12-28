@@ -48,11 +48,11 @@ CommonDialog {
     property bool searchFieldVisible: false
 
     onStatusChanged: {
-        if (status == DialogStatus.Closing) {
+        if (status === DialogStatus.Closing) {
             searchField.platformCloseSoftwareInputPanel();
             searchField.text = "";
         }
-        else if (status == DialogStatus.Opening) {
+        else if (status === DialogStatus.Opening) {
             if (searchFieldVisible && inPortrait)
                 searchField.forceActiveFocus();
         }
