@@ -38,6 +38,7 @@ SOURCES += \
     helpers/commandparser.cpp \
     helpers/channelhelper.cpp \
     helpers/notifier.cpp \
+    helpers/qobjectlistmodel.cpp \
     model/channelmodelcollection.cpp
 
 RESOURCES += \
