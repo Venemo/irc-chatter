@@ -19,10 +19,11 @@
 #ifndef COMMUNIIRCCLIENT_H
 #define COMMUNIIRCCLIENT_H
 
-#include <QHash>
-#include <QString>
-#include <QStringList>
-#include "abstractircclient.h"
+#include <QtCore/QHash>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+
+#include "clients/abstractircclient.h"
 
 class IrcSession;
 class IrcMessage;

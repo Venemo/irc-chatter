@@ -19,12 +19,12 @@
 #ifndef APPSETTINGS_H
 #define APPSETTINGS_H
 
-#include <QObject>
-#include <QSettings>
+#include <QtCore/QObject>
+#include <QtCore/QSettings>
 
-#include "model/settings/serversettings.h"
-#include "helpers/qobjectlistmodel.h"
 #include "helpers/util.h"
+#include "helpers/qobjectlistmodel.h"
+#include "model/settings/serversettings.h"
 
 // Increase this when anything changes in the settings
 #define APPSETTINGS_VERSION 4

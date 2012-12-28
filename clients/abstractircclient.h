@@ -19,8 +19,8 @@
 #ifndef ABSTRACTIRCCLIENT_H
 #define ABSTRACTIRCCLIENT_H
 
-#include <QObject>
-#include <QAbstractSocket>
+#include <QtCore/QObject>
+#include <QtNetwork/QAbstractSocket>
 
 #include "helpers/util.h"
 

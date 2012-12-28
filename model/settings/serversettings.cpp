@@ -16,9 +16,7 @@
 // Copyright (C) 2011-2012, Timur Kristóf <venemo@fedoraproject.org>
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
-#include <QtCore>
-
-#include "serversettings.h"
+#include "model/settings/serversettings.h"
 
 ServerSettings::ServerSettings(QObject *parent, const QString &url, const quint16 &port, bool ssl, const QString &password, const QStringList &autoJoinChannels) :
     QObject(parent),

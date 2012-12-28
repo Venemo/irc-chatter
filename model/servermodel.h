@@ -19,13 +19,13 @@
 #ifndef SERVERMODEL_H
 #define SERVERMODEL_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 #include "helpers/util.h"
 #include "helpers/qobjectlistmodel.h"
 #include "model/channelmodel.h"
-#include "settings/appsettings.h"
 #include "model/channelmodelcollection.h"
+#include "model/settings/appsettings.h"
 
 class AbstractIrcClient;
 class IrcModel;

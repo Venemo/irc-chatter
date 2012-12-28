@@ -20,13 +20,13 @@
 #ifndef IRCMODEL_H
 #define IRCMODEL_H
 
-#include <QObject>
-#include <QNetworkConfigurationManager>
-#include <QNetworkSession>
+#include <QtCore/QObject>
+#include <QtNetwork/QNetworkConfigurationManager>
+#include <QtNetwork/QNetworkSession>
 
+#include "helpers/qobjectlistmodel.h"
 #include "model/channelmodel.h"
 #include "model/servermodel.h"
-#include "helpers/qobjectlistmodel.h"
 
 class ServerSettings;
 class AppSettings;

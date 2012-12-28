@@ -15,8 +15,8 @@
 //
 // Copyright (C) 2012, Timur Kristóf <venemo@fedoraproject.org>
 
-#include <QEvent>
-#include <QtDBus>
+#include <QtCore/QEvent>
+#include <QtDBus/QDBusConnection>
 
 #include "helpers/notifier.h"
 #include "appeventlistener.h"

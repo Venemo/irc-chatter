@@ -16,10 +16,8 @@
 // Copyright (C) 2011-2012, Timur Kristóf <venemo@fedoraproject.org>
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
-#include <QtCore>
-
-#include "servermodel.h"
-#include "ircmodel.h"
+#include "model/servermodel.h"
+#include "model/ircmodel.h"
 #include "settings/appsettings.h"
 #include "clients/abstractircclient.h"
 

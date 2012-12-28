@@ -20,7 +20,7 @@
 #include <MNotification>
 #endif
 
-#include <QDebug>
+#include <QtCore/QDebug>
 #include "notifier.h"
 
 void Notifier::notify(const QString &summary, const QString &message)

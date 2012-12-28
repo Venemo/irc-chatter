@@ -19,9 +19,9 @@
 #ifndef CHANNELMODELCOLLECTION_H
 #define CHANNELMODELCOLLECTION_H
 
-#include <QHash>
-#include <QString>
-#include <QList>
+#include <QtCore/QHash>
+#include <QtCore/QString>
+#include <QtCore/QList>
 
 class ChannelModel;
 

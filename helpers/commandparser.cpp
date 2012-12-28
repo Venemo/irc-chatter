@@ -16,12 +16,12 @@
 //
 // Copyright (C) 2012, Timur Kristóf <venemo@fedoraproject.org>
 
-#include <QCoreApplication>
-#include <QStringList>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QStringList>
 
+#include "helpers/commandparser.h"
 #include "clients/abstractircclient.h"
 #include "model/settings/appsettings.h"
-#include "commandparser.h"
 
 CommandParser::CommandParser(QObject *parent, AbstractIrcClient *ircClient, AppSettings *appSettings) :
     QObject(parent),

@@ -19,7 +19,7 @@
 // Authors of code borrowed from Konversation (colorForNick method):
 // Copyright (C) 2006 Michael Kreitzer <mrgrim@gr1m.org>
 
-#include <QtCore>
+#include <QtCore/QList>
 #include "channelhelper.h"
 
 QList<QString> *_colors = 0;

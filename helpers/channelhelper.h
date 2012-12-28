@@ -19,7 +19,7 @@
 #ifndef CHANNELHELPER_H
 #define CHANNELHELPER_H
 
-#include <QString>
+#include <QtCore/QString>
 
 class ChannelHelper
 {

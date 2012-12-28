@@ -19,9 +19,9 @@
 #ifndef SERVERSETTINGS_H
 #define SERVERSETTINGS_H
 
-#include <QObject>
-#include <QStringList>
-#include <QDataStream>
+#include <QtCore/QObject>
+#include <QtCore/QStringList>
+#include <QtCore/QDataStream>
 
 #include "helpers/util.h"
 

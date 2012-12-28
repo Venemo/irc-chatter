@@ -16,7 +16,7 @@
 //
 // Copyright (C) 2012, Timur Kristóf <venemo@fedoraproject.org>
 
-#include "channelmodelcollection.h"
+#include "model/channelmodelcollection.h"
 #include "model/channelmodel.h"
 
 ChannelModelCollection::ChannelModelCollection()

@@ -16,8 +16,8 @@
 //
 // Copyright (C) 2012, Timur Kristóf <venemo@fedoraproject.org>
 
-#include <QtCore>
-#include <QSslSocket>
+#include <QtCore/QTimer>
+#include <QtNetwork/QSslSocket>
 
 #include <Irc>
 #include <IrcSession>
@@ -27,7 +27,7 @@
 #include <IrcMessage>
 #include <IrcCommand>
 
-#include "communiircclient.h"
+#include "clients/communiircclient.h"
 #include "model/settings/serversettings.h"
 
 #define FIX_EMPTY_CHANNEL_NAME(channelName) channelName.length() > 0 ? channelName : _ircSession->host()

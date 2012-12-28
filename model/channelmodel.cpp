@@ -19,11 +19,11 @@
 // Authors of code borrowed from Konversation (URL regex):
 // Copyright (C) 2010 Eike Hein <hein@kde.org>
 
-#include <QtCore>
+#include <QtCore/QTime>
 
-#include "channelmodel.h"
-#include "servermodel.h"
-#include "ircmodel.h"
+#include "model/channelmodel.h"
+#include "model/servermodel.h"
+#include "model/ircmodel.h"
 #include "clients/abstractircclient.h"
 #include "helpers/commandparser.h"
 #include "helpers/channelhelper.h"

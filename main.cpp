@@ -16,17 +16,20 @@
 // Copyright (C) 2011-2012, Timur Kristóf <venemo@fedoraproject.org>
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
+#include <QtCore/QSettings>
 #include <QtGui/QApplication>
-#include <QtDeclarative>
-#include <QSettings>
-
-#if defined(HAVE_APPLAUNCHERD)
-#include <MDeclarativeCache>
-#endif
+#include <QtDeclarative/QtDeclarative>
+#include <QtDeclarative/QDeclarativeView>
+#include <QtDeclarative/QDeclarativeContext>
+#include <QtDeclarative/QDeclarativeEngine>
 
 #include "helpers/appeventlistener.h"
 #include "model/ircmodel.h"
 #include "model/settings/appsettings.h"
+
+#if defined(HAVE_APPLAUNCHERD)
+#include <MDeclarativeCache>
+#endif
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -55,11 +58,13 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     IrcModel *model = new IrcModel(app, appSettings);
     AppEventListener *eventListener = new AppEventListener(model);
     app->installEventFilter(eventListener);
+    qDebug() << "QApplication, QDeclarativeView, IrcModel, AppEventListener instances created";
 
     qmlRegisterType<ServerSettings>("net.venemo.ircchatter", 1, 0, "ServerSettings");
     qmlRegisterType<AppSettings>("net.venemo.ircchatter", 1, 0, "AppSettings");
     qmlRegisterUncreatableType<ChannelModel>("net.venemo.ircchatter", 1, 0, "ChannelModel", "This object is created in the model.");
     qmlRegisterUncreatableType<IrcModel>("net.venemo.ircchatter", 1, 0, "IrcModel", "This object is created in the model.");
+    qDebug() << "QML types registered";
 
     QObject::connect(eventListener, SIGNAL(applicationActivated()), view, SLOT(raise()));
     QObject::connect(app, SIGNAL(aboutToQuit()), appSettings, SLOT(saveServerSettings()));
@@ -74,7 +79,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->rootContext()->setContextProperty("appSettings", appSettings);
     view->rootContext()->setContextProperty("isPreRelease", isPreRelease);
     view->setSource(QUrl("qrc:/qml/meego/AppWindow.qml"));
+    qDebug() << "View set up";
+
     view->showFullScreen();
+    qDebug() << "View shown!";
 
     int result = app->exec();
     delete view;

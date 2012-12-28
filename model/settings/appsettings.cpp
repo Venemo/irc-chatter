@@ -16,11 +16,11 @@
 // Copyright (C) 2011-2012, Timur Kristóf <venemo@fedoraproject.org>
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
-#include <QtCore>
-#include <QDebug>
-#include <QFont>
+#include <QtCore/QBuffer>
+#include <QtCore/QDebug>
+#include <QtGui/QFont>
 
-#include "appsettings.h"
+#include "model/settings/appsettings.h"
 
 #define APPSETTING_SETTINGSVERSION "SettingsVersion"
 #define APPSETTING_SERVERSETTINGS "ServerSettings"

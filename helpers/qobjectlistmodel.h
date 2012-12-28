@@ -18,8 +18,8 @@
 #ifndef QOBJECTLISTMODEL_H
 #define QOBJECTLISTMODEL_H
 
-#include <QAbstractListModel>
-#include <QMetaProperty>
+#include <QtCore/QAbstractListModel>
+#include <QtCore/QMetaProperty>
 
 class QObjectListModelMagic : public QAbstractListModel
 {

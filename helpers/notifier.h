@@ -19,7 +19,7 @@
 #ifndef NOTIFIER_H
 #define NOTIFIER_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class Notifier
 {

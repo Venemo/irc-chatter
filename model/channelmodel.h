@@ -20,8 +20,8 @@
 #ifndef CHANNELMODEL_H
 #define CHANNELMODEL_H
 
-#include <QObject>
-#include <QStringListModel>
+#include <QtCore/QObject>
+#include <QtGui/QStringListModel>
 
 #include "helpers/util.h"
 

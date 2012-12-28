@@ -18,7 +18,7 @@
 #ifndef APPEVENTLISTENER_H
 #define APPEVENTLISTENER_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class IrcModel;
 

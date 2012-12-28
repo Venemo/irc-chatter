@@ -19,7 +19,7 @@
 #ifndef COMMANDPARSER_H
 #define COMMANDPARSER_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class AbstractIrcClient;
 class AppSettings;

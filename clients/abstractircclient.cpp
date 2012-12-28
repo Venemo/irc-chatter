@@ -16,7 +16,7 @@
 //
 // Copyright (C) 2012, Timur Kristóf <venemo@fedoraproject.org>
 
-#include "abstractircclient.h"
+#include "clients/abstractircclient.h"
 
 AbstractIrcClient::AbstractIrcClient(QObject *parent, ServerSettings *serverSettings) :
     QObject(parent)
