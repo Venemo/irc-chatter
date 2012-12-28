@@ -16,12 +16,16 @@
 //
 // Copyright (C) 2012, Timur Kristóf <venemo@fedoraproject.org>
 
-#include <MNotificationGroup>
+#if defined(HAVE_MNOTIFICATION)
 #include <MNotification>
+#endif
+
+#include <QDebug>
 #include "notifier.h"
 
 void Notifier::notify(const QString &summary, const QString &message)
 {
+#if defined(HAVE_MNOTIFICATION)
     QList<MNotification*> notifications = MNotification::notifications();
     foreach (MNotification *n, notifications)
     {
@@ -34,13 +38,20 @@ void Notifier::notify(const QString &summary, const QString &message)
     notification->setAction(MRemoteAction("net.venemo.ircchatter", "/", "net.venemo.ircchatter", "activateApplication"));
 
     notification->publish();
+#else
+    qDebug() << Q_FUNC_INFO << "Sending notifications is not supported by the current build.";
+#endif
 }
 
 void Notifier::unpublish()
 {
+#if defined(HAVE_MNOTIFICATION)
     QList<MNotification*> notifications = MNotification::notifications();
     foreach (MNotification *n, notifications)
     {
         n->remove();
     }
+#else
+    qDebug() << Q_FUNC_INFO << "Unpublishing notifications is not supported by the current build.";
+#endif
 }
