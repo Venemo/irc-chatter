@@ -78,11 +78,12 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->rootContext()->setContextProperty("appVersion", appVersion);
     view->rootContext()->setContextProperty("appSettings", appSettings);
     view->rootContext()->setContextProperty("isPreRelease", isPreRelease);
-    view->setSource(QUrl("qrc:/qml/meego/AppWindow.qml"));
     qDebug() << "View set up";
+    view->setSource(QUrl("qrc:/qml/meego/AppWindow.qml"));
+    qDebug() << "Loaded QML";
 
     view->showFullScreen();
-    qDebug() << "View shown!";
+    qDebug() << "View shown";
 
     int result = app->exec();
     delete view;
