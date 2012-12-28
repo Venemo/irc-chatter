@@ -12,35 +12,35 @@ DEFINES += \
 include(communi.pri)
 
 HEADERS += \
-    util.h \
-    appeventlistener.h \
+    helpers/util.h \
+    helpers/appeventlistener.h \
     model/channelmodel.h \
     model/servermodel.h \
     model/ircmodel.h \
-    qobjectlistmodel.h \
+    helpers/qobjectlistmodel.h \
     model/settings/appsettings.h \
     model/settings/serversettings.h \
-    model/clients/abstractircclient.h \
-    model/clients/communiircclient.h \
-    model/helpers/commandparser.h \
-    model/helpers/channelhelper.h \
-    model/helpers/notifier.h \
-    model/helpers/channelmodelcollection.h
+    clients/abstractircclient.h \
+    clients/communiircclient.h \
+    helpers/commandparser.h \
+    helpers/channelhelper.h \
+    helpers/notifier.h \
+    model/channelmodelcollection.h
 
 SOURCES += \
     main.cpp \
-    appeventlistener.cpp \
+    helpers/appeventlistener.cpp \
     model/channelmodel.cpp \
     model/ircmodel.cpp \
     model/servermodel.cpp \
     model/settings/appsettings.cpp \
     model/settings/serversettings.cpp \
-    model/clients/abstractircclient.cpp \
-    model/clients/communiircclient.cpp \
-    model/helpers/commandparser.cpp \
-    model/helpers/channelhelper.cpp \
-    model/helpers/notifier.cpp \
-    model/helpers/channelmodelcollection.cpp
+    clients/abstractircclient.cpp \
+    clients/communiircclient.cpp \
+    helpers/commandparser.cpp \
+    helpers/channelhelper.cpp \
+    helpers/notifier.cpp \
+    model/channelmodelcollection.cpp
 
 RESOURCES += \
     ui-meego.qrc

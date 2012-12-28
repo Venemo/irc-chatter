@@ -28,7 +28,7 @@
 #include <IrcCommand>
 
 #include "communiircclient.h"
-#include "../settings/serversettings.h"
+#include "model/settings/serversettings.h"
 
 #define FIX_EMPTY_CHANNEL_NAME(channelName) channelName.length() > 0 ? channelName : _ircSession->host()
 

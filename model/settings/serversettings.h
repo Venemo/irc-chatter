@@ -23,7 +23,7 @@
 #include <QStringList>
 #include <QDataStream>
 
-#include "util.h"
+#include "helpers/util.h"
 
 class ServerSettings : public QObject
 {

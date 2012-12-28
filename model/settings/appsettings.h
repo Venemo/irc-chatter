@@ -22,9 +22,9 @@
 #include <QObject>
 #include <QSettings>
 
-#include "serversettings.h"
-#include "qobjectlistmodel.h"
-#include "util.h"
+#include "model/settings/serversettings.h"
+#include "helpers/qobjectlistmodel.h"
+#include "helpers/util.h"
 
 // Increase this when anything changes in the settings
 #define APPSETTINGS_VERSION 4

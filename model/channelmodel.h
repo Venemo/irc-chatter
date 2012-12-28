@@ -23,7 +23,7 @@
 #include <QObject>
 #include <QStringListModel>
 
-#include "util.h"
+#include "helpers/util.h"
 
 class CommandParser;
 class AbstractIrcClient;

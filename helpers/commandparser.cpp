@@ -19,8 +19,8 @@
 #include <QCoreApplication>
 #include <QStringList>
 
-#include "../clients/abstractircclient.h"
-#include "../settings/appsettings.h"
+#include "clients/abstractircclient.h"
+#include "model/settings/appsettings.h"
 #include "commandparser.h"
 
 CommandParser::CommandParser(QObject *parent, AbstractIrcClient *ircClient, AppSettings *appSettings) :

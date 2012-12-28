@@ -24,7 +24,7 @@
 #include <MDeclarativeCache>
 #endif
 
-#include "appeventlistener.h"
+#include "helpers/appeventlistener.h"
 #include "model/ircmodel.h"
 #include "model/settings/appsettings.h"
 

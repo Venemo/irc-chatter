@@ -24,9 +24,9 @@
 #include <QNetworkConfigurationManager>
 #include <QNetworkSession>
 
-#include "channelmodel.h"
-#include "servermodel.h"
-#include "qobjectlistmodel.h"
+#include "model/channelmodel.h"
+#include "model/servermodel.h"
+#include "helpers/qobjectlistmodel.h"
 
 class ServerSettings;
 class AppSettings;

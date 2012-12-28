@@ -18,7 +18,7 @@
 #include <QEvent>
 #include <QtDBus>
 
-#include "model/helpers/notifier.h"
+#include "helpers/notifier.h"
 #include "appeventlistener.h"
 #include "model/ircmodel.h"
 

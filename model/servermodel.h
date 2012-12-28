@@ -21,11 +21,11 @@
 
 #include <QObject>
 
-#include "util.h"
-#include "qobjectlistmodel.h"
-#include "channelmodel.h"
+#include "helpers/util.h"
+#include "helpers/qobjectlistmodel.h"
+#include "model/channelmodel.h"
 #include "settings/appsettings.h"
-#include "helpers/channelmodelcollection.h"
+#include "model/channelmodelcollection.h"
 
 class AbstractIrcClient;
 class IrcModel;

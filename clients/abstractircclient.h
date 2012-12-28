@@ -22,7 +22,7 @@
 #include <QObject>
 #include <QAbstractSocket>
 
-#include "util.h"
+#include "helpers/util.h"
 
 class ServerSettings;
 
