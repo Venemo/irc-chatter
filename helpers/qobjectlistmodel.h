@@ -25,6 +25,7 @@ class QObjectListModel : public QAbstractListModel
     Q_PROPERTY(int itemCount READ itemCount NOTIFY itemCountChanged)
 
     QList<QObject*> *_list;
+    QHash<int, QByteArray> _roles;
 
 public:
     explicit QObjectListModel(QObject *parent = 0, QList<QObject*> *list = new QList<QObject*>());
@@ -48,6 +49,9 @@ public:
     template<typename T>
     void setList(QList<T*> *list);
     void setList(QList<QObject*> *list);
+#if QT_VERSION >= 0x050000
+    QHash<int, QByteArray> roleNames() const { return _roles; }
+#endif
 
 private slots:
     void removeDestroyedItem();

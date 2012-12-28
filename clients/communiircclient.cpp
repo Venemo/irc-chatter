@@ -19,7 +19,7 @@
 #include <QtCore/QTimer>
 #include <QtNetwork/QSslSocket>
 
-#include <Communi/Irc>
+#include <irc.h>
 #include <Communi/IrcSession>
 #include <Communi/IrcSender>
 #include <Communi/IrcUtil>

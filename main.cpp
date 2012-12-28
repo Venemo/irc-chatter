@@ -17,11 +17,23 @@
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
 #include <QtCore/QSettings>
+
+#if QT_VERSION >= 0x050000
+#include <QtGui/QGuiApplication>
+#include <QtQuick/QtQuick>
+#include <QtQuick/QQuickView>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlContext>
+#if defined(USE_DESKTOP_UI)
+#include <QtWidgets/QApplication>
+#endif
+#else
 #include <QtGui/QApplication>
 #include <QtDeclarative/QtDeclarative>
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
+#endif
 
 #include "helpers/appeventlistener.h"
 #include "model/ircmodel.h"
@@ -41,19 +53,25 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     isPreRelease = true;
 #endif
 
-    QApplication::setApplicationName("irc-chatter");
-    QApplication::setOrganizationName("irc-chatter");
-    QApplication::setApplicationVersion(APP_VERSION);
+    QCoreApplication::setApplicationName("irc-chatter");
+    QCoreApplication::setOrganizationName("irc-chatter");
+    QCoreApplication::setApplicationVersion(APP_VERSION);
 
 #if defined(HAVE_APPLAUNCHERD)
     qDebug() << "IRC Chatter is using applauncherd";
     QApplication *app = MDeclarativeCache::qApplication(argc, argv);
     QDeclarativeView *view = MDeclarativeCache::qDeclarativeView();
+#elif QT_VERSION >= 0x050000 && defined(USE_DESKTOP_UI)
+    QApplication *app = new QApplication(argc, argv);
+    QQuickView *view = new QQuickView();
+#elif QT_VERSION >= 0x050000
+    QGuiApplication *app = new QGuiApplication(argc, argv);
+    QQuickView *view = new QQuickView();
 #else
     QApplication *app = new QApplication(argc, argv);
     QDeclarativeView *view = new QDeclarativeView();
 #endif
-    QApplication::addLibraryPath("./plugins");
+    QCoreApplication::addLibraryPath("./plugins");
 
     AppSettings *appSettings = new AppSettings(app);
     IrcModel *model = new IrcModel(app, appSettings);
@@ -70,20 +88,33 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QObject::connect(eventListener, SIGNAL(applicationActivated()), view, SLOT(raise()));
     QObject::connect(app, SIGNAL(aboutToQuit()), appSettings, SLOT(saveServerSettings()));
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
+#if QT_VERSION >= 0x050000
+    view->setTitle("IRC Chatter");
+#else
     view->setWindowTitle("IRC Chatter");
     view->setAttribute(Qt::WA_OpaquePaintEvent);
     view->setAttribute(Qt::WA_NoSystemBackground);
     view->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
     view->viewport()->setAttribute(Qt::WA_NoSystemBackground);
+#endif
     view->rootContext()->setContextProperty("ircModel", model);
     view->rootContext()->setContextProperty("appVersion", appVersion);
     view->rootContext()->setContextProperty("appSettings", appSettings);
     view->rootContext()->setContextProperty("isPreRelease", isPreRelease);
     qDebug() << "View set up";
-    view->setSource(QUrl("qrc:/qml/meego/AppWindow.qml"));
-    qDebug() << "Loaded QML";
 
+#if defined(USE_MEEGO_UI)
+    view->setSource(QUrl("qrc:/qml/meego/AppWindow.qml"));
     view->showFullScreen();
+#elif defined(USE_DESKTOP_UI)
+    view->setMinimumSize(QSize(600, 400));
+    view->setResizeMode(QQuickView::SizeRootObjectToView);
+    view->setSource(QUrl("qrc:/qml/desktop/AppWindow.qml"));
+    view->show();
+#else
+#error Please configure your build properly and select a UI.
+#endif
+
     qDebug() << "View shown";
 
     int result = app->exec();

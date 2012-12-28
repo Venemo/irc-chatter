@@ -21,9 +21,10 @@ QObjectListModel::QObjectListModel(QObject *parent, QList<QObject*> *list)
     : QAbstractListModel(parent),
       _list(list)
 {
-    QHash<int, QByteArray> roles;
-    roles[Qt::UserRole + 1] = "object";
-    setRoleNames(roles);
+    _roles[Qt::UserRole + 1] = "object";
+#if QT_VERSION < 0x050000
+    setRoleNames(_roles);
+#endif
 }
 
 int QObjectListModel::indexOf(QObject *obj) const
@@ -138,6 +139,7 @@ void QObjectListModel::setList(QList<QObject *> *list)
 
 void QObjectListModel::reset()
 {
-    QAbstractListModel::reset();
+    QAbstractListModel::beginResetModel();
+    QAbstractListModel::endResetModel();
     emit itemCountChanged();
 }
