@@ -19,7 +19,10 @@
 #include <QtGui/QApplication>
 #include <QtDeclarative>
 #include <QSettings>
+
+#if defined(HAVE_APPLAUNCHERD)
 #include <MDeclarativeCache>
+#endif
 
 #include "appeventlistener.h"
 #include "model/ircmodel.h"
@@ -39,7 +42,15 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QApplication::setOrganizationName("irc-chatter");
     QApplication::setApplicationVersion(APP_VERSION);
 
+#if defined(HAVE_APPLAUNCHERD)
+    qDebug() << "IRC Chatter is using applauncherd";
     QApplication *app = MDeclarativeCache::qApplication(argc, argv);
+    QDeclarativeView *view = MDeclarativeCache::qDeclarativeView();
+#else
+    QApplication *app = new QApplication(argc, argv);
+    QDeclarativeView *view = new QDeclarativeView();
+#endif
+
     AppSettings *appSettings = new AppSettings(app);
     IrcModel *model = new IrcModel(app, appSettings);
     AppEventListener *eventListener = new AppEventListener(model);
@@ -50,7 +61,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterUncreatableType<ChannelModel>("net.venemo.ircchatter", 1, 0, "ChannelModel", "This object is created in the model.");
     qmlRegisterUncreatableType<IrcModel>("net.venemo.ircchatter", 1, 0, "IrcModel", "This object is created in the model.");
 
-    QDeclarativeView *view = MDeclarativeCache::qDeclarativeView();
     QObject::connect(eventListener, SIGNAL(applicationActivated()), view, SLOT(raise()));
     QObject::connect(app, SIGNAL(aboutToQuit()), appSettings, SLOT(saveServerSettings()));
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));

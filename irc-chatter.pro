@@ -78,7 +78,7 @@ unix {
 
 contains(MEEGO_EDITION, harmattan) {
     # for Harmattan
-    DEFINES += MEEGO_EDITION_HARMATTAN
+    DEFINES += MEEGO_EDITION_HARMATTAN HAVE_APPLAUNCHERD
     CONFIG += qdeclarative-boostable link_pkgconfig
     PKGCONFIG += qdeclarative-boostable
     INCLUDEPATH += /usr/include/applauncherd
