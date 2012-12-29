@@ -18,5 +18,27 @@
 import QtQuick 2.0
 
 Rectangle {
+    id: sidebar
+    color: "#f9a300"
 
+    Rectangle {
+        width: sidebar.height
+        height: sidebar.width
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: "#33222222" }
+            GradientStop { position: 0.7; color: "#33ffffff" }
+        }
+        anchors {
+            top: sidebar.top
+            left: sidebar.left
+        }
+        transform: [
+            Rotation {
+                angle: -90
+            },
+            Translate {
+                y: sidebar.height
+            }
+        ]
+    }
 }
