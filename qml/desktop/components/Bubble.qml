@@ -18,5 +18,54 @@
 import QtQuick 2.0
 
 Rectangle {
+    id: bubble
 
+    property alias inner: innerColumn.children
+    property real padding: 15
+    property real minHeight: 70
+
+    border.color: "#111"
+    border.width: 2
+    color: "#ddd"
+    radius: 15
+    width: 250
+    implicitHeight: Math.max(innerColumn.height + padding * 2, minHeight)
+
+    Rectangle {
+        width: 30
+        height: width
+        color: bubble.color
+        border.color: bubble.border.color
+        border.width: bubble.border.width
+        anchors {
+            right: parent.right
+            verticalCenter: parent.verticalCenter
+        }
+        transform: [
+            Rotation {
+                angle: 45
+                origin.x: 15
+                origin.y: 15
+            },
+            Translate {
+                x: 13
+            }
+        ]
+    }
+    Rectangle {
+        width: bubble.width - bubble.padding
+        height: 50
+        color: bubble.color
+        anchors {
+            right: parent.right
+            rightMargin: bubble.border.width
+            verticalCenter: parent.verticalCenter
+        }
+    }
+
+    Column {
+        id: innerColumn
+        anchors.centerIn: parent
+        width: parent.width - padding * 2
+    }
 }
