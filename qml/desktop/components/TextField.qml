@@ -18,5 +18,28 @@
 import QtQuick 2.0
 
 Rectangle {
+    id: textField
 
+    property real padding: 10
+
+    implicitHeight: textInput.height + padding * 2
+    gradient: Gradient {
+        GradientStop { position: 0.0; color: "#777" }
+        GradientStop { position: 0.4; color: "#ddd" }
+        GradientStop { position: 1.0; color: "#fff" }
+    }
+
+    // Uncomment this to see the area of the TextInput
+    //    Rectangle {
+    //        color: "red"
+    //        anchors.fill: textInput
+    //    }
+
+    TextInput {
+        id: textInput
+        height: font.pixelSize * 3 / 2
+        anchors.centerIn: parent
+        width: parent.width - textField.padding * 2
+        verticalAlignment: TextInput.AlignVCenter
+    }
 }
