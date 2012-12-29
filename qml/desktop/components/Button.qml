@@ -18,5 +18,27 @@
 import QtQuick 2.0
 
 Rectangle {
+    id: button
 
+    property real padding: 10
+    property bool textCenter: true
+    property alias text: theText.text
+    property alias textColor: theText.color
+    property alias font: theText.font
+
+    implicitHeight: theText.height + padding * 2
+    implicitWidth: theText.width + padding * 2
+    color: "#444"
+    radius: 10
+
+    Text {
+        id: theText
+        anchors {
+            verticalCenter: parent.verticalCenter
+            horizontalCenter: textCenter ? parent.horizontalCenter : undefined
+            left: textCenter ? undefined : parent.left
+            leftMargin: button.padding
+        }
+        color: "#eee"
+    }
 }
