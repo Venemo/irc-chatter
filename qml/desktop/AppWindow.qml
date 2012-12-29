@@ -22,7 +22,12 @@ import "./pages"
 Rectangle {
     color: "#fff"
 
+
+    StartPage {
+        id: startPage
+    }
     ChatPage {
         id: chatPage
+        visible: false
     }
 }

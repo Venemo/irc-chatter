@@ -19,5 +19,24 @@ import QtQuick 2.0
 import "../components"
 
 Page {
+    id: startPage
+
+    Text {
+        id: welcomeText
+        text: "Welcome to IRC Chatter"
+        anchors.centerIn: parent
+        color: "#fff"
+        font.pointSize: 24
+    }
+    Button {
+        text: "Connect!"
+        color: "#9fce00"
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: welcomeText.bottom
+        onClicked: {
+            startPage.animateOut();
+            chatPage.animateIn();
+        }
+    }
 
 }

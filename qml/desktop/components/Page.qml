@@ -41,6 +41,9 @@ Rectangle {
 
     ParallelAnimation {
         id: outAnimation
+        onStopped: {
+            page.visible = false;
+        }
 
         NumberAnimation {
             target: translateTransform
@@ -63,6 +66,9 @@ Rectangle {
 
     ParallelAnimation {
         id: inAnimation
+        onStarted: {
+            page.visible = true;
+        }
 
         NumberAnimation {
             target: translateTransform
