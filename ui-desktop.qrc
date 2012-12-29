@@ -11,5 +11,6 @@
         <file>qml/desktop/pages/StartPage.qml</file>
         <file>qml/desktop/specialcomponents/ChannelSwitcherButton.qml</file>
         <file>qml/desktop/specialcomponents/ServerSettingEntry.qml</file>
+        <file>qml/desktop/components/Switch.qml</file>
     </qresource>
 </RCC>

@@ -24,15 +24,13 @@ Item {
 
     property alias serverName: serverNameText.text
     property alias userName: userNameText.text
+    property alias serverEnabled: theSwitch.value
 
     implicitHeight: serverNameText.font.pixelSize * 1.5 + userNameText.font.pixelSize * 1.5 + 10
     width: parent.width
 
-    Rectangle {
+    Switch {
         id: theSwitch
-        width: 80
-        height: 40
-        color: "#fff"
         anchors {
             left: parent.left
             verticalCenter: parent.verticalCenter

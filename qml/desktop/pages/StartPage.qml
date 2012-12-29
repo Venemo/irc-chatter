@@ -50,6 +50,7 @@ Page {
         ServerSettingEntry {
             serverName: "irc.freenode.net:7000"
             userName: "Venemo"
+            serverEnabled: true
         }
         ServerSettingEntry {
             serverName: "irc.gnome.org:6667"
