@@ -57,9 +57,9 @@ Page {
                     anchors.rightMargin: 10
                     border.color: "transparent"
                     inner: [
-                        Button { radius: 0; color: "#666"; text: "Part"; width: parent.width; textCenter: false },
-                        Button { radius: 0; color: "#666"; text: "User list"; width: parent.width; textCenter: false },
-                        Button { radius: 0; color: "#666"; text: "View topic"; width: parent.width; textCenter: false }
+                        Button { radius: 0; color: "#666"; textColor: "#fff"; text: "Part"; width: parent.width; textCenter: false },
+                        Button { radius: 0; color: "#666"; textColor: "#fff"; text: "User list"; width: parent.width; textCenter: false },
+                        Button { radius: 0; color: "#666"; textColor: "#fff"; text: "View topic"; width: parent.width; textCenter: false }
                     ]
                 }
             }

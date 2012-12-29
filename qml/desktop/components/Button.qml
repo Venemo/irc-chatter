@@ -33,7 +33,7 @@ Rectangle {
 
     implicitHeight: theText.height + padding * 2
     implicitWidth: theText.width * 1.2 + padding * 2
-    color: "#444"
+    color: "#ddd"
     radius: 0
 
     Rectangle {
@@ -92,7 +92,7 @@ Rectangle {
             left: textCenter ? undefined : parent.left
             leftMargin: button.padding * 2
         }
-        color: "#fefefe"
+        color: "#000"
         height: font.pixelSize * 1.5
     }
 

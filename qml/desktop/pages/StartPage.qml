@@ -22,12 +22,14 @@ import "../specialcomponents"
 Page {
     id: startPage
 
+    property bool hasServersConfigured: true
+
     Text {
         id: welcomeText
         text: "Welcome to IRC Chatter"
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.left: serversRow.left
         anchors.bottom: serversRow.top
-        anchors.bottomMargin: 10
+        anchors.bottomMargin: 20
         color: "#fff"
         font.pointSize: 24
     }
@@ -39,34 +41,66 @@ Page {
         spacing: 5
 
         Text {
+            text: "You haven't configured any servers yet. Press the button below to add one."
+            color: "#fff"
+            width: serversRow.width
+            wrapMode: Text.WordWrap
+            visible: !hasServersConfigured
+        }
+
+        Text {
             text: "Your configured servers"
             color: "#fff"
+            visible: hasServersConfigured
         }
         Rectangle {
             width: serversRow.width
             height: 1
             color: "#fff"
+            visible: hasServersConfigured
         }
         ServerSettingEntry {
             serverName: "irc.freenode.net:7000"
             userName: "Venemo"
             serverEnabled: true
+            visible: hasServersConfigured
         }
         ServerSettingEntry {
             serverName: "irc.gnome.org:6667"
             userName: "Venemo"
+            visible: hasServersConfigured
         }
     }
 
-    Button {
-        text: "Connect!"
-        color: "#9fce00"
+    Row {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: serversRow.bottom
-        anchors.topMargin: 10
-        onClicked: {
-            startPage.animateOut();
-            chatPage.animateIn();
+        anchors.topMargin: 20
+        spacing: 5
+
+        Button {
+            width: 130
+            text: "Connect!"
+            color: "#9fce00"
+            textColor: "#000"
+            onClicked: {
+                startPage.animateOut();
+                chatPage.animateIn();
+            }
+            visible: hasServersConfigured
+        }
+        Button {
+            width: 130
+            text: "Add server"
+            color: "#ddd"
+            textColor: "#000"
+        }
+        Button {
+            width: 130
+            text: "Settings"
+            color: "#ddd"
+            textColor: "#000"
+            visible: hasServersConfigured
         }
     }
 
