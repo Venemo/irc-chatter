@@ -27,18 +27,60 @@ Rectangle {
     property alias font: theText.font
     property alias useGradientOverlay: gradientOverlay.visible
 
+    signal clicked
+    signal pressed
+    signal released
+
     implicitHeight: theText.height + padding * 2
     implicitWidth: theText.width + padding * 2
     color: "#444"
-    radius: 10
+    radius: 0
 
     Rectangle {
         id: gradientOverlay
         anchors.fill: parent
         radius: parent.radius
         gradient: Gradient {
-            GradientStop { position: 0.66; color: "#00ffffff" }
-            GradientStop { position: 1.0; color: "#44222222" }
+            GradientStop { id: lighterStop; position: 0.66; color: "#00ffffff" }
+            GradientStop { id: darkerStop; position: 1.0; color: "#33222222" }
+        }
+    }
+
+    ParallelAnimation {
+        id: pressedAnimation
+
+        ColorAnimation {
+            duration: 50
+            target: lighterStop
+            property: "color"
+            from: lighterStop.color
+            to: "#22ffffff"
+        }
+        ColorAnimation {
+            duration: 50
+            target: darkerStop
+            property: "color"
+            from: darkerStop.color
+            to: "#00ffffff"
+        }
+    }
+
+    ParallelAnimation {
+        id: releasedAnimation
+
+        ColorAnimation {
+            duration: 50
+            target: lighterStop
+            property: "color"
+            from: lighterStop.color
+            to: "#00ffffff"
+        }
+        ColorAnimation {
+            duration: 50
+            target: darkerStop
+            property: "color"
+            from: darkerStop.color
+            to: "#33222222"
         }
     }
 
@@ -52,5 +94,22 @@ Rectangle {
         }
         color: "#fefefe"
         height: font.pixelSize * 1.5
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            button.clicked();
+        }
+        onPressed: {
+            releasedAnimation.stop();
+            pressedAnimation.start();
+            button.pressed();
+        }
+        onReleased: {
+            pressedAnimation.stop();
+            releasedAnimation.start();
+            button.released();
+        }
     }
 }
