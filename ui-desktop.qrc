@@ -1,5 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/desktop/AppWindow.qml</file>
+        <file>qml/desktop/components/Bubble.qml</file>
+        <file>qml/desktop/components/Button.qml</file>
+        <file>qml/desktop/components/Sidebar.qml</file>
+        <file>qml/desktop/components/TextField.qml</file>
+        <file>qml/desktop/components/VerticalScrollBar.qml</file>
+        <file>qml/desktop/components/Page.qml</file>
     </qresource>
 </RCC>

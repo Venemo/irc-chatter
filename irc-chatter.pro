@@ -54,10 +54,14 @@ RESOURCES += \
     ui-meego.qrc \
     ui-desktop.qrc
 
+# Licensing and other information
 OTHER_FILES += \
     LICENSE \
     LICENSE-DOCS \
-    AUTHORS \
+    AUTHORS
+
+# User interface for MeeGo
+OTHER_FILES += \
     qml/meego/AppWindow.qml \
     qml/meego/components/TitleLabel.qml \
     qml/meego/components/WorkingSelectionDialog.qml \
@@ -68,8 +72,17 @@ OTHER_FILES += \
     qml/meego/pages/SettingsPage.qml \
     qml/meego/pages/ManageServersPage.qml \
     qml/meego/sheets/JoinSheet.qml \
-    qml/meego/sheets/ServerSettingsSheet.qml \
-    qml/desktop/AppWindow.qml
+    qml/meego/sheets/ServerSettingsSheet.qml
+
+# User interface for desktop
+OTHER_FILES += \
+    qml/desktop/AppWindow.qml \
+    qml/desktop/components/Button.qml \
+    qml/desktop/components/Bubble.qml \
+    qml/desktop/components/Sidebar.qml \
+    qml/desktop/components/TextField.qml \
+    qml/desktop/components/VerticalScrollBar.qml \
+    qml/desktop/components/Page.qml
 
 CONFIG += meegotouch
 

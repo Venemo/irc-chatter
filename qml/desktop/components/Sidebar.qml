@@ -16,8 +16,7 @@
 // Copyright (C) 2012, Timur Kristóf <venemo@fedoraproject.org>
 
 import QtQuick 2.0
-import "./components"
 
 Rectangle {
-    color: "#fff"
+
 }
