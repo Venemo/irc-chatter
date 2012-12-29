@@ -18,4 +18,67 @@
 import QtQuick 2.0
 
 Rectangle {
+    id: page
+    anchors.fill: parent
+    color: "#444"
+
+    function animateOut() {
+        outAnimation.start();
+    }
+    function animateIn() {
+        inAnimation.start();
+    }
+
+    transform: [ Translate {
+            id: translateTransform
+        }, Scale {
+            id: scaleTransform
+            origin {
+                x: page.width / 2
+                y: page.height / 2
+            }
+        }]
+
+    ParallelAnimation {
+        id: outAnimation
+
+        NumberAnimation {
+            target: translateTransform
+            property: "x"
+            duration: 300
+            from: 0
+            to: -page.width * 3 / 2;
+            easing.type: Easing.InOutQuad
+
+        }
+        NumberAnimation {
+            target: scaleTransform
+            properties: "yScale, xScale"
+            duration: 300
+            from: 1.0
+            to: 0.8
+            easing.type: Easing.InOutQuad
+        }
+    }
+
+    ParallelAnimation {
+        id: inAnimation
+
+        NumberAnimation {
+            target: translateTransform
+            property: "x"
+            duration: 300
+            from: page.width * 3 / 2;
+            to: 0
+            easing.type: Easing.InOutQuad
+        }
+        NumberAnimation {
+            target: scaleTransform
+            properties: "yScale, xScale"
+            duration: 300
+            from: 0.8
+            to: 1.0
+            easing.type: Easing.InOutQuad
+        }
+    }
 }
