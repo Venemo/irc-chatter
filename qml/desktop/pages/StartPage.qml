@@ -16,13 +16,8 @@
 // Copyright (C) 2012, Timur Kristóf <venemo@fedoraproject.org>
 
 import QtQuick 2.0
-import "./components"
-import "./pages"
+import "../components"
 
-Rectangle {
-    color: "#fff"
+Page {
 
-    ChatPage {
-        id: chatPage
-    }
 }

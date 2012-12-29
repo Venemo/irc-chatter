@@ -20,16 +20,27 @@ import QtQuick 2.0
 Rectangle {
     id: button
 
-    property real padding: 10
+    property real padding: 5
     property bool textCenter: true
     property alias text: theText.text
     property alias textColor: theText.color
     property alias font: theText.font
+    property alias useGradientOverlay: gradientOverlay.visible
 
     implicitHeight: theText.height + padding * 2
     implicitWidth: theText.width + padding * 2
     color: "#444"
     radius: 10
+
+    Rectangle {
+        id: gradientOverlay
+        anchors.fill: parent
+        radius: parent.radius
+        gradient: Gradient {
+            GradientStop { position: 0.66; color: "#00ffffff" }
+            GradientStop { position: 1.0; color: "#44222222" }
+        }
+    }
 
     Text {
         id: theText
@@ -37,8 +48,9 @@ Rectangle {
             verticalCenter: parent.verticalCenter
             horizontalCenter: textCenter ? parent.horizontalCenter : undefined
             left: textCenter ? undefined : parent.left
-            leftMargin: button.padding
+            leftMargin: button.padding * 2
         }
-        color: "#eee"
+        color: "#fefefe"
+        height: font.pixelSize * 1.5
     }
 }

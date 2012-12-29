@@ -107,7 +107,13 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->setSource(QUrl("qrc:/qml/meego/AppWindow.qml"));
     view->showFullScreen();
 #elif defined(USE_DESKTOP_UI)
-    view->setMinimumSize(QSize(600, 400));
+    if (view->screen()->size().width() > 1024)
+        view->setMinimumSize(QSize(view->screen()->size().width() * 2 / 3, view->screen()->size().height() * 2 / 3));
+    else
+        view->setMinimumSize(QSize(800, 480));
+    view->setWidth(view->minimumWidth());
+    view->setHeight(view->minimumHeight());
+    view->setPosition(view->screen()->size().width() / 2 - view->width() / 2, view->screen()->size().height() / 2 - view->height() / 2);
     view->setResizeMode(QQuickView::SizeRootObjectToView);
     view->setSource(QUrl("qrc:/qml/desktop/AppWindow.qml"));
     view->show();

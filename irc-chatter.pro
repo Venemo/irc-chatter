@@ -58,7 +58,8 @@ RESOURCES += \
 OTHER_FILES += \
     LICENSE \
     LICENSE-DOCS \
-    AUTHORS
+    AUTHORS \
+    qml/desktop/specialcomponents/ChannelSwitcherButton.qml
 
 # User interface for MeeGo
 OTHER_FILES += \
@@ -82,7 +83,9 @@ OTHER_FILES += \
     qml/desktop/components/Sidebar.qml \
     qml/desktop/components/TextField.qml \
     qml/desktop/components/VerticalScrollBar.qml \
-    qml/desktop/components/Page.qml
+    qml/desktop/components/Page.qml \
+    qml/desktop/pages/StartPage.qml \
+    qml/desktop/pages/ChatPage.qml
 
 CONFIG += meegotouch
 

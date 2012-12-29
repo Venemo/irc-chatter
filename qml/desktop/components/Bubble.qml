@@ -21,12 +21,13 @@ Rectangle {
     id: bubble
 
     property alias inner: innerColumn.children
+    property alias spacing: innerColumn.spacing
     property real padding: 15
     property real minHeight: 70
 
-    border.color: "#111"
+    border.color: "#aaa"
     border.width: 2
-    color: "#ddd"
+    color: "#eee"
     radius: 15
     width: 250
     implicitHeight: Math.max(innerColumn.height + padding * 2, minHeight)
@@ -48,8 +49,12 @@ Rectangle {
                 origin.y: 15
             },
             Translate {
-                x: 13
+                x: 0
+            },
+            Scale {
+                xScale: 1.5
             }
+
         ]
     }
     Rectangle {
@@ -67,5 +72,6 @@ Rectangle {
         id: innerColumn
         anchors.centerIn: parent
         width: parent.width - padding * 2
+        spacing: 10
     }
 }
