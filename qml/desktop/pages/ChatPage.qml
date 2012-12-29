@@ -47,20 +47,22 @@ Page {
                 text: "#nemomobile"
                 font.underline: true
 
-                Bubble {
-                    color: "#444"
-                    spacing: 1
-                    padding: 5
-                    radius: 5
+                Menu {
+                    showTab: true
                     anchors.right: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.rightMargin: 10
-                    border.color: "transparent"
-                    inner: [
-                        Button { radius: 0; color: "#666"; textColor: "#fff"; text: "Part"; width: parent.width; textCenter: false },
-                        Button { radius: 0; color: "#666"; textColor: "#fff"; text: "User list"; width: parent.width; textCenter: false },
-                        Button { radius: 0; color: "#666"; textColor: "#fff"; text: "View topic"; width: parent.width; textCenter: false }
-                    ]
+
+
+                    MenuButton {
+                        text: "View topic"
+                    }
+                    MenuButton {
+                        text: "User list (138)"
+                    }
+                    MenuButton {
+                        text: "Part"
+                    }
                 }
             }
             ChannelSwitcherButton { text: "#irc-chatter" }
@@ -68,6 +70,7 @@ Page {
         }
 
         Rectangle {
+            id: moreOptionsContainer
             color: "#55444444"
             height: chatField.height
             anchors {
@@ -80,6 +83,37 @@ Page {
                 text: "More options..."
                 color: "#fff"
                 anchors.centerIn: parent
+            }
+            MouseArea {
+                anchors.fill: moreOptionsMenu
+                hoverEnabled: true
+                onEntered: {
+                    moreOptionsMenu.opacity = 1;
+                }
+                onExited: {
+                    moreOptionsMenu.opacity = 0;
+                }
+            }
+            Menu {
+                id: moreOptionsMenu
+                opacity: 0
+                visible: opacity > 0
+                height: opacity > 0 ? implicitHeight : moreOptionsContainer.height
+                anchors {
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                }
+                MenuButton {
+                    text: "Manage servers"
+                }
+                MenuButton {
+                    text: "Settings"
+                }
+
+                Behavior on opacity {
+                    NumberAnimation { duration: 100 }
+                }
             }
         }
     }

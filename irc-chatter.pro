@@ -61,7 +61,10 @@ OTHER_FILES += \
     AUTHORS \
     qml/desktop/specialcomponents/ChannelSwitcherButton.qml \
     qml/desktop/specialcomponents/ServerSettingEntry.qml \
-    qml/desktop/components/Switch.qml
+    qml/desktop/components/Switch.qml \
+    qml/desktop/components/Dialog.qml \
+    qml/desktop/components/Menu.qml \
+    qml/desktop/components/MenuButton.qml
 
 # User interface for MeeGo
 OTHER_FILES += \

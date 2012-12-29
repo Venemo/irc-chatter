@@ -20,19 +20,21 @@ import QtQuick 2.0
 Rectangle {
     id: bubble
 
-    property alias inner: innerColumn.children
+    default property alias inner: innerColumn.children
     property alias spacing: innerColumn.spacing
     property real padding: 15
     property real minHeight: 70
+    property bool showTab: true
 
     border.color: "#aaa"
     border.width: 2
     color: "#eee"
-    radius: 15
+    radius: 0
     width: 250
     implicitHeight: Math.max(innerColumn.height + padding * 2, minHeight)
 
     Rectangle {
+        visible: showTab
         width: 30
         height: width
         color: bubble.color
@@ -58,6 +60,7 @@ Rectangle {
         ]
     }
     Rectangle {
+        visible: showTab
         width: bubble.width - bubble.padding
         height: 50
         color: bubble.color
