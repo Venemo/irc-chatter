@@ -32,7 +32,7 @@ Rectangle {
     signal released
 
     implicitHeight: theText.height + padding * 2
-    implicitWidth: theText.width + padding * 2
+    implicitWidth: theText.width * 1.2 + padding * 2
     color: "#444"
     radius: 0
 

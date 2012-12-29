@@ -17,6 +17,7 @@
 
 import QtQuick 2.0
 import "../components"
+import "../specialcomponents"
 
 Page {
     id: startPage
@@ -24,15 +25,44 @@ Page {
     Text {
         id: welcomeText
         text: "Welcome to IRC Chatter"
-        anchors.centerIn: parent
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: serversRow.top
+        anchors.bottomMargin: 10
         color: "#fff"
         font.pointSize: 24
     }
+
+    Column {
+        id: serversRow
+        anchors.centerIn: parent
+        width: parent.width / 2
+        spacing: 5
+
+        Text {
+            text: "Your configured servers"
+            color: "#fff"
+        }
+        Rectangle {
+            width: serversRow.width
+            height: 1
+            color: "#fff"
+        }
+        ServerSettingEntry {
+            serverName: "irc.freenode.net:7000"
+            userName: "Venemo"
+        }
+        ServerSettingEntry {
+            serverName: "irc.gnome.org:6667"
+            userName: "Venemo"
+        }
+    }
+
     Button {
         text: "Connect!"
         color: "#9fce00"
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: welcomeText.bottom
+        anchors.top: serversRow.bottom
+        anchors.topMargin: 10
         onClicked: {
             startPage.animateOut();
             chatPage.animateIn();

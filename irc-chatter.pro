@@ -59,7 +59,8 @@ OTHER_FILES += \
     LICENSE \
     LICENSE-DOCS \
     AUTHORS \
-    qml/desktop/specialcomponents/ChannelSwitcherButton.qml
+    qml/desktop/specialcomponents/ChannelSwitcherButton.qml \
+    qml/desktop/specialcomponents/ServerSettingEntry.qml
 
 # User interface for MeeGo
 OTHER_FILES += \

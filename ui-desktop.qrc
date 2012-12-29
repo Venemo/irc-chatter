@@ -10,5 +10,6 @@
         <file>qml/desktop/pages/ChatPage.qml</file>
         <file>qml/desktop/pages/StartPage.qml</file>
         <file>qml/desktop/specialcomponents/ChannelSwitcherButton.qml</file>
+        <file>qml/desktop/specialcomponents/ServerSettingEntry.qml</file>
     </qresource>
 </RCC>
