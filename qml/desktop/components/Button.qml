@@ -26,6 +26,7 @@ Rectangle {
     property alias textColor: theText.color
     property alias font: theText.font
     property alias useGradientOverlay: gradientOverlay.visible
+    property alias interactive: mouseArea.enabled
 
     signal clicked
     signal pressed
@@ -97,7 +98,9 @@ Rectangle {
     }
 
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
+        cursorShape: Qt.ArrowCursor
         onClicked: {
             button.clicked();
         }

@@ -16,6 +16,7 @@
 // Copyright (C) 2012, Timur Kristóf <venemo@fedoraproject.org>
 
 import QtQuick 2.0
+import QtWebKit 3.0
 import "../components"
 import "../specialcomponents"
 
@@ -24,6 +25,35 @@ Page {
     gradient: Gradient {
         GradientStop { position: 0.0; color: "#ddd" }
         GradientStop { position: 0.4; color: "#fff" }
+    }
+
+    // The chat message area
+    Flickable {
+        id: chatFlickable
+        boundsBehavior: Flickable.StopAtBounds
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: sidebar.left
+            bottom: chatField.top
+            margins: 15
+        }
+        contentHeight: chatView.height
+
+        MouseArea {
+            anchors.fill: chatView
+            cursorShape: Qt.IBeamCursor
+        }
+
+        TextEdit {
+            id: chatView
+            textFormat: TextEdit.RichText
+            selectByMouse: true
+            width: chatFlickable.width
+            text: "<span class='time'>07:17</span> <span style='color: green'>Venemo</span>: Hello world!<br />
+<span class='time'>07:20</span> <span style='color: blue'>Stskeeps</span>: moo<br />
+<span class='time'>07:21</span> <span style='color: red'>faenil</span>: Behold the new IRC Chatter"
+        }
     }
 
     // Side bar of the chat UI - channel switcher and options
@@ -122,6 +152,7 @@ Page {
     TextField {
         id: chatField
         padding: 15
+        text: "Good morning captain!"
         anchors {
             bottom: parent.bottom
             left: parent.left
@@ -131,7 +162,8 @@ Page {
         Button {
             text: "Send!"
             width: implicitWidth * 1.7
-            color: "#9fce00"
+            color: "#666"
+            textColor: "#fff"
             font.bold: true
             anchors {
                 verticalCenter: parent.verticalCenter

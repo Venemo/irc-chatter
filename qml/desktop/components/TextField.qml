@@ -21,6 +21,7 @@ Rectangle {
     id: textField
 
     property real padding: 10
+    property alias text: textInput.text
 
     implicitHeight: textInput.height + padding * 2
     gradient: Gradient {
@@ -34,6 +35,10 @@ Rectangle {
     //        color: "red"
     //        anchors.fill: textInput
     //    }
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.IBeamCursor
+    }
 
     TextInput {
         id: textInput
@@ -41,5 +46,6 @@ Rectangle {
         anchors.centerIn: parent
         width: parent.width - textField.padding * 2
         verticalAlignment: TextInput.AlignVCenter
+        selectByMouse: true
     }
 }
