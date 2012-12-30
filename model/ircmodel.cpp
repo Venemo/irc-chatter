@@ -166,8 +166,7 @@ void IrcModel::refreshChannelList()
         currentServerName = currentServer()->url();
     }
 
-    QList<ChannelModel*> *allChannelsList = new QList<ChannelModel*>(),
-            *oldChannelsList = _allChannels.getList<ChannelModel>();
+    QList<ChannelModel*> *allChannelsList = new QList<ChannelModel*>();
 
     foreach (ServerModel *serverModel, _servers)
     {
@@ -177,7 +176,9 @@ void IrcModel::refreshChannelList()
     }
 
     setCurrentChannelIndex(-1);
+    // The QObjectListModel automatically deletes the old list, so this is not a memory leak
     _allChannels.setList(allChannelsList);
+
     if (currentServerName.length() && currentChannelName.length())
         setCurrentChannel(currentChannelName, currentServerName);
 }
