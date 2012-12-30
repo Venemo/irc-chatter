@@ -27,6 +27,12 @@ QObjectListModel::QObjectListModel(QObject *parent, QList<QObject*> *list)
 #endif
 }
 
+QObjectListModel::~QObjectListModel()
+{
+    if (_list)
+        delete _list;
+}
+
 int QObjectListModel::indexOf(QObject *obj) const
 {
     return _list->indexOf((QObject*) obj);
