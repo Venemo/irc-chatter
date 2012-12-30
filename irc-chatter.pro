@@ -116,7 +116,7 @@ contains(MEEGO_EDITION, harmattan) {
     PKGCONFIG += qdeclarative-boostable
     INCLUDEPATH += /usr/include/applauncherd /usr/include/Communi
     LIBS += -lCommuni
-    DEFINES += USE_MEEGO_UI
+    DEFINES += USE_MEEGO_UI DEFAULT_CHANNELS=\\\"#harmattan, #irc-chatter\\\"
 
     # IRC Chatter app
     target.path=/opt/irc-chatter

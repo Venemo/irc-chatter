@@ -30,8 +30,7 @@ ServerSettings::ServerSettings(QObject *parent, const QString &url, const quint1
 {
     if (!_autoJoinChannels.length() && url == "irc.freenode.net")
     {
-        _autoJoinChannels.append("#irc-chatter");
-        _autoJoinChannels.append("#harmattan");
+        setAutoJoinChannelsInPlainString(DEFAULT_CHANNELS);
     }
 }
 
