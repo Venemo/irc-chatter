@@ -43,6 +43,9 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         cursorShape: Qt.IBeamCursor
+        onClicked: {
+            textInput.forceActiveFocus();
+        }
     }
 
     TextInput {
