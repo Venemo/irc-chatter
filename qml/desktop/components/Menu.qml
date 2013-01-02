@@ -24,4 +24,80 @@ Bubble {
     spacing: 5
     padding: 10
     border.color: "#888"
+    state: "closed"
+    states: [
+        State {
+            name: "opened"
+            when: menu.visible
+
+            PropertyChanges {
+                target: menu
+                opacity: 1
+                visible: true
+            }
+        },
+        State {
+            name: "closed"
+
+            PropertyChanges {
+                target: menu
+                opacity: 0
+            }
+        }
+    ]
+    transitions: [
+        Transition {
+            from: "*"
+            to: "closed"
+
+            SequentialAnimation {
+                NumberAnimation {
+                    target: menu
+                    duration: 150
+                    property: "opacity"
+                    from: 1
+                    to: 0
+                }
+                PropertyAction {
+                    target: menu
+                    property: "visible"
+                    value: false
+                }
+            }
+        },
+        Transition {
+            from: "*"
+            to: "opened"
+
+            SequentialAnimation {
+                PropertyAction {
+                    target: menu
+                    property: "visible"
+                    value: true
+                }
+                NumberAnimation {
+                    target: menu
+                    duration: 150
+                    property: "opacity"
+                    from: 0
+                    to: 1
+                }
+            }
+        }
+    ]
+
+    function open() {
+        state = "opened";
+    }
+    function close() {
+        state = "closed";
+    }
+    function toggle() {
+        if (state == "opened") {
+            close();
+        }
+        else {
+            open();
+        }
+    }
 }

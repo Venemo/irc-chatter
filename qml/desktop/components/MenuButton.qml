@@ -18,17 +18,22 @@
 import QtQuick 2.0
 
 Button {
+    id: menuButton
+
+    property bool isPressed: false
+    property bool isHovered: false
+
     radius: 0;
-    color: "transparent";
+    color: isHovered ? (isPressed ? "#888" : "#666") : "transparent";
     textColor: "#fff";
     width: parent.width;
     textCenter: false
     text: "Click here!"
     useGradientOverlay: false
-    hoverEnabled: false
+    hoverEnabled: true
 
-    onEntered: color = "#666"
-    onExited: color = "transparent"
-    onPressed: color = "#888"
-    onReleased: color = "#666"
+    onEntered: isHovered = true
+    onExited: isHovered = false
+    onPressed: isPressed = true
+    onReleased: isPressed = false
 }

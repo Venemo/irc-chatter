@@ -115,28 +115,22 @@ Page {
                 anchors.centerIn: parent
             }
             MouseArea {
-                anchors.fill: moreOptionsMenu
-                hoverEnabled: true
-                onEntered: {
-                    moreOptionsMenu.opacity = 1;
-                }
-                onExited: {
-                    moreOptionsMenu.opacity = 0;
+                anchors.fill: moreOptionsContainer
+                onClicked: {
+                    moreOptionsMenu.toggle();
                 }
             }
+
             Menu {
                 id: moreOptionsMenu
-                opacity: 0
-                visible: opacity > 0
-                height: opacity > 0 ? implicitHeight : moreOptionsContainer.height
+                showBottomTab: true
+                visible: false
                 anchors {
                     bottom: parent.bottom
                     left: parent.left
                     right: parent.right
-                }
-
-                Behavior on opacity {
-                    NumberAnimation { duration: 100 }
+                    bottomMargin: 50
+                    margins: 5
                 }
 
                 MenuButton {
