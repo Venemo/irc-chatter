@@ -75,6 +75,7 @@ Dialog {
                     portField.text = "6667";
                 }
             }
+            border.width: 0
         }
 
         // Poor attempt at a separator
@@ -113,7 +114,7 @@ Dialog {
         TextField {
             id: realNameField
             width: Math.max(appWindow.width * 0.3, 200)
-            enableTextValidation: true
+            enableTextValidation: false
             tooltipText: "Your real name. This will appear if someone uses the whois command on you."
         }
 
@@ -139,7 +140,7 @@ Dialog {
         TextField {
             id: identField
             width: Math.max(appWindow.width * 0.3, 200)
-            enableTextValidation: true
+            enableTextValidation: false
             tooltipText: "Username used for authenticating on the server. Some servers require it."
         }
 
@@ -153,7 +154,7 @@ Dialog {
         TextField {
             id: passwordField
             width: Math.max(appWindow.width * 0.3, 200)
-            enableTextValidation: true
+            enableTextValidation: false
             tooltipText: "Password for authenticating on the server. Some servers require it."
         }
 
