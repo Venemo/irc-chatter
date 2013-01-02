@@ -22,9 +22,10 @@ Rectangle {
 
     default property alias inner: innerColumn.children
     property alias spacing: innerColumn.spacing
-    property real padding: 15
-    property real minHeight: 70
+    property real padding: 10
+    property real minHeight: 50
     property bool showRightTab: true
+    property bool showLeftTab: false
 
     border.color: "#aaa"
     border.width: 2
@@ -33,19 +34,22 @@ Rectangle {
     width: 250
     implicitHeight: Math.max(innerColumn.height + padding * 2, minHeight)
 
+    // Right tab implementation
     Rectangle {
         visible: showRightTab
         anchors {
             left: parent.right
+            leftMargin: -bubble.border.width
             verticalCenter: parent.verticalCenter
         }
         color: "transparent"
         clip: true
-        width: 40
+        width: 13 + bubble.border.width + 5
         height: parent.height
 
         Rectangle {
-            width: 50
+            id: rightTabRect
+            width: 25
             height: width
             color: bubble.color
             border.color: bubble.border.color
@@ -57,15 +61,48 @@ Rectangle {
             transform: [
                 Rotation {
                     angle: 45
-                    origin.x: 25
-                    origin.y: 25
+                    origin.x: rightTabRect.width / 2
+                    origin.y: rightTabRect.width / 2
                 },
                 Translate {
-                    x: -25
+                    x: - bubble.border.width - 10
+                }
+            ]
+        }
+
+    }
+    // Left tab implementation
+    Rectangle {
+        visible: showLeftTab
+        anchors {
+            right: parent.left
+            rightMargin: -bubble.border.width
+            verticalCenter: parent.verticalCenter
+        }
+        color: "transparent"
+        clip: true
+        width: 13 + bubble.border.width + 5
+        height: parent.height
+
+        Rectangle {
+            id: leftTabRect
+            width: 25
+            height: width
+            color: bubble.color
+            border.color: bubble.border.color
+            border.width: bubble.border.width
+            anchors {
+                left: parent.left
+                verticalCenter: parent.verticalCenter
+            }
+            transform: [
+                Rotation {
+                    angle: 45
+                    origin.x: leftTabRect.width / 2
+                    origin.y: leftTabRect.width / 2
                 },
-                Scale {
-                    yScale: 0.5
-                    origin.y: 25
+                Translate {
+                    x: bubble.border.width + 5
                 }
 
             ]
