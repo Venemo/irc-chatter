@@ -24,6 +24,10 @@ Dialog {
     acceptButtonText: "Save"
     rejectButtonText: "Cancel"
 
+    onOpened: {
+        hostnameField.forceActiveFocus();
+    }
+
     Grid {
         columns: 2
         spacing: 10
@@ -44,6 +48,7 @@ Dialog {
             width: Math.max(appWindow.width * 0.3, 200)
             enableTextValidation: true
             tooltipText: "The hostname of the server you want to connect to."
+            KeyNavigation.tab: portField
         }
 
         // Server port
@@ -58,6 +63,7 @@ Dialog {
             width: Math.max(appWindow.width * 0.3, 200)
             enableTextValidation: true
             tooltipText: "Depends on the server. Default is 6667 or 7000 (used by most servers)."
+            KeyNavigation.tab: sslSwitch
         }
 
         // Whether to use SSL for the connection
@@ -78,6 +84,7 @@ Dialog {
                 }
             }
             border.width: 0
+            KeyNavigation.tab: nicknameField
         }
 
         // Poor attempt at a separator
@@ -104,6 +111,7 @@ Dialog {
             width: Math.max(appWindow.width * 0.3, 200)
             enableTextValidation: true
             tooltipText: "Your nick name. This will appear to everyone else."
+            KeyNavigation.tab: realNameField
         }
 
         // Real name
@@ -118,6 +126,7 @@ Dialog {
             width: Math.max(appWindow.width * 0.3, 200)
             enableTextValidation: false
             tooltipText: "Your real name. This will appear if someone uses the whois command on you."
+            KeyNavigation.tab: identField
         }
 
         // Poor attempt at a separator
@@ -144,6 +153,7 @@ Dialog {
             width: Math.max(appWindow.width * 0.3, 200)
             enableTextValidation: false
             tooltipText: "Username used for authenticating on the server. Some servers require it."
+            KeyNavigation.tab: passwordField
         }
 
         // Server password
@@ -158,6 +168,7 @@ Dialog {
             width: Math.max(appWindow.width * 0.3, 200)
             enableTextValidation: false
             tooltipText: "Password for authenticating on the server. Some servers require it."
+            KeyNavigation.tab: hostnameField
         }
 
     }

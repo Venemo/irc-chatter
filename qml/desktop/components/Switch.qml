@@ -32,7 +32,12 @@ Rectangle {
         GradientStop { position: 0.8; color: "#fff" }
     }
     border.color: button.color
-    border.width: 2
+    border.width: 0
+    Keys.onSpacePressed: toggleSwitch();
+    Keys.onEnterPressed: toggleSwitch();
+    Keys.onReturnPressed: toggleSwitch();
+    Keys.onLeftPressed: if (value) toggleSwitch();
+    Keys.onRightPressed: if (!value) toggleSwitch();
 
     function toggleSwitch() {
         value = !value;
@@ -49,6 +54,7 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
+            theSwitch.forceActiveFocus();
             toggleSwitch();
         }
     }
@@ -90,6 +96,7 @@ Rectangle {
 
         onClicked: {
             toggleSwitch();
+            theSwitch.forceActiveFocus();
         }
 
         ParallelAnimation {

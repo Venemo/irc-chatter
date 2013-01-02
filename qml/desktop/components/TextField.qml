@@ -34,6 +34,11 @@ Rectangle {
         GradientStop { position: 0.4; color: "#ddd" }
         GradientStop { position: 1.0; color: "#fff" }
     }
+    onActiveFocusChanged: {
+        if (activeFocus) {
+            textInput.forceActiveFocus();
+        }
+    }
 
     // Uncomment this to see the area of the TextInput
     //    Rectangle {

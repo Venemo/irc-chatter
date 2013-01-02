@@ -28,6 +28,7 @@ Rectangle {
 
     signal accepted
     signal rejected
+    signal opened
 
     function open() {
         opacity = 0;
@@ -58,6 +59,9 @@ Rectangle {
         to: dialog.opacity > 0 ? 0 : 1
         onStopped: {
             dialog.visible = dialog.opacity > 0;
+            if (dialog.visible) {
+                dialog.opened();
+            }
         }
         onStarted: {
             dialog.visible = true;

@@ -20,8 +20,8 @@ import "./components"
 import "./pages"
 
 Rectangle {
+    id: appWindow
     color: "#fff"
-
 
     StartPage {
         id: startPage
