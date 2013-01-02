@@ -105,6 +105,7 @@ Rectangle {
             button.clicked();
         }
         onPressed: {
+            button.forceActiveFocus();
             releasedAnimation.stop();
             pressedAnimation.start();
             button.pressed();
