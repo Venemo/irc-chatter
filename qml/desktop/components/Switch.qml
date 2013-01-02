@@ -53,6 +53,26 @@ Rectangle {
         }
     }
 
+    Text {
+        anchors {
+            left: parent.left
+            verticalCenter: parent.verticalCenter
+            leftMargin: padding
+        }
+        text: "ON"
+        visible: value
+    }
+
+    Text {
+        anchors {
+            right: parent.right
+            verticalCenter: parent.verticalCenter
+            rightMargin: padding
+        }
+        text: "OFF"
+        visible: !value
+    }
+
     Button {
         id: button
         width: parent.width * 0.4
