@@ -34,7 +34,7 @@ Button {
     onExited: {
         font.underline = false;
         channelMenuTimer.stop();
-        channelMenu.close();
+        channelMenuHideTimer.start();
     }
 
     Timer {
@@ -47,7 +47,31 @@ Button {
             channelMenu.open();
         }
     }
-
+    Timer {
+        id: channelMenuHideTimer
+        repeat: false
+        running: false
+        triggeredOnStart: false
+        interval: 100
+        onTriggered: {
+            channelMenu.close();
+        }
+    }
+    MouseArea {
+        anchors.fill: channelMenu
+        anchors.margins: -10
+        hoverEnabled: true
+        onEntered: {
+            channelMenuHideTimer.start();
+        }
+    }
+    MouseArea {
+        anchors.fill: channelMenu
+        hoverEnabled: true
+        onEntered: {
+            channelMenuHideTimer.stop();
+        }
+    }
     Menu {
         id: channelMenu
         visible: false
