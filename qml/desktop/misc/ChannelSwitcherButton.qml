@@ -19,6 +19,7 @@ import QtQuick 2.0
 import "../components"
 
 Button {
+    id: button
     color: "transparent"
     textColor: "#fff"
     textCenter: false
@@ -28,13 +29,24 @@ Button {
     hoverEnabled: true
 
     onEntered: {
+        //console.log("button entered");
         font.underline = true;
+        channelMenuEnterArea.visible = true;
+        channelMenuEnterArea.enabled = true;
+        channelMenuHideTimer.stop();
         channelMenuTimer.start();
+        channelMenuEnterArea.z += 10
     }
     onExited: {
+        //console.log("button exited");
         font.underline = false;
         channelMenuTimer.stop();
         channelMenuHideTimer.start();
+
+        if (channelMenu.opacity === 0) {
+            channelMenuEnterArea.visible = false;
+            channelMenuEnterArea.enabled = false;
+        }
     }
 
     Timer {
@@ -44,6 +56,7 @@ Button {
         triggeredOnStart: false
         interval: 300
         onTriggered: {
+            //console.log("opening channelMenu");
             channelMenu.open();
         }
     }
@@ -55,39 +68,51 @@ Button {
         interval: 100
         onTriggered: {
             channelMenu.close();
+            channelMenuEnterArea.enabled = false;
         }
     }
     MouseArea {
-        anchors.fill: channelMenu
-        anchors.margins: -10
-        hoverEnabled: true
-        onEntered: {
-            channelMenuHideTimer.start();
-        }
-    }
-    MouseArea {
-        anchors.fill: channelMenu
-        hoverEnabled: true
-        onEntered: {
-            channelMenuHideTimer.stop();
-        }
-    }
-    Menu {
-        id: channelMenu
+        id: channelMenuEnterArea
+        z: button.z + 1
+        enabled: false
         visible: false
-        showRightTab: true
         anchors.right: parent.left
         anchors.verticalCenter: parent.verticalCenter
         anchors.rightMargin: 0
+        height: channelMenu.height
+        width: channelMenu.width
+        hoverEnabled: true
+        onEntered: {
+            //console.log("channelMenuEnterArea entered")
+            channelMenuHideTimer.stop();
+        }
+        onExited: {
+            //console.log("channelMenuEnterArea exited")
+            channelMenuHideTimer.start();
+        }
+        Menu {
+            id: channelMenu
+            z: button.z + 1
+            visible: false
+            showRightTab: true
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            onVisibleChanged: {
+                if (!channelMenu.visible) {
+                    channelMenuEnterArea.visible = false;
+                    channelMenuEnterArea.enabled = false;
+                }
+            }
 
-        MenuButton {
-            text: "View topic"
-        }
-        MenuButton {
-            text: "User list (138)"
-        }
-        MenuButton {
-            text: "Part"
+            MenuButton {
+                text: "View topic"
+            }
+            MenuButton {
+                text: "User list (138)"
+            }
+            MenuButton {
+                text: "Part"
+            }
         }
     }
 }
