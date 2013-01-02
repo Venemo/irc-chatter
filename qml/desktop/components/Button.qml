@@ -27,7 +27,10 @@ Rectangle {
     property alias font: theText.font
     property alias useGradientOverlay: gradientOverlay.visible
     property alias interactive: mouseArea.enabled
+    property alias hoverEnabled: mouseArea.hoverEnabled
 
+    signal entered
+    signal exited
     signal clicked
     signal pressed
     signal released
@@ -101,6 +104,7 @@ Rectangle {
         id: mouseArea
         anchors.fill: parent
         cursorShape: Qt.ArrowCursor
+        hoverEnabled: false
         onClicked: {
             button.clicked();
         }
@@ -114,6 +118,12 @@ Rectangle {
             pressedAnimation.stop();
             releasedAnimation.start();
             button.released();
+        }
+        onEntered: {
+            button.entered();
+        }
+        onExited: {
+            button.exited();
         }
     }
 }

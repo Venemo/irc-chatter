@@ -19,9 +19,16 @@ import QtQuick 2.0
 
 Button {
     radius: 0;
-    color: "#666";
+    color: "transparent";
     textColor: "#fff";
     width: parent.width;
     textCenter: false
     text: "Click here!"
+    useGradientOverlay: false
+    hoverEnabled: false
+
+    onEntered: color = "#666"
+    onExited: color = "transparent"
+    onPressed: color = "#888"
+    onReleased: color = "#666"
 }

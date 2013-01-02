@@ -20,8 +20,8 @@ import QtQuick 2.0
 Bubble {
     id: menu
     showRightTab: false
-    color: "#444"
-    spacing: 1
-    padding: 5
-    border.color: "transparent"
+    color: "#222"
+    spacing: 5
+    padding: 10
+    border.color: "#888"
 }
