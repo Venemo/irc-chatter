@@ -20,17 +20,19 @@ import QtQuick 2.0
 Rectangle {
     id: textField
 
-    property bool isTextValid: text.length > 0
     property bool enableTextValidation: false
     property real padding: 10
     property real rightPadding: padding
     property real leftPadding: padding
     property alias text: textInput.text
     property alias tooltipText: toolTipTextItem.text
+    property alias inputMethodHints: textInput.inputMethodHints
+    property alias validator: textInput.validator
+    property alias acceptableInput: textInput.acceptableInput
 
     implicitHeight: textInput.height + padding * 2
     border.width: enableTextValidation ? 2 : 0
-    border.color: enableTextValidation ? (isTextValid ? "#9fce00" : "#ff0000") : "#444"
+    border.color: enableTextValidation ? (acceptableInput ? "#9fce00" : "#ff0000") : "#444"
     gradient: Gradient {
         GradientStop { position: 0.0; color: "#777" }
         GradientStop { position: 0.4; color: "#ddd" }
@@ -68,6 +70,10 @@ Rectangle {
         }
         verticalAlignment: TextInput.AlignVCenter
         selectByMouse: true
+        inputMethodHints: Qt.ImhDigitsOnly
+        validator: RegExpValidator {
+            regExp: enableTextValidation ? /..*/ : /.*/
+        }
     }
 
     Bubble {

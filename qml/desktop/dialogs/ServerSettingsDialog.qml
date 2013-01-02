@@ -64,6 +64,7 @@ Dialog {
             enableTextValidation: true
             tooltipText: "Depends on the server. Default is 6667 or 7000 (used by most servers)."
             KeyNavigation.tab: sslSwitch
+            validator: IntValidator { }
         }
 
         // Whether to use SSL for the connection
@@ -170,7 +171,5 @@ Dialog {
             tooltipText: "Password for authenticating on the server. Some servers require it."
             KeyNavigation.tab: hostnameField
         }
-
     }
-
 }
