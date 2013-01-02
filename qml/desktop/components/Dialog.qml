@@ -18,5 +18,76 @@
 import QtQuick 2.0
 
 Rectangle {
+    id: dialog
 
+    property bool allowBackgroundClick: false
+    default property alias inner: dialogContents.children
+    property alias acceptButtonText: acceptButton.text
+    property alias rejectButtonText: rejectButton.text
+    property alias dialogTitle: titleText.text
+
+    signal accepted
+    signal rejected
+
+    anchors.fill: parent
+    gradient: Gradient {
+        GradientStop { position: 0.0; color: "#ff222222" }
+        GradientStop { position: 0.4; color: "#ff444444" }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            if (dialog.allowBackgroundClick) {
+                dialog.rejected();
+            }
+        }
+    }
+    Text {
+        id: titleText
+        text: "Dialog title"
+        anchors.left: dialogContents.left
+        anchors.bottom: dialogContents.top
+        anchors.bottomMargin: 20
+        color: "#fff"
+        font.pointSize: 24
+    }
+    Item {
+        id: dialogContents
+        anchors.centerIn: parent
+        width: parent.width / 2
+
+        Component.onCompleted: {
+            if (dialogContents.children.length > 1) {
+                console.log("warning: The Dialog component is designed to have only one child item!");
+            }
+            else if (dialogContents.children.length === 1) {
+                dialogContents.children[0].width = dialogContents.width;
+                dialogContents.height = dialogContents.children[0].height;
+            }
+        }
+    }
+    Row {
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: dialogContents.bottom
+        anchors.topMargin: 20
+        spacing: 5
+
+        Button {
+            id: acceptButton
+            width: 130
+            text: "Accept"
+            color: "#9fce00"
+            textColor: "#000"
+            visible: text.length > 0
+        }
+        Button {
+            id: rejectButton
+            width: 130
+            text: "Reject"
+            color: "#ff0000"
+            textColor: "#fff"
+            visible: text.length > 0
+        }
+    }
 }
