@@ -26,6 +26,7 @@ Rectangle {
     property real minHeight: 50
     property bool showRightTab: true
     property bool showLeftTab: false
+    property bool showBottomTab: false
 
     border.color: "#aaa"
     border.width: 2
@@ -69,7 +70,6 @@ Rectangle {
                 }
             ]
         }
-
     }
     // Left tab implementation
     Rectangle {
@@ -103,6 +103,42 @@ Rectangle {
                 },
                 Translate {
                     x: bubble.border.width + 5
+                }
+            ]
+        }
+    }
+    // Bottom tab implementation
+    Rectangle {
+        visible: showBottomTab
+        anchors {
+            top: parent.bottom
+            topMargin: -bubble.border.width
+            horizontalCenter: parent.horizontalCenter
+        }
+        color: "transparent"
+        clip: true
+        height: 13 + bubble.border.width + 5
+        width: parent.width
+
+        Rectangle {
+            id: bottomTabRect
+            width: 25
+            height: width
+            color: bubble.color
+            border.color: bubble.border.color
+            border.width: bubble.border.width
+            anchors {
+                bottom: parent.bottom
+                horizontalCenter: parent.horizontalCenter
+            }
+            transform: [
+                Rotation {
+                    angle: 45
+                    origin.x: bottomTabRect.width / 2
+                    origin.y: bottomTabRect.width / 2
+                },
+                Translate {
+                    y: -7
                 }
 
             ]
