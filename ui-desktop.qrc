@@ -15,5 +15,7 @@
         <file>qml/desktop/components/Menu.qml</file>
         <file>qml/desktop/components/MenuButton.qml</file>
         <file>qml/desktop/components/Dialog.qml</file>
+        <file>qml/desktop/dialogs/ManageServersDialog.qml</file>
+        <file>qml/desktop/dialogs/ServerSettingsDialog.qml</file>
     </qresource>
 </RCC>
