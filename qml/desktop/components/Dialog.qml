@@ -24,7 +24,7 @@ Rectangle {
     default property alias inner: dialogContents.children
     property alias acceptButtonText: acceptButton.text
     property alias rejectButtonText: rejectButton.text
-    property alias dialogTitle: titleText.text
+    property alias title: titleText.text
 
     signal accepted
     signal rejected
@@ -62,7 +62,6 @@ Rectangle {
                 console.log("warning: The Dialog component is designed to have only one child item!");
             }
             else if (dialogContents.children.length === 1) {
-                dialogContents.children[0].width = dialogContents.width;
                 dialogContents.height = dialogContents.children[0].height;
             }
         }

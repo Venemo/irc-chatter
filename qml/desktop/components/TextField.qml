@@ -20,11 +20,11 @@ import QtQuick 2.0
 Rectangle {
     id: textField
 
-    property bool isTextValid: false
+    property bool isTextValid: text.length > 0
     property bool enableTextValidation: false
-    property bool showTooltip: false
     property real padding: 10
     property alias text: textInput.text
+    property alias tooltipText: toolTipTextItem.text
 
     implicitHeight: textInput.height + padding * 2
     border.width: enableTextValidation ? 2 : 0
@@ -60,17 +60,20 @@ Rectangle {
 
     Bubble {
         id: tooltip
-        visible: showTooltip && textInput.activeFocus
+        visible: tooltipText.length > 0 && textInput.activeFocus
         anchors.left: textInput.right
         anchors.leftMargin: 17
         anchors.verticalCenter: parent.verticalCenter
-        padding: 5
+        padding: 10
         //border.width: 0
         showRightTab: false
         showLeftTab: true
 
         Text {
-            text: "Hey!"
+            width: parent.width
+            wrapMode: Text.Wrap
+            id: toolTipTextItem
+            text: ""
         }
     }
 }
