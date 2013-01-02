@@ -164,6 +164,7 @@ Page {
     TextField {
         id: chatField
         padding: 15
+        rightPadding: padding + sendButton.width + sendButton.anchors.rightMargin + sendButton.anchors.leftMargin
         text: "Good morning captain!"
         anchors {
             bottom: parent.bottom
@@ -172,6 +173,7 @@ Page {
         }
 
         Button {
+            id: sendButton
             text: "Send!"
             width: implicitWidth * 1.7
             color: "#666"

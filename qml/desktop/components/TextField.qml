@@ -23,6 +23,8 @@ Rectangle {
     property bool isTextValid: text.length > 0
     property bool enableTextValidation: false
     property real padding: 10
+    property real rightPadding: padding
+    property real leftPadding: padding
     property alias text: textInput.text
     property alias tooltipText: toolTipTextItem.text
 
@@ -57,8 +59,13 @@ Rectangle {
         clip: true
         id: textInput
         height: font.pixelSize * 1.5
-        anchors.centerIn: parent
-        width: parent.width - textField.padding * 2
+        anchors {
+            verticalCenter: parent.verticalCenter
+            left: parent.left
+            right: parent.right
+            leftMargin: leftPadding
+            rightMargin: rightPadding
+        }
         verticalAlignment: TextInput.AlignVCenter
         selectByMouse: true
     }
