@@ -21,6 +21,8 @@ import "../components"
 Dialog {
     id: serverSettingsDialog
     title: "Server settings"
+    acceptButtonText: "Save"
+    rejectButtonText: "Cancel"
 
     Grid {
         columns: 2

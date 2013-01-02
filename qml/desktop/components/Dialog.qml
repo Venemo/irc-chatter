@@ -30,26 +30,37 @@ Rectangle {
     signal rejected
 
     function open() {
-        opacity = 1;
+        opacity = 0;
+        visible = true;
+        showHideAnimation.start();
     }
 
     onAccepted: {
-        opacity = 0;
+        showHideAnimation.start();
     }
     onRejected: {
-        opacity = 0;
+        showHideAnimation.start();
     }
 
+    visible: false
     anchors.fill: parent
     gradient: Gradient {
         GradientStop { position: 0.0; color: "#ff222222" }
         GradientStop { position: 0.4; color: "#ff444444" }
     }
 
-    Behavior on opacity {
-        NumberAnimation {
-            duration: 300
-            easing: Easing.InOutQuad
+    NumberAnimation {
+        id: showHideAnimation
+        duration: 300
+        target: dialog
+        property: "opacity"
+        from: dialog.opacity
+        to: dialog.opacity > 0 ? 0 : 1
+        onStopped: {
+            dialog.visible = dialog.opacity > 0;
+        }
+        onStarted: {
+            dialog.visible = true;
         }
     }
 

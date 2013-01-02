@@ -17,6 +17,7 @@
 
 import QtQuick 2.0
 import "../components"
+import "../dialogs"
 import "../misc"
 
 Page {
@@ -94,6 +95,9 @@ Page {
             text: "Add server"
             color: "#ddd"
             textColor: "#000"
+            onClicked: {
+                serverSettingsDialog.open();
+            }
         }
         Button {
             width: 130
@@ -104,4 +108,7 @@ Page {
         }
     }
 
+    ServerSettingsDialog {
+        id: serverSettingsDialog
+    }
 }
