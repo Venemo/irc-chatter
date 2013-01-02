@@ -50,6 +50,7 @@ Rectangle {
         GradientStop { position: 0.4; color: "#ff444444" }
     }
 
+    // This can not be done with Behavior because then we can't listen to the onStopped signal
     NumberAnimation {
         id: showHideAnimation
         duration: 300

@@ -25,4 +25,45 @@ Button {
     font.bold: true
     width: parent.width
     useGradientOverlay: false
+    hoverEnabled: true
+
+    onEntered: {
+        font.underline = true;
+        channelMenuTimer.start();
+    }
+    onExited: {
+        font.underline = false;
+        channelMenuTimer.stop();
+        channelMenu.close();
+    }
+
+    Timer {
+        id: channelMenuTimer
+        repeat: false
+        running: false
+        triggeredOnStart: false
+        interval: 300
+        onTriggered: {
+            channelMenu.open();
+        }
+    }
+
+    Menu {
+        id: channelMenu
+        visible: false
+        showRightTab: true
+        anchors.right: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.rightMargin: 0
+
+        MenuButton {
+            text: "View topic"
+        }
+        MenuButton {
+            text: "User list (138)"
+        }
+        MenuButton {
+            text: "Part"
+        }
+    }
 }

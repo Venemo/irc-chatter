@@ -73,28 +73,7 @@ Page {
 
             ChannelSwitcherButton { text: "irc.freenode.net" }
             ChannelSwitcherButton { text: "#mer" }
-            ChannelSwitcherButton {
-                text: "#nemomobile"
-                font.underline: true
-
-                Menu {
-                    showRightTab: true
-                    anchors.right: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.rightMargin: 10
-
-
-                    MenuButton {
-                        text: "View topic"
-                    }
-                    MenuButton {
-                        text: "User list (138)"
-                    }
-                    MenuButton {
-                        text: "Part"
-                    }
-                }
-            }
+            ChannelSwitcherButton { text: "#nemomobile" }
             ChannelSwitcherButton { text: "#irc-chatter" }
             ChannelSwitcherButton { text: "#mer-meeting" }
         }
@@ -110,6 +89,7 @@ Page {
             }
 
             Text {
+                id: moreOptionsText
                 text: "More options..."
                 color: "#fff"
                 anchors.centerIn: parent
@@ -119,6 +99,9 @@ Page {
                 onClicked: {
                     moreOptionsMenu.toggle();
                 }
+                hoverEnabled: true
+                onEntered: moreOptionsText.font.underline = true
+                onExited: moreOptionsText.font.underline = false;
             }
 
             Menu {
