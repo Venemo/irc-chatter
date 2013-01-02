@@ -48,7 +48,7 @@ Rectangle {
         NumberAnimation {
             target: translateTransform
             property: "x"
-            duration: 300
+            duration: 500
             from: 0
             to: -page.width * 3 / 2;
             easing.type: Easing.InOutQuad
@@ -57,7 +57,7 @@ Rectangle {
         NumberAnimation {
             target: scaleTransform
             properties: "yScale, xScale"
-            duration: 300
+            duration: 500
             from: 1.0
             to: 0.8
             easing.type: Easing.InOutQuad
@@ -73,7 +73,7 @@ Rectangle {
         NumberAnimation {
             target: translateTransform
             property: "x"
-            duration: 300
+            duration: 500
             from: page.width * 3 / 2;
             to: 0
             easing.type: Easing.InOutQuad
@@ -81,7 +81,7 @@ Rectangle {
         NumberAnimation {
             target: scaleTransform
             properties: "yScale, xScale"
-            duration: 300
+            duration: 500
             from: 0.8
             to: 1.0
             easing.type: Easing.InOutQuad
