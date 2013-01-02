@@ -24,7 +24,7 @@ Rectangle {
     property alias spacing: innerColumn.spacing
     property real padding: 15
     property real minHeight: 70
-    property bool showTab: true
+    property bool showRightTab: true
 
     border.color: "#aaa"
     border.width: 2
@@ -34,41 +34,43 @@ Rectangle {
     implicitHeight: Math.max(innerColumn.height + padding * 2, minHeight)
 
     Rectangle {
-        visible: showTab
-        width: 30
-        height: width
-        color: bubble.color
-        border.color: bubble.border.color
-        border.width: bubble.border.width
+        visible: showRightTab
         anchors {
-            right: parent.right
+            left: parent.right
             verticalCenter: parent.verticalCenter
         }
-        transform: [
-            Rotation {
-                angle: 45
-                origin.x: 15
-                origin.y: 15
-            },
-            Translate {
-                x: 0
-            },
-            Scale {
-                xScale: 1.5
-            }
+        color: "transparent"
+        clip: true
+        width: 40
+        height: parent.height
 
-        ]
-    }
-    Rectangle {
-        visible: showTab
-        width: bubble.width - bubble.padding
-        height: 50
-        color: bubble.color
-        anchors {
-            right: parent.right
-            rightMargin: bubble.border.width
-            verticalCenter: parent.verticalCenter
+        Rectangle {
+            width: 50
+            height: width
+            color: bubble.color
+            border.color: bubble.border.color
+            border.width: bubble.border.width
+            anchors {
+                left: parent.left
+                verticalCenter: parent.verticalCenter
+            }
+            transform: [
+                Rotation {
+                    angle: 45
+                    origin.x: 25
+                    origin.y: 25
+                },
+                Translate {
+                    x: -25
+                },
+                Scale {
+                    yScale: 0.5
+                    origin.y: 25
+                }
+
+            ]
         }
+
     }
 
     Column {

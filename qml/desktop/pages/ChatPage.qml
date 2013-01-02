@@ -78,7 +78,7 @@ Page {
                 font.underline: true
 
                 Menu {
-                    showTab: true
+                    showRightTab: true
                     anchors.right: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.rightMargin: 10
@@ -134,15 +134,27 @@ Page {
                     left: parent.left
                     right: parent.right
                 }
+
+                Behavior on opacity {
+                    NumberAnimation { duration: 100 }
+                }
+
+                MenuButton {
+                    text: "Disconnect all"
+                    onClicked: {
+                        // TODO: confirmation dialog
+                        startPage.animateIn();
+                        chatPage.animateOut();
+                    }
+                }
                 MenuButton {
                     text: "Manage servers"
                 }
                 MenuButton {
                     text: "Settings"
                 }
-
-                Behavior on opacity {
-                    NumberAnimation { duration: 100 }
+                MenuButton {
+                    text: "Enable away status"
                 }
             }
         }
