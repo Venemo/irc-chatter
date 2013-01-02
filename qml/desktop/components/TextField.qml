@@ -20,10 +20,15 @@ import QtQuick 2.0
 Rectangle {
     id: textField
 
+    property bool isTextValid: false
+    property bool enableTextValidation: false
+    property bool showTooltip: false
     property real padding: 10
     property alias text: textInput.text
 
     implicitHeight: textInput.height + padding * 2
+    border.width: enableTextValidation ? 2 : 0
+    border.color: enableTextValidation ? (isTextValid ? "#9fce00" : "#ff0000") : "#444"
     gradient: Gradient {
         GradientStop { position: 0.0; color: "#777" }
         GradientStop { position: 0.4; color: "#ddd" }
@@ -41,11 +46,28 @@ Rectangle {
     }
 
     TextInput {
+        clip: true
         id: textInput
-        height: font.pixelSize * 3 / 2
+        height: font.pixelSize * 1.5
         anchors.centerIn: parent
         width: parent.width - textField.padding * 2
         verticalAlignment: TextInput.AlignVCenter
         selectByMouse: true
+    }
+
+    Bubble {
+        id: tooltip
+        visible: showTooltip && textInput.activeFocus
+        anchors.left: textInput.right
+        anchors.leftMargin: 17
+        anchors.verticalCenter: parent.verticalCenter
+        padding: 5
+        //border.width: 0
+        showRightTab: false
+        showLeftTab: true
+
+        Text {
+            text: "Hey!"
+        }
     }
 }
