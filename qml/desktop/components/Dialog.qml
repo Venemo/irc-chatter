@@ -29,10 +29,28 @@ Rectangle {
     signal accepted
     signal rejected
 
+    function open() {
+        opacity = 1;
+    }
+
+    onAccepted: {
+        opacity = 0;
+    }
+    onRejected: {
+        opacity = 0;
+    }
+
     anchors.fill: parent
     gradient: Gradient {
         GradientStop { position: 0.0; color: "#ff222222" }
         GradientStop { position: 0.4; color: "#ff444444" }
+    }
+
+    Behavior on opacity {
+        NumberAnimation {
+            duration: 300
+            easing: Easing.InOutQuad
+        }
     }
 
     MouseArea {
@@ -45,12 +63,13 @@ Rectangle {
     }
     Text {
         id: titleText
-        text: "Dialog title"
+        text: ""
         anchors.left: dialogContents.left
         anchors.bottom: dialogContents.top
         anchors.bottomMargin: 20
         color: "#fff"
         font.pointSize: 24
+        visible: text.length > 0
     }
     Item {
         id: dialogContents
@@ -75,18 +94,24 @@ Rectangle {
         Button {
             id: acceptButton
             width: 130
-            text: "Accept"
+            text: ""
             color: "#9fce00"
             textColor: "#000"
             visible: text.length > 0
+            onClicked: {
+                dialog.accepted();
+            }
         }
         Button {
             id: rejectButton
             width: 130
-            text: "Reject"
+            text: ""
             color: "#ff0000"
             textColor: "#fff"
             visible: text.length > 0
+            onClicked: {
+                dialog.rejected();
+            }
         }
     }
 }
