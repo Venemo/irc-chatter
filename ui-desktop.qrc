@@ -9,8 +9,8 @@
         <file>qml/desktop/components/Page.qml</file>
         <file>qml/desktop/pages/ChatPage.qml</file>
         <file>qml/desktop/pages/StartPage.qml</file>
-        <file>qml/desktop/specialcomponents/ChannelSwitcherButton.qml</file>
-        <file>qml/desktop/specialcomponents/ServerSettingEntry.qml</file>
+        <file>qml/desktop/misc/ChannelSwitcherButton.qml</file>
+        <file>qml/desktop/misc/ServerSettingEntry.qml</file>
         <file>qml/desktop/components/Switch.qml</file>
         <file>qml/desktop/components/Menu.qml</file>
         <file>qml/desktop/components/MenuButton.qml</file>

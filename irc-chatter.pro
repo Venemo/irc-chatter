@@ -59,8 +59,8 @@ OTHER_FILES += \
     LICENSE \
     LICENSE-DOCS \
     AUTHORS \
-    qml/desktop/specialcomponents/ChannelSwitcherButton.qml \
-    qml/desktop/specialcomponents/ServerSettingEntry.qml \
+    qml/desktop/misc/ChannelSwitcherButton.qml \
+    qml/desktop/misc/ServerSettingEntry.qml \
     qml/desktop/components/Switch.qml \
     qml/desktop/components/Dialog.qml \
     qml/desktop/components/Menu.qml \

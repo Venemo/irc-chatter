@@ -17,7 +17,7 @@
 
 import QtQuick 2.0
 import "../components"
-import "../specialcomponents"
+import "../misc"
 
 Page {
     id: startPage
