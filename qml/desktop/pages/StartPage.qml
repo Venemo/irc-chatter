@@ -103,6 +103,7 @@ Page {
             color: "#ddd"
             textColor: "#000"
             onClicked: {
+                // TODO: this is a memory leak, fix it
                 serverSettingsDialog.serverSettings = appSettings.newServerSettings();
                 serverSettingsDialog.open();
             }
