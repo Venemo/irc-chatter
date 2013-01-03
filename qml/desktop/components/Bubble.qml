@@ -24,7 +24,7 @@ Rectangle {
     property alias spacing: innerColumn.spacing
     property real padding: 10
     property real minHeight: 50
-    property bool showRightTab: true
+    property bool showRightTab: false
     property bool showLeftTab: false
     property bool showBottomTab: false
 

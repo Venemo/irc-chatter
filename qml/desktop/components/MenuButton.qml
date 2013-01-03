@@ -28,7 +28,6 @@ Button {
     textColor: "#fff";
     width: parent.width;
     textCenter: false
-    text: "Click here!"
     useGradientOverlay: false
     hoverEnabled: true
 

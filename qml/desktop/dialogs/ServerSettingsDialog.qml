@@ -45,7 +45,7 @@ Dialog {
         }
         TextField {
             id: hostnameField
-            width: Math.max(appWindow.width * 0.3, 200)
+            width: appWindow.width * 0.35
             enableTextValidation: true
             tooltipText: "The hostname of the server you want to connect to."
             KeyNavigation.tab: portField
@@ -60,7 +60,7 @@ Dialog {
         }
         TextField {
             id: portField
-            width: Math.max(appWindow.width * 0.3, 200)
+            width: appWindow.width * 0.35
             enableTextValidation: true
             tooltipText: "Depends on the server. Default is 6667 or 7000 (used by most servers)."
             KeyNavigation.tab: sslSwitch
@@ -109,7 +109,7 @@ Dialog {
         }
         TextField {
             id: nicknameField
-            width: Math.max(appWindow.width * 0.3, 200)
+            width: appWindow.width * 0.35
             enableTextValidation: true
             tooltipText: "Your nick name. This will appear to everyone else."
             KeyNavigation.tab: realNameField
@@ -124,7 +124,7 @@ Dialog {
         }
         TextField {
             id: realNameField
-            width: Math.max(appWindow.width * 0.3, 200)
+            width: appWindow.width * 0.35
             enableTextValidation: false
             tooltipText: "Your real name. This will appear if someone uses the whois command on you."
             KeyNavigation.tab: identField
@@ -151,7 +151,7 @@ Dialog {
         }
         TextField {
             id: identField
-            width: Math.max(appWindow.width * 0.3, 200)
+            width: appWindow.width * 0.35
             enableTextValidation: false
             tooltipText: "Username used for authenticating on the server. Some servers require it."
             KeyNavigation.tab: passwordField
@@ -166,7 +166,7 @@ Dialog {
         }
         TextField {
             id: passwordField
-            width: Math.max(appWindow.width * 0.3, 200)
+            width: appWindow.width * 0.35
             enableTextValidation: false
             tooltipText: "Password for authenticating on the server. Some servers require it."
             KeyNavigation.tab: hostnameField

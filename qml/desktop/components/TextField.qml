@@ -83,8 +83,6 @@ Rectangle {
         anchors.leftMargin: 17
         anchors.verticalCenter: parent.verticalCenter
         padding: 10
-        //border.width: 0
-        showRightTab: false
         showLeftTab: true
 
         Text {

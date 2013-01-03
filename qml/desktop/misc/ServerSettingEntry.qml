@@ -29,6 +29,33 @@ Item {
     implicitHeight: serverNameText.font.pixelSize * 1.5 + userNameText.font.pixelSize * 1.5 + 10
     width: parent.width
 
+    MenuButton {
+        id: button
+        anchors {
+            fill: parent
+            leftMargin: -10
+            rightMargin: -10
+        }
+        onEntered: tooltip.visible = true
+        onExited: tooltip.visible = false
+
+        Bubble {
+            id: tooltip
+            visible: false
+            anchors.left: button.right
+            anchors.leftMargin: -50
+            anchors.verticalCenter: parent.verticalCenter
+            padding: 10
+            showLeftTab: true
+
+            Text {
+                width: parent.width
+                wrapMode: Text.Wrap
+                id: toolTipTextItem
+                text: "Edit the server settings, or use the switch to decide whether to connect to the server."
+            }
+        }
+    }
     Switch {
         id: theSwitch
         anchors {
@@ -36,7 +63,6 @@ Item {
             verticalCenter: parent.verticalCenter
         }
     }
-
     Text {
         id: serverNameText
         text: "Your server name"
@@ -47,7 +73,6 @@ Item {
         anchors.leftMargin: 10
         anchors.topMargin: 5
     }
-
     Text {
         id: userNameText
         text: "Your user name"
