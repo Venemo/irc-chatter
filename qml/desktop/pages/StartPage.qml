@@ -92,10 +92,37 @@ Page {
             color: "#9fce00"
             textColor: "#000"
             onClicked: {
-                startPage.animateOut();
-                chatPage.animateIn();
+                if (ircModel.anyServersToConnect()) {
+                    ircModel.connectToServers();
+                    startPage.animateOut();
+                    chatPage.animateIn();
+                }
+                else {
+                    noServersTooltip.visible = true;
+                }
             }
             visible: hasServersConfigured
+            onActiveFocusChanged: {
+                if (!activeFocus) {
+                    noServersTooltip.visible = false;
+                }
+            }
+
+            Bubble {
+                id: noServersTooltip
+                visible: false
+                anchors.right: parent.left
+                anchors.rightMargin: 5
+                anchors.verticalCenter: parent.verticalCenter
+                padding: 10
+                showRightTab: true
+
+                Text {
+                    width: parent.width
+                    wrapMode: Text.Wrap
+                    text: "No servers selected to connect to."
+                }
+            }
         }
         Button {
             width: 130

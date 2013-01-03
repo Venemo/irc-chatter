@@ -22,6 +22,28 @@ import "../misc"
 
 Page {
     id: chatPage
+
+    function sendCurrentMessage() {
+        if (ircModel.currentChannel !== null) {
+            messageField.shouldUpdateCurrentMessage = false;
+            ircModel.currentChannel.sendCurrentMessage();
+            messageField.shouldUpdateCurrentMessage = true;
+        }
+    }
+    function switchChannel(index) {
+        messageField.shouldUpdateCurrentMessage = false;
+        ircModel.currentChannelIndex = index;
+        messageField.shouldUpdateCurrentMessage = true;
+
+        if (appSettings.autoFocusTextField)
+            messageField.forceActiveFocus();
+
+        scrollToBottom();
+    }
+    function scrollToBottom() {
+        chatFlickable.contentY = Math.max(0,  chatArea.height - chatFlickable.height)
+    }
+
     gradient: Gradient {
         GradientStop { position: 0.0; color: "#ddd" }
         GradientStop { position: 0.4; color: "#fff" }
@@ -35,24 +57,31 @@ Page {
             top: parent.top
             left: parent.left
             right: sidebar.left
-            bottom: chatField.top
+            bottom: messageField.top
             margins: 15
         }
-        contentHeight: chatView.height
+        contentHeight: chatArea.height
 
-        MouseArea {
-            anchors.fill: chatView
-            cursorShape: Qt.IBeamCursor
-        }
+        // Removed because of https://bugreports.qt-project.org/browse/QTBUG-28930
+        //        MouseArea {
+        //            anchors.fill: chatArea
+        //            cursorShape: Qt.IBeamCursor
+        //        }
 
         TextEdit {
-            id: chatView
-            textFormat: TextEdit.RichText
-            selectByMouse: true
+            id: chatArea
             width: chatFlickable.width
-            text: "<span class='time'>07:17</span> <span style='color: green'>Venemo</span>: Hello world!<br />
-<span class='time'>07:20</span> <span style='color: blue'>Stskeeps</span>: moo<br />
-<span class='time'>07:21</span> <span style='color: red'>faenil</span>: Behold the new IRC Chatter"
+            selectByMouse: true
+            textFormat: TextEdit.RichText
+            readOnly: true
+            wrapMode: TextEdit.Wrap
+            text: ircModel.currentChannel !== null ? ircModel.currentChannel.channelText : ""
+            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+            font.pixelSize: appSettings.fontSize
+            font.family: appSettings.fontMonospace ? "Monospace" : appSettings.getDefaultFont()
+            onTextChanged: {
+                scrollToBottom();
+            }
         }
     }
 
@@ -67,21 +96,44 @@ Page {
         }
 
         Column {
-            anchors.fill: parent
-            anchors.margins: 15
+            anchors {
+                margins: 15
+                top: parent.top
+                left: parent.left
+                right: parent.right
+                bottom: moreOptionsContainer.top
+            }
             spacing: 0
 
-            ChannelSwitcherButton { text: "irc.freenode.net" }
-            ChannelSwitcherButton { text: "#mer" }
-            ChannelSwitcherButton { text: "#nemomobile" }
-            ChannelSwitcherButton { text: "#irc-chatter" }
-            ChannelSwitcherButton { text: "#mer-meeting" }
+            Repeater {
+                model: ircModel.allChannels
+                delegate: ChannelSwitcherButton {
+                    isCurrent: ircModel.currentChannelIndex === index
+                    channel: model.object
+
+                    onClicked: {
+                        switchChannel(index)
+                    }
+
+                    Connections {
+                        target: ircModel.allChannels.getItem(index)
+                        onNewMessageReceived: {
+                            if (!isCurrent)
+                                hasNewMessage = true
+                        }
+                        onNewMessageWithUserNickReceived: {
+                            if (!isCurrent)
+                                hasNewMessageWithUserNick = true
+                        }
+                    }
+                }
+            }
         }
 
         Rectangle {
             id: moreOptionsContainer
             color: "#55444444"
-            height: chatField.height
+            height: messageField.height
             anchors {
                 bottom: parent.bottom
                 left: parent.left
@@ -120,18 +172,22 @@ Page {
                     text: "Disconnect all"
                     onClicked: {
                         // TODO: confirmation dialog
+                        // TODO: actual disconnecting
                         startPage.animateIn();
                         chatPage.animateOut();
                     }
                 }
                 MenuButton {
                     text: "Manage servers"
+                    // TODO: onClicked
                 }
                 MenuButton {
                     text: "Settings"
+                    // TODO: onClicked
                 }
                 MenuButton {
                     text: "Enable away status"
+                    // TODO: onClicked
                 }
             }
         }
@@ -139,14 +195,38 @@ Page {
 
     // Text field for chatting
     TextField {
-        id: chatField
+        id: messageField
+
+        property bool shouldUpdateCurrentMessage: true
+
         padding: 15
         rightPadding: padding + sendButton.width + sendButton.anchors.rightMargin + sendButton.anchors.leftMargin
-        text: "Good morning captain!"
         anchors {
             bottom: parent.bottom
             left: parent.left
             right: sidebar.left
+        }
+        text: ircModel.currentChannel !== null ? ircModel.currentChannel.currentMessage : ""
+        inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+        enabled: ircModel.currentServer !== null ? ircModel.currentServer.serverSettings.isConnected : true
+        onTextChanged: {
+            if (ircModel.currentChannel !== null) {
+                if (shouldUpdateCurrentMessage && ircModel.currentChannel.currentMessage !== messageField.text) {
+                    ircModel.currentChannel.currentMessage = text
+                }
+            }
+        }
+        Keys.onReturnPressed: {
+            if (ircModel.currentChannel !== null)
+                sendCurrentMessage()
+        }
+        Keys.onUpPressed: {
+            if (ircModel.currentChannel !== null)
+                ircModel.currentChannel.getSentMessagesUp()
+        }
+        Keys.onDownPressed: {
+            if (ircModel.currentChannel !== null)
+                ircModel.currentChannel.getSentMessagesDown()
         }
 
         Button {
@@ -160,6 +240,10 @@ Page {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
                 rightMargin: 8
+            }
+            onClicked: {
+                if (ircModel.currentChannel !== null)
+                    sendCurrentMessage();
             }
         }
     }

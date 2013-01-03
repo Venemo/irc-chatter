@@ -17,17 +17,36 @@
 
 import QtQuick 2.0
 import "../components"
+import net.venemo.ircchatter 1.0
 
 Button {
     id: button
+
+    property variant channel: null
+    readonly property bool isServer: channel.channelType === 0
+    readonly property bool isChannel: channel.channelType === 1
+    readonly property bool isQuery: channel.channelType === 2
+
+    readonly property bool isConnected: channel.server.serverSettings.isConnected
+    readonly property bool isConnecting: channel.server.serverSettings.isConnecting
+
+    property bool isCurrent: false
+    property bool hasNewMessage: false
+    property bool hasNewMessageWithUserNick: false
+
     color: "transparent"
-    textColor: "#fff"
     textCenter: false
-    font.bold: true
     width: parent.width
     useGradientOverlay: false
     hoverEnabled: true
+    text: model.object.name
+    textColor: isCurrent ? "white" : (hasNewMessageWithUserNick ? "red" : (hasNewMessage ? "blue" : "black"))
+    font.bold: isCurrent ? true : false
 
+    onClicked: {
+        hasNewMessage = false;
+        hasNewMessageWithUserNick = false;
+    }
     onEntered: {
         //console.log("button entered");
         font.underline = true;
@@ -35,7 +54,6 @@ Button {
         channelMenuEnterArea.enabled = true;
         channelMenuHideTimer.stop();
         channelMenuTimer.start();
-        channelMenuEnterArea.z += 10
     }
     onExited: {
         //console.log("button exited");
@@ -104,14 +122,50 @@ Button {
                 }
             }
 
+            Text {
+                text: "Connecting..."
+                color: "#fff"
+                visible: isConnecting
+            }
+            Text {
+                text: "Not connected"
+                color: "#fff"
+                visible: !isConnected && !isConnecting
+            }
             MenuButton {
                 text: "View topic"
+                visible: isChannel && isConnected
+                // TODO: onClicked
             }
             MenuButton {
                 text: "User list (138)"
+                visible: isChannel && isConnected
+                // TODO: onClicked
             }
             MenuButton {
                 text: "Part"
+                visible: isChannel && isConnected
+                // TODO: onClicked
+            }
+            MenuButton {
+                text: "View whois"
+                visible: isQuery && isConnected
+                // TODO: onClicked
+            }
+            MenuButton {
+                text: "Close"
+                visible: isQuery && isConnected
+                // TODO: onClicked
+            }
+            MenuButton {
+                text: "Disconnect"
+                visible: isServer && isConnected
+                // TODO: onClicked
+            }
+            MenuButton {
+                text: "Reconnect"
+                visible: isServer && !isConnected && !isConnecting
+                // TODO: onClicked
             }
         }
     }

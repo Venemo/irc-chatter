@@ -47,7 +47,8 @@ private:
     Q_PROPERTY(QString channelText READ channelText NOTIFY channelTextChanged)
     GENPROPERTY_R(QString, _topic, topic)
     Q_PROPERTY(QString topic READ topic NOTIFY topicChanged)
-    GENPROPERTY_S(unsigned, _channelType, channelType, setChannelType)
+    GENPROPERTY_F(unsigned, _channelType, channelType, setChannelType, channelTypeChanged)
+    Q_PROPERTY(unsigned channelType READ channelType NOTIFY channelTypeChanged)
     GENPROPERTY_R(QStringList, _userNames, userNames)
 
     AbstractIrcClient *_ircClient;
@@ -108,6 +109,7 @@ signals:
     void serverChanged();
     void channelTextChanged();
     void topicChanged();
+    void channelTypeChanged();
 
     void newMessageReceived();
     void newMessageWithUserNickReceived();

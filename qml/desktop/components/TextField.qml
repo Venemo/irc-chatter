@@ -31,6 +31,7 @@ Rectangle {
     property alias acceptableInput: textInput.acceptableInput
     property alias passwordCharacter: textInput.passwordCharacter
     property alias echoMode: textInput.echoMode
+    property alias enabled: textInput.enabled
 
     implicitHeight: textInput.height + padding * 2
     border.width: enableTextValidation ? 2 : 0
