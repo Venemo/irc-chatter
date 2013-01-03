@@ -17,12 +17,20 @@
 
 import QtQuick 2.0
 import "../components"
+import net.venemo.ircchatter 1.0
 
 Dialog {
     id: serverSettingsDialog
+
+    property bool isValid: hostnameField.acceptableInput && nicknameField.acceptableInput && serverPortField.acceptableInput
+    property bool isNewServer: true
+    property ServerSettings serverSettings: null
+
     title: "Server settings"
     acceptButtonText: "Save"
     rejectButtonText: "Cancel"
+    cantAcceptTooltipText: "The settings are incorrect. Cannot save the server."
+    canAccept: visible && isValid
 
     onOpened: {
         hostnameField.forceActiveFocus();
@@ -48,18 +56,18 @@ Dialog {
             width: appWindow.width * 0.35
             enableTextValidation: true
             tooltipText: "The hostname of the server you want to connect to."
-            KeyNavigation.tab: portField
+            KeyNavigation.tab: serverPortField
         }
 
         // Server port
         Text {
             text: "Port"
             color: "#fff"
-            height: portField.height
+            height: serverPortField.height
             verticalAlignment: Text.AlignVCenter
         }
         TextField {
-            id: portField
+            id: serverPortField
             width: appWindow.width * 0.35
             enableTextValidation: true
             tooltipText: "Depends on the server. Default is 6667 or 7000 (used by most servers)."
@@ -77,11 +85,11 @@ Dialog {
         Switch {
             id: sslSwitch
             onValueChanged: {
-                if (portField.text === "6667") {
-                    portField.text = "7000";
+                if (serverPortField.text === "6667") {
+                    serverPortField.text = "7000";
                 }
-                else if (portField.text === "7000") {
-                    portField.text = "6667";
+                else if (serverPortField.text === "7000") {
+                    serverPortField.text = "6667";
                 }
             }
             border.width: 0

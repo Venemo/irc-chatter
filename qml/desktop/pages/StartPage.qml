@@ -23,7 +23,7 @@ import "../misc"
 Page {
     id: startPage
 
-    property bool hasServersConfigured: true
+    property bool hasServersConfigured: appSettings.serverSettings.itemCount !== 0
 
     Text {
         id: welcomeText

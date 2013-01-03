@@ -21,12 +21,15 @@ Rectangle {
     id: dialog
 
     property bool allowBackgroundClick: false
+    property bool canAccept: true
     default property alias inner: dialogContents.children
     property alias acceptButtonText: acceptButton.text
     property alias rejectButtonText: rejectButton.text
     property alias title: titleText.text
+    property alias cantAcceptTooltipText: cantAcceptTooltipTextItem.text
 
     signal accepted
+    signal acceptedWhenCantAccept
     signal rejected
     signal opened
 
@@ -107,7 +110,38 @@ Rectangle {
             textColor: "#000"
             visible: text.length > 0
             onClicked: {
-                dialog.accepted();
+                if (dialog.canAccept) {
+                    cantAcceptTooltip.visible = false;
+                    dialog.accepted();
+                }
+                else {
+                    if (cantAcceptTooltipTextItem.text.length > 0) {
+                        cantAcceptTooltip.visible = true;
+                    }
+                    dialog.acceptedWhenCantAccept();
+                }
+            }
+            onActiveFocusChanged: {
+                if (!activeFocus) {
+                    cantAcceptTooltip.visible = false;
+                }
+            }
+
+            Bubble {
+                id: cantAcceptTooltip
+                visible: false
+                anchors.right: acceptButton.left
+                anchors.rightMargin: 5
+                anchors.verticalCenter: parent.verticalCenter
+                padding: 10
+                showRightTab: true
+
+                Text {
+                    width: parent.width
+                    wrapMode: Text.Wrap
+                    id: cantAcceptTooltipTextItem
+                    text: ""
+                }
             }
         }
         Button {
