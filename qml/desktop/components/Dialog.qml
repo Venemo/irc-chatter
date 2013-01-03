@@ -91,15 +91,7 @@ Rectangle {
         id: dialogContents
         anchors.centerIn: parent
         width: parent.width / 2
-
-        Component.onCompleted: {
-            if (dialogContents.children.length > 1) {
-                console.log("warning: The Dialog component is designed to have only one child item!");
-            }
-            else if (dialogContents.children.length === 1) {
-                dialogContents.height = dialogContents.children[0].height;
-            }
-        }
+        height: childrenRect.height
     }
     Row {
         anchors.horizontalCenter: parent.horizontalCenter
