@@ -34,7 +34,6 @@ Page {
         color: "#fff"
         font.pointSize: 24
     }
-
     Column {
         id: serversRow
         anchors.centerIn: parent
@@ -60,19 +59,27 @@ Page {
             color: "#fff"
             visible: hasServersConfigured
         }
-        ServerSettingEntry {
-            serverName: "irc.freenode.net:7000"
-            userName: "Venemo"
-            serverEnabled: true
-            visible: hasServersConfigured
-        }
-        ServerSettingEntry {
-            serverName: "irc.gnome.org:6667"
-            userName: "Venemo"
-            visible: hasServersConfigured
+        Repeater {
+            model: appSettings.serverSettings
+            width: parent.width
+            delegate: ServerSettingEntry {
+                id: serverSettingEntry
+                serverName: model.object.serverUrl + ":" + model.object.serverPort
+                userName: model.object.userNickname
+                serverEnabled: model.object.shouldConnect
+                onClicked: {
+                    serverSettingsDialog.serverSettings = model.object;
+                    serverSettingsDialog.open();
+                }
+
+                Binding {
+                    target: model.object
+                    property: "shouldConnect"
+                    value: serverSettingEntry.serverEnabled
+                }
+            }
         }
     }
-
     Row {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: serversRow.bottom
@@ -96,6 +103,7 @@ Page {
             color: "#ddd"
             textColor: "#000"
             onClicked: {
+                serverSettingsDialog.serverSettings = appSettings.newServerSettings();
                 serverSettingsDialog.open();
             }
         }
@@ -107,8 +115,24 @@ Page {
             visible: hasServersConfigured
         }
     }
-
     ServerSettingsDialog {
         id: serverSettingsDialog
+        onAccepted: {
+            if (isValid) {
+                if (isNewServer) {
+                    appSettings.appendServerSettings(serverSettings)
+                }
+                else {
+                    appSettings.serverSettings.reset()
+                }
+                appSettings.saveServerSettings()
+            }
+        }
+//        onRejected: {
+//            if (!isNewServer) {
+//                areYouSureToDeleteServerDialog.serverSettingsSheet = serverSettingsSheet
+//                areYouSureToDeleteServerDialog.open()
+//            }
+//        }
     }
 }

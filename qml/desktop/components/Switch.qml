@@ -41,6 +41,9 @@ Rectangle {
 
     function toggleSwitch() {
         value = !value;
+    }
+
+    onValueChanged: {
         if (value) {
             switchOffAnimation.stop();
             switchOnAnimation.start();
@@ -52,6 +55,7 @@ Rectangle {
     }
 
     MouseArea {
+        id: switchMouseArea
         anchors.fill: parent
         onClicked: {
             theSwitch.forceActiveFocus();

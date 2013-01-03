@@ -26,6 +26,8 @@ Item {
     property alias userName: userNameText.text
     property alias serverEnabled: theSwitch.value
 
+    signal clicked
+
     implicitHeight: serverNameText.font.pixelSize * 1.5 + userNameText.font.pixelSize * 1.5 + 10
     width: parent.width
 
@@ -38,6 +40,7 @@ Item {
         }
         onEntered: tooltip.visible = true
         onExited: tooltip.visible = false
+        onClicked: serverSettingEntry.clicked()
 
         Bubble {
             id: tooltip
