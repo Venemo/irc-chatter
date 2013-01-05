@@ -38,6 +38,9 @@ Rectangle {
         visible = true;
         showHideAnimation.start();
     }
+    function close() {
+        showHideAnimation.start();
+    }
 
     onAccepted: {
         showHideAnimation.start();

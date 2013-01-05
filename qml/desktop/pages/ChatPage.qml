@@ -171,10 +171,7 @@ Page {
                 MenuButton {
                     text: "Disconnect all"
                     onClicked: {
-                        // TODO: confirmation dialog
-                        // TODO: actual disconnecting
-                        startPage.animateIn();
-                        chatPage.animateOut();
+                        areYouSureToDisconnectAllDialog.open();
                     }
                 }
                 MenuButton {
@@ -247,6 +244,17 @@ Page {
                 if (ircModel.currentChannel !== null)
                     sendCurrentMessage();
             }
+        }
+    }
+
+    // Dialog for disconnecting from all servers
+    QueryDialog {
+        id: areYouSureToDisconnectAllDialog
+        text: "Do you want to disconnect from all servers?"
+        onAccepted: {
+            ircModel.disconnectFromServers();
+            startPage.animateIn();
+            chatPage.animateOut();
         }
     }
 }

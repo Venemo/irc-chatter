@@ -16,22 +16,34 @@
 // Copyright (C) 2012, Timur Kristóf <venemo@fedoraproject.org>
 
 import QtQuick 2.0
-import "./components"
-import "./pages"
-import "./dialogs"
+import "../components"
 
-Rectangle {
-    id: appWindow
-    color: "#fff"
+Dialog {
+    id: queryDialog
 
-    StartPage {
-        id: startPage
+    property alias text: theText.text
+    property alias textFormat: theText.textFormat
+
+    title: "Are you sure?"
+    acceptButtonText: "Yes"
+    rejectButtonText: "No"
+    gradient: Gradient {
+        GradientStop { position: 0.0; color: "#cc222222" }
+        GradientStop { position: 0.4; color: "#dd444444" }
     }
-    ChatPage {
-        id: chatPage
-        visible: false
-    }
-    AboutDialog {
-        id: aboutDialog
+
+    Text {
+        id: theText
+        width: parent.width * 0.5
+        wrapMode: Text.Wrap
+        color: "#fff"
+        onLinkActivated: {
+            if (link == "back://back") {
+                queryDialog.close();
+            }
+            else {
+                Qt.openUrlExternally(link);
+            }
+        }
     }
 }

@@ -133,11 +133,6 @@ Button {
                 visible: !isConnected && !isConnecting
             }
             MenuButton {
-                text: "View topic"
-                visible: isChannel && isConnected
-                // TODO: onClicked
-            }
-            MenuButton {
                 text: "User list (138)"
                 visible: isChannel && isConnected
                 // TODO: onClicked
@@ -145,11 +140,6 @@ Button {
             MenuButton {
                 text: "Part"
                 visible: isChannel && isConnected
-                // TODO: onClicked
-            }
-            MenuButton {
-                text: "View whois"
-                visible: isQuery && isConnected
                 // TODO: onClicked
             }
             MenuButton {
@@ -165,6 +155,11 @@ Button {
             MenuButton {
                 text: "Reconnect"
                 visible: isServer && !isConnected && !isConnecting
+                // TODO: onClicked
+            }
+            MenuButton {
+                text: "Join / query"
+                visible: isServer && isConnected
                 // TODO: onClicked
             }
         }
