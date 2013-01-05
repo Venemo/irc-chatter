@@ -53,9 +53,14 @@ CommuniIrcClient::CommuniIrcClient(QObject *parent, ServerSettings *serverSettin
 
     if (serverSettings->serverSSL())
     {
+        // When SSL is enabled, create an SSL socket
         QSslSocket *socket = new QSslSocket(_ircSession);
+        // Don't care about the identity of the server
         socket->ignoreSslErrors();
-        socket->setPeerVerifyMode(QSslSocket::VerifyNone);
+        socket->setPeerVerifyMode(QSslSocket::QueryPeer);
+        // Ask it to start encrypting when it's connected - since Qt 5, doesn't work without this
+        connect(socket, SIGNAL(connected()), socket, SLOT(startClientEncryption()));
+        // Set the socket of the IRC session to the new socket
         _ircSession->setSocket(socket);
     }
 
