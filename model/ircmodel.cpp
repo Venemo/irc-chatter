@@ -82,6 +82,7 @@ void IrcModel::disconnectFromServers()
         serverModel->deleteLater();
     }
 
+    setCurrentChannelIndex(-1);
     _queue.clear();
     _servers.clear();
 
@@ -162,8 +163,17 @@ void IrcModel::refreshChannelList()
 
     if (_currentChannelIndex != -1)
     {
-        currentChannelName = currentChannel()->name();
-        currentServerName = currentServer()->url();
+        ChannelModel *channel = currentChannel();
+
+        if (channel)
+        {
+            currentChannelName = currentChannel()->name();
+            currentServerName = currentServer()->url();
+        }
+        else
+        {
+            setCurrentChannelIndex(-1);
+        }
     }
 
     QList<ChannelModel*> *allChannelsList = new QList<ChannelModel*>();
