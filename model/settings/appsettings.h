@@ -21,6 +21,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
+#include <QtGui/QFont>
 
 #include "helpers/util.h"
 #include "helpers/qobjectlistmodel.h"
@@ -69,7 +70,7 @@ public:
     SETTINGPROPERTY(bool, displayTimestamps, setDisplayTimestamps, displayTimestampsChanged, "displayTimestamps", true)
     SETTINGPROPERTY(bool, notifyOnNick, setNotifyOnNick, notifyOnNickChanged, "notifyOnNick", true)
     SETTINGPROPERTY(bool, notifyOnPrivmsg, setNotifyOnPrivmsg, notifyOnPrivmsgChanged, "notifyOnPrivmsg", true)
-    SETTINGPROPERTY(int, fontSize, setFontSize, fontSizeChanged, "fontSize", 24)
+    SETTINGPROPERTY(int, fontSize, setFontSize, fontSizeChanged, "fontSize", QFont().pixelSize())
 
     QObjectListModel *serverSettings();
     Q_INVOKABLE void appendServerSettings(ServerSettings *serverSettings);
