@@ -56,8 +56,8 @@ public:
     ServerSettings *serverSettings() const;
     ChannelModel *defaultChannel() const;
 
-    void connectToServer();
-    void disconnectFromServer();
+    Q_INVOKABLE void connectToServer();
+    Q_INVOKABLE void disconnectFromServer();
     ChannelModel *findOrCreateChannel(const QString &channelName);
     ChannelModelCollection &channels();
 

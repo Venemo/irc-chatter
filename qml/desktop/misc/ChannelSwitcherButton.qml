@@ -126,11 +126,13 @@ Button {
                 text: "Connecting..."
                 color: "#fff"
                 visible: isConnecting
+                font.bold: true
             }
             Text {
                 text: "Not connected"
                 color: "#fff"
                 visible: !isConnected && !isConnecting
+                font.bold: true
             }
             MenuButton {
                 text: "User list (138)"
@@ -140,22 +142,30 @@ Button {
             MenuButton {
                 text: "Part"
                 visible: isChannel && isConnected
-                // TODO: onClicked
+                onClicked: {
+                    channel.server.partChannel(channel.name);
+                }
             }
             MenuButton {
                 text: "Close"
                 visible: isQuery && isConnected
-                // TODO: onClicked
+                onClicked: {
+                    channel.server.partChannel(channel.name);
+                }
             }
             MenuButton {
                 text: "Disconnect"
                 visible: isServer && isConnected
-                // TODO: onClicked
+                onClicked: {
+                    channel.server.disconnectFromServer();
+                }
             }
             MenuButton {
                 text: "Reconnect"
                 visible: isServer && !isConnected && !isConnecting
-                // TODO: onClicked
+                onClicked: {
+                    channel.server.connectToServer();
+                }
             }
             MenuButton {
                 text: "Join / query"
