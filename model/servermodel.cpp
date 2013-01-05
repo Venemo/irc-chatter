@@ -117,6 +117,15 @@ void ServerModel::connectedToServer()
 {
     qDebug() << "backend of " << url() << " is now connected to server";
 
+    if (_serverSettings->autoJoinChannels().length() == 0)
+    {
+        if (_serverSettings->serverUrl() == DEFAULT_SERVER)
+        {
+            _serverSettings->setAutoJoinChannelsInPlainString(DEFAULT_CHANNELS);
+            static_cast<IrcModel*>(parent())->appSettings()->saveServerSettings();
+        }
+    }
+
     foreach (QString channelName, _serverSettings->autoJoinChannels())
     {
         addModelForChannel(channelName);
