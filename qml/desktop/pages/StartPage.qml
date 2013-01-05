@@ -143,6 +143,21 @@ Page {
             visible: hasServersConfigured
         }
     }
+    Button {
+        anchors {
+            right: parent.right
+            bottom: parent.bottom
+            margins: 10
+        }
+        text: "About"
+        color: "#676767"
+        textColor: "#fff"
+        width: 130
+        font.bold: true
+        onClicked: {
+            aboutDialog.open();
+        }
+    }
     ServerSettingsDialog {
         id: serverSettingsDialog
         onAccepted: {

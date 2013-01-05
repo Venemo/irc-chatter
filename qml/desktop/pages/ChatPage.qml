@@ -186,8 +186,10 @@ Page {
                     // TODO: onClicked
                 }
                 MenuButton {
-                    text: "Enable away status"
-                    // TODO: onClicked
+                    text: "About"
+                    onClicked: {
+                        aboutDialog.open();
+                    }
                 }
             }
         }
