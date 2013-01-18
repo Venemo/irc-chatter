@@ -227,6 +227,10 @@ Page {
             if (ircModel.currentChannel !== null)
                 ircModel.currentChannel.getSentMessagesDown()
         }
+        Keys.onTabPressed: {
+            if (ircModel.currentChannel !== null)
+                ircModel.currentChannel.autoCompleteNick()
+        }
 
         Button {
             id: sendButton
