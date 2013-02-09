@@ -67,6 +67,8 @@ public:
     explicit ServerSettings(QObject *parent = 0, const QString &url = DEFAULT_SERVER, const quint16 &port = 6667, bool ssl = false, const QString &password = QString(), const QStringList &autoJoinChannels = QStringList());
     QString autoJoinChannelsInPlainString() const;
     void setAutoJoinChannelsInPlainString(const QString &value);
+    void addAutoJoinChannel(const QString &channelName);
+    void save();
 
 signals:
     void serverUrlChanged();

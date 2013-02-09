@@ -287,6 +287,11 @@ void ServerModel::addModelForChannel(const QString &channelName)
         else if (channelName.startsWith('#'))
         {
             channel->setChannelType(ChannelModel::Channel);
+
+            // Add this channel to the autojoin list of the server
+            qDebug() << "trying to add" << channelName << "to autojoin";
+            _serverSettings->addAutoJoinChannel(channelName);
+            _serverSettings->save();
         }
         else
         {

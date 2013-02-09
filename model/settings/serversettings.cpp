@@ -16,7 +16,10 @@
 // Copyright (C) 2011-2012, Timur Kristóf <venemo@fedoraproject.org>
 // Copyright (C) 2011, Hiemanshu Sharma <mail@theindiangeek.in>
 
+#include <QDebug>
+
 #include "model/settings/serversettings.h"
+#include "model/settings/appsettings.h"
 
 ServerSettings::ServerSettings(QObject *parent, const QString &url, const quint16 &port, bool ssl, const QString &password, const QStringList &autoJoinChannels) :
     QObject(parent),
@@ -40,6 +43,22 @@ void ServerSettings::setAutoJoinChannelsInPlainString(const QString &value)
     _autoJoinChannels = value.split(",");
     for (int i = 0; i < _autoJoinChannels.count(); i++)
         _autoJoinChannels[i] = _autoJoinChannels[i].trimmed();
+}
+
+void ServerSettings::addAutoJoinChannel(const QString &channelName)
+{
+    if (!_autoJoinChannels.contains(channelName, Qt::CaseInsensitive))
+    {
+        qDebug() << "adding" << channelName << "to autojoin";
+        _autoJoinChannels.append(channelName);
+        emit this->autoJoinChannelsChanged();
+    }
+}
+
+void ServerSettings::save()
+{
+    AppSettings *appSettings = static_cast<AppSettings*>(this->parent());
+    appSettings->saveServerSettings();
 }
 
 void ServerSettings::backendAsksForPassword(QString *password)
