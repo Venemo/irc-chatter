@@ -26,8 +26,8 @@ Rectangle {
         height: sidebar.width
         gradient: Gradient {
             GradientStop { position: 0.0; color: "#33222222" }
-            GradientStop { position: 0.3; color: "#33dddddd" }
-            GradientStop { position: 0.7; color: "#33ffffff" }
+            GradientStop { position: 0.1; color: "#33dddddd" }
+            GradientStop { position: 0.4; color: "#33ffffff" }
         }
         anchors {
             top: sidebar.top
