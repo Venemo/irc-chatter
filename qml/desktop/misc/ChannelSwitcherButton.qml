@@ -135,7 +135,7 @@ Button {
                 font.bold: true
             }
             MenuButton {
-                text: ("User list (%1)").arg(ircModel.currentChannel === null ? 0 : ircModel.currentChannel.userCount)
+                text: ("User list (%1)").arg(channel === null ? 0 : channel.userCount)
                 visible: isChannel && isConnected
                 // TODO: onClicked
             }
