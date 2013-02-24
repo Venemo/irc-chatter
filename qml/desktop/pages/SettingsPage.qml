@@ -95,6 +95,31 @@ Page {
                 }
             }
         }
+        // SETTING: color of the sidebar
+        Text {
+            color: "#fff"
+            text: "Sidebar color"
+            width: parent.width
+            z: 1
+
+            ComboBox {
+                width: 350
+                text: "Orange (default)"
+                anchors {
+                    right: parent.right
+                    verticalCenter: parent.verticalCenter
+                }
+                model: ListModel {
+                    ListElement { text: "Orange (Default)"; value: "#f9a300" }
+                    ListElement { text: "Green";            value: "#9fce00" }
+                    ListElement { text: "Red";              value: "#ff0000" }
+                    ListElement { text: "Blue";             value: "#0000ff" }
+                    ListElement { text: "Grey";             value: "#999999" }
+                    ListElement { text: "Purple";           value: "#400758" }
+                    ListElement { text: "Yellow";           value: "#cec700" }
+                }
+            }
+        }
         // SETTING GROUP
         TitleLabel {
             color: "#fff"
@@ -138,7 +163,7 @@ Page {
             width: parent.width
 
             TextField {
-                width: 300
+                width: 350
                 anchors {
                     right: parent.right
                     verticalCenter: parent.verticalCenter
@@ -153,7 +178,7 @@ Page {
             width: parent.width
 
             TextField {
-                width: 300
+                width: 350
                 anchors {
                     right: parent.right
                     verticalCenter: parent.verticalCenter

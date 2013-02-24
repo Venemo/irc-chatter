@@ -20,5 +20,6 @@
         <file>qml/desktop/components/QueryDialog.qml</file>
         <file>qml/desktop/pages/SettingsPage.qml</file>
         <file>qml/desktop/misc/TitleLabel.qml</file>
+        <file>qml/desktop/components/ComboBox.qml</file>
     </qresource>
 </RCC>
