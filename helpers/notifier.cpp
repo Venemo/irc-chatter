@@ -39,6 +39,8 @@ void Notifier::notify(const QString &summary, const QString &message)
 
     notification->publish();
 #else
+    Q_UNUSED(summary)
+    Q_UNUSED(message)
     qDebug() << Q_FUNC_INFO << "Sending notifications is not supported by the current build.";
 #endif
 }
