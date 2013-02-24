@@ -16,26 +16,25 @@
 // Copyright (C) 2012, Timur Kristóf <venemo@fedoraproject.org>
 
 import QtQuick 2.0
-import "./components"
-import "./pages"
-import "./dialogs"
 
-Rectangle {
-    id: appWindow
-    color: "#fff"
+Row {
+    id: titleLabel
+    spacing: 10
+    width: parent.width
+    anchors.bottomMargin: 10
 
-    StartPage {
-        id: startPage
+    property alias text: title1.text
+    property alias color: title1.color
+
+    Rectangle {
+        anchors.verticalCenter: parent.verticalCenter
+        height: 1
+        color: titleLabel.color
+        width: (parent.width - title1.width) - 10
     }
-    ChatPage {
-        id: chatPage
-        visible: false
-    }
-    SettingsPage {
-        id: settingsPage
-        visible: false
-    }
-    AboutDialog {
-        id: aboutDialog
+    Text {
+        id: title1
+        text: "Your title here"
+        font.bold: true
     }
 }

@@ -18,5 +18,7 @@
         <file>qml/desktop/dialogs/ServerSettingsDialog.qml</file>
         <file>qml/desktop/dialogs/AboutDialog.qml</file>
         <file>qml/desktop/components/QueryDialog.qml</file>
+        <file>qml/desktop/pages/SettingsPage.qml</file>
+        <file>qml/desktop/misc/TitleLabel.qml</file>
     </qresource>
 </RCC>

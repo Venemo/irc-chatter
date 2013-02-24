@@ -67,7 +67,9 @@ OTHER_FILES += \
     qml/desktop/components/MenuButton.qml \
     qml/desktop/dialogs/ServerSettingsDialog.qml \
     qml/desktop/dialogs/AboutDialog.qml \
-    qml/desktop/components/QueryDialog.qml
+    qml/desktop/components/QueryDialog.qml \
+    qml/desktop/pages/SettingsPage.qml \
+    qml/desktop/misc/TitleLabel.qml
 
 # User interface for MeeGo
 OTHER_FILES += \

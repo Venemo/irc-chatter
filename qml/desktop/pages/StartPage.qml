@@ -141,6 +141,10 @@ Page {
             color: "#ddd"
             textColor: "#000"
             visible: hasServersConfigured
+            onClicked: {
+                settingsPage.animateIn();
+                startPage.animateOut();
+            }
         }
     }
     Button {
