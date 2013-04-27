@@ -36,6 +36,8 @@ public:
 
 signals:
     void commandParseError(const QString &error);
+    void dumpHtml(const QString &path);
+    void loadHtml(const QString &path);
     
 };
 

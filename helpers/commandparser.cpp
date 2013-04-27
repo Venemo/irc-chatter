@@ -115,7 +115,11 @@ void CommandParser::parseAndSendCommand(const QString &channelName, const QStrin
         if (n == 1)
             _ircClient->requestTopic(channelName);
         else
-            emit commandParseError("Changing Topics is not supported yet!");
+        {
+            commandParts.removeAt(0);
+            QString topic = commandParts.join(' ');
+            _ircClient->setTopic(channelName, topic);
+        }
     }
     else if (commandParts[0] == "/query" || commandParts[0] == "/q")
     {
@@ -159,6 +163,24 @@ void CommandParser::parseAndSendCommand(const QString &channelName, const QStrin
             _ircClient->sendWhois(commandParts[1]);
         else
             emit commandParseError("Invalid command. Correct usage: '/whois &lt;user name&gt;'");
+    }
+    else if (commandParts[0] == "/dumphtml")
+    {
+        if (n > 1)
+        {
+            commandParts.removeAt(0);
+            QString path = commandParts.join(' ');
+            emit dumpHtml(path);
+        }
+    }
+    else if (commandParts[0] == "/loadhtml")
+    {
+        if (n > 1)
+        {
+            commandParts.removeAt(0);
+            QString path = commandParts.join(' ');
+            emit loadHtml(path);
+        }
     }
     // TODO
 //    else if (commandParts[0] == "/quote")

@@ -20,6 +20,7 @@
 // Copyright (C) 2010 Eike Hein <hein@kde.org>
 
 #include <QtCore/QTime>
+#include <QtCore/QFile>
 
 #include "model/channelmodel.h"
 #include "model/servermodel.h"
@@ -46,6 +47,8 @@ ChannelModel::ChannelModel(ServerModel *parent, const QString &channelName, Abst
     _sentMessagesIndex(-1)
 {
     connect(_commandParser, SIGNAL(commandParseError(QString)), this, SLOT(appendError(QString)));
+    connect(_commandParser, SIGNAL(dumpHtml(QString)), this, SLOT(dumpHtml(QString)));
+    connect(_commandParser, SIGNAL(loadHtml(QString)), this, SLOT(loadHtml(QString)));
 }
 
 ChannelModel::~ChannelModel()
@@ -394,4 +397,32 @@ void ChannelModel::adjustForSentMessagesIndex()
 AppSettings *ChannelModel::appSettings()
 {
     return static_cast<IrcModel*>(parent()->parent())->appSettings();
+}
+
+void ChannelModel::dumpHtml(const QString &path)
+{
+    qDebug() << "dumping html to" << path;
+    QFile *file;
+    if (!QFile::exists(path))
+    {
+        file = new QFile(path, this);
+        file->open(QIODevice::WriteOnly);
+    }
+    else
+    {
+        file = new QFile(path, this);
+        file->open(QFile::Append);
+    }
+
+    file->write(_channelText.toUtf8());
+    file->close();
+    delete file;
+}
+
+void ChannelModel::loadHtml(const QString &path)
+{
+    QFile file(path);
+    file.open(QFile::ReadOnly);
+    setChannelText(QString::fromUtf8(file.readAll()));
+    file.close();
 }

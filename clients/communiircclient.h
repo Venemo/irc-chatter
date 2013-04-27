@@ -59,6 +59,7 @@ public slots:
     virtual void sendCtcpReply(const QString &userName, const QString &message);
     virtual void sendMessage(const QString &channelName, const QString &message);
     virtual void requestTopic(const QString &channelName);
+    virtual void setTopic(const QString &channelName, const QString &topic);
     virtual void changeNick(const QString &newNick);
     virtual void kick(const QString &channelName, const QString &userName, const QString &message);
     virtual void sendRaw(const QString &message);

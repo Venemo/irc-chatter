@@ -123,6 +123,9 @@ public slots:
     void appendDeemphasisedInfo(QString msg);
     void appendError(QString msg);
 
+    void dumpHtml(const QString &path);
+    void loadHtml(const QString &path);
+
 };
 
 #endif // CHANNELMODEL_H

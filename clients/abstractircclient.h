@@ -83,6 +83,7 @@ public:
     virtual void sendCtcpReply(const QString &userName, const QString &message) = 0;
     virtual void sendMessage(const QString &channelName, const QString &message) = 0;
     virtual void requestTopic(const QString &channelName) = 0;
+    virtual void setTopic(const QString &channelName, const QString &topic) = 0;
     virtual void changeNick(const QString &newNick) = 0;
     virtual void kick(const QString &channelName, const QString &userName, const QString &message) = 0;
     virtual void sendRaw(const QString &message) = 0;

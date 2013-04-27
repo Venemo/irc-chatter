@@ -366,6 +366,12 @@ void CommuniIrcClient::requestTopic(const QString &channelName)
     _ircSession->sendCommand(IrcCommand::createTopic(channelName));
 }
 
+void CommuniIrcClient::setTopic(const QString &channelName, const QString &topic)
+{
+    qDebug() << "setting topic of" << channelName << "to" << topic;
+    _ircSession->sendCommand(IrcCommand::createTopic(channelName, topic));
+}
+
 void CommuniIrcClient::changeNick(const QString &newNick)
 {
     _ircSession->setNickName(newNick);
