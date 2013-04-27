@@ -153,7 +153,6 @@ void ServerModel::receiveUserNames(const QString &channelName, const QStringList
 
 void ServerModel::receiveMessage(const QString &channelName, const QString &userName, const QString &message)
 {
-
     findOrCreateChannel(channelName)->receiveMessage(userName, message);
 }
 
@@ -262,8 +261,7 @@ void ServerModel::receiveMotd(const QString &motd)
 
 void ServerModel::receiveError(const QString &error)
 {
-    if (_defaultChannel)
-        _defaultChannel->appendError(error);
+    static_cast<IrcModel*>(parent())->currentChannel()->appendError(error);
 }
 
 ChannelModel *ServerModel::findOrCreateChannel(const QString &channelName)
@@ -289,7 +287,6 @@ void ServerModel::addModelForChannel(const QString &channelName)
             channel->setChannelType(ChannelModel::Channel);
 
             // Add this channel to the autojoin list of the server
-            qDebug() << "trying to add" << channelName << "to autojoin";
             _serverSettings->addAutoJoinChannel(channelName);
             _serverSettings->save();
         }
@@ -312,8 +309,15 @@ void ServerModel::removeModelForChannel(const QString &channelName)
 {
     if (_channels.contains(channelName))
     {
+        if (_channels[channelName]->channelType() == ChannelModel::Channel)
+        {
+            // Remove this channel from the autojoin list of the server
+            _serverSettings->removeAutoJoinChannel(channelName);
+            _serverSettings->save();
+        }
         if (_channels[channelName] == static_cast<IrcModel*>(parent())->currentChannel())
             static_cast<IrcModel*>(parent())->setCurrentChannelIndex(static_cast<IrcModel*>(parent())->currentChannelIndex() - 1);
+
         _channels.remove(channelName);
         emit this->channelsChanged();
     }
@@ -326,6 +330,8 @@ void ServerModel::joinChannel(const QString &channelName, const QString &channel
     if (!_channels.contains(channelName))
     {
         addModelForChannel(channelName);
+        qDebug() << "setting current channel to" << channelName;
+        static_cast<IrcModel*>(parent())->setCurrentChannel(channelName, this->url());
 
         if (channelName.startsWith('#'))
             _ircClient->joinChannel(channelName, channelKey);
