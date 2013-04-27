@@ -22,8 +22,10 @@
 #include "helpers/commandparser.h"
 #include "clients/abstractircclient.h"
 #include "model/settings/appsettings.h"
+#include "model/channelmodel.h"
+#include "model/servermodel.h"
 
-CommandParser::CommandParser(QObject *parent, AbstractIrcClient *ircClient, AppSettings *appSettings) :
+CommandParser::CommandParser(ChannelModel *parent, AbstractIrcClient *ircClient, AppSettings *appSettings) :
     QObject(parent),
     _ircClient(ircClient),
     _appSettings(appSettings)
@@ -37,18 +39,21 @@ void CommandParser::parseAndSendCommand(const QString &channelName, const QStrin
 
     if (commandParts[0] == "/join" || commandParts[0] == "/j")
     {
-        if (n == 2)
+        if (n == 2 || n == 3)
         {
+            QString channelKey;
+
             // Allow the user to spare the '#' character which is handy for VKB
             if (!commandParts[1].startsWith('#'))
                 commandParts[1].insert(0, '#');
+            if (n == 3)
+                channelKey = commandParts[2];
 
-            // TODO: add possibility to store channel keys in the autojoin
-            _ircClient->joinChannel(commandParts[1], QString());
+            static_cast<ServerModel*>(parent()->parent())->joinChannel(commandParts[1], channelKey);
         }
         else
         {
-            emit commandParseError("Invalid command. Correct usage: '/join &lt;channelname&gt;'");
+            emit commandParseError("Invalid command. Correct usage: '/join &lt;channelname&gt; [&lt;channelkey&gt;]'");
         }
     }
     else if (channelName.startsWith('#') && (commandParts[0] == "/part" || commandParts[0] == "/p"))
@@ -124,7 +129,7 @@ void CommandParser::parseAndSendCommand(const QString &channelName, const QStrin
     else if (commandParts[0] == "/query" || commandParts[0] == "/q")
     {
         if (n == 2)
-            _ircClient->queryUser(commandParts[1]);
+            static_cast<ServerModel*>(parent()->parent())->joinChannel(commandParts[1]);
         else
             emit commandParseError("Invalid command. Correct usage: '/query &lt;username&gt;' ");
     }

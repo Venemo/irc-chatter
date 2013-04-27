@@ -23,6 +23,7 @@
 
 class AbstractIrcClient;
 class AppSettings;
+class ChannelModel;
 
 class CommandParser : public QObject
 {
@@ -31,7 +32,7 @@ class CommandParser : public QObject
     AppSettings *_appSettings;
 
 public:
-    explicit CommandParser(QObject *parent, AbstractIrcClient *ircClient, AppSettings *appSettings);
+    explicit CommandParser(ChannelModel *parent, AbstractIrcClient *ircClient, AppSettings *appSettings);
     void parseAndSendCommand(const QString &channelName, const QString &command);
 
 signals:
