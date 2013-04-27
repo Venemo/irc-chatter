@@ -35,8 +35,7 @@ Page {
         ircModel.currentChannelIndex = index;
         messageField.shouldUpdateCurrentMessage = true;
 
-        if (appSettings.autoFocusTextField)
-            messageField.forceActiveFocus();
+        messageField.forceActiveFocus();
 
         scrollToBottom();
     }
@@ -81,6 +80,11 @@ Page {
             font.family: appSettings.fontMonospace ? "Monospace" : appSettings.getDefaultFont()
             onTextChanged: {
                 scrollToBottom();
+            }
+            onLinkActivated: {
+                if (link.indexOf('http:') >= 0 || link.indexOf('https:') || link.indexOf('ftp:')) {
+                    Qt.openUrlExternally(link);
+                }
             }
         }
     }

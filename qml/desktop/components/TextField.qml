@@ -33,6 +33,10 @@ Rectangle {
     property alias echoMode: textInput.echoMode
     property alias enabled: textInput.enabled
 
+    function forceActiveFocus() {
+        textInput.forceActiveFocus();
+    }
+
     implicitHeight: textInput.height + padding * 2
     border.width: enableTextValidation ? 2 : 0
     border.color: enableTextValidation ? (acceptableInput ? "#9fce00" : "#ff0000") : "#444"
