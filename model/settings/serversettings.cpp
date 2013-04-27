@@ -55,6 +55,16 @@ void ServerSettings::addAutoJoinChannel(const QString &channelName)
     }
 }
 
+void ServerSettings::removeAutoJoinChannel(const QString &channelName)
+{
+    if (_autoJoinChannels.contains(channelName, Qt::CaseInsensitive))
+    {
+        qDebug() << "removing" << channelName << "from autojoin";
+        _autoJoinChannels.removeAll(channelName);
+        emit this->autoJoinChannelsChanged();
+    }
+}
+
 void ServerSettings::save()
 {
     AppSettings *appSettings = static_cast<AppSettings*>(this->parent());

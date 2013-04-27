@@ -68,6 +68,7 @@ public:
     QString autoJoinChannelsInPlainString() const;
     void setAutoJoinChannelsInPlainString(const QString &value);
     void addAutoJoinChannel(const QString &channelName);
+    void removeAutoJoinChannel(const QString &channelName);
     void save();
 
 signals:
