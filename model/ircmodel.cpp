@@ -198,7 +198,7 @@ int IrcModel::getChannelIndex(const QString &currentChannelName, const QString &
     int i = 0;
     foreach (ChannelModel *channelModel, *(_allChannels.getList<ChannelModel>()))
     {
-        if (static_cast<ServerModel*>(channelModel->parent())->url() == currentServerName && channelModel->name() == currentChannelName)
+        if (static_cast<ServerModel*>(channelModel->parent())->url() == currentServerName && channelModel->name().toLower() == currentChannelName.toLower())
         {
             return i;
         }
